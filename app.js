@@ -9,11 +9,13 @@ const $=id=>document.getElementById(id);
 /* ---------------- Save / load ---------------- */
 const SAVE_KEY='wordpond_v1';
 let stars=0; const enabled={}; GAMES.forEach(g=>enabled[g.id]=g.on);
+let masteredWords=new Set();
 let storageOK=true;
-function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled}));}catch(e){storageOK=false;}}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords]}));}catch(e){storageOK=false;}}
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s){if(typeof s.stars==='number')stars=s.stars;
-  if(s.enabled)GAMES.forEach(g=>{if(g.id in s.enabled)enabled[g.id]=s.enabled[g.id];});}}catch(e){storageOK=false;}}
-function resetProgress(){stars=0;GAMES.forEach(g=>enabled[g.id]=g.on);persist();$('starCount').textContent=0;renderMenu();renderSkillList();}
+  if(s.enabled)GAMES.forEach(g=>{if(g.id in s.enabled)enabled[g.id]=s.enabled[g.id];});
+  if(Array.isArray(s.mastered))masteredWords=new Set(s.mastered);}}catch(e){storageOK=false;}}
+function resetProgress(){stars=0;GAMES.forEach(g=>enabled[g.id]=g.on);masteredWords=new Set();persist();$('starCount').textContent=0;renderMenu();renderSkillList();}
 
 function addStar(n=1){stars+=n;$('starCount').textContent=stars;persist();
   const m=$('mascot');m.classList.remove('happy');void m.offsetWidth;m.classList.add('happy');}
@@ -151,8 +153,8 @@ const ENGINES={
       <div class="big-target word-target">${w}
         <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div>
       <div class="sight-controls">
-        <button class="btn-mint" onclick="Game.sightAnswer(true)">✓ I read it!</button>
-        <button class="btn-soft" onclick="Game.sightAnswer(false)">🔁 Still tricky</button>
+        <button class="btn-mint" onclick="Game.sightAnswer(true,'${w}')">✓ I read it!</button>
+        <button class="btn-soft" onclick="Game.sightAnswer(false,'${w}')">🔁 Still tricky</button>
       </div>
       <div class="feedback" id="fb"></div></div>`;},
 
@@ -184,6 +186,13 @@ const Game={
   },
   next(){this.locked=false;this.round++;
     if(this.round>this.total){this.finish();return;}
+    if(this.deck.id==='sight'){
+      const remaining=SIGHTWORDS.filter(w=>!masteredWords.has(w));
+      if(remaining.length===0){this.showAchievement();return;}
+      $('progress').textContent=remaining.length+' / '+SIGHTWORDS.length+' left to master';
+      ENGINES.sightword(remaining);
+      return;
+    }
     const stage=this.currentStage();
     $('progress').textContent=this.round+' / '+this.total+(stage.label?' · '+stage.label:'');
     ENGINES[stage.engine].call(ENGINES,stage.pool);},
@@ -224,11 +233,22 @@ const Game={
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
     this.showNext();
   },
-  sightAnswer(knewIt){
+  sightAnswer(knewIt,word){
     if(this.locked)return;this.locked=true;
-    if(knewIt){this.win();this.good('⭐ Way to read it!');}
-    else{this.bad('Nice try — that one will come back around.');}
+    if(knewIt){
+      if(word&&!masteredWords.has(word)){masteredWords.add(word);persist();}
+      this.win();this.good('⭐ Way to read it!');
+    }else{this.bad('Nice try — that one will come back around.');}
     this.showNext();
+  },
+  showAchievement(){
+    $('progress').textContent='';
+    $('gameArea').innerHTML=`<div class="card done-card achievement-card">
+      <div class="achievement-badge">🏆</div>
+      <h2>Congratulations!</h2>
+      <p>You've mastered all ${SIGHTWORDS.length} sight words! Pip is so proud of you. 🐸✨</p>
+      <button class="back" style="margin-top:6px" onclick="Game.home()">Back to menu</button>
+    </div>`;
   },
   doMagic(shortW,longW,mean){
     if(this.locked)return;this.locked=true;

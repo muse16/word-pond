@@ -53,6 +53,8 @@ Fields:
 | `syllablesplit`| array of `{w, parts:[p1,p2]}` — student picks the correctly hyphenated split (e.g. "pic-nic"); wrong-split distractors are generated automatically | `SPLIT` |
 | `sightword`    | flat word array — no multiple choice; the word is shown, the child reads it aloud, and self-reports "I read it!" or "Still tricky" (only the former earns a star) | `SIGHTWORDS` |
 
+`sightword` is special-cased in the game controller (by the `sight` game id) to track long-term mastery rather than just session rounds: every word marked "I read it!" is saved to `localStorage` permanently, the header shows "N / total left to master" instead of a round counter, and mastered words drop out of the rotation so practice always focuses on what's left. Marking the last word triggers a full-screen congratulations achievement. "Reset stars & progress" in settings clears mastery too.
+
 ### Multi-stage lessons and the intro screen
 
 A lesson can also run more than one activity back to back, and show a teaching screen before practice starts. Use `stages` instead of `engine`/`pool`:

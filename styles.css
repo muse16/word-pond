@@ -128,6 +128,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .trick-title{font-family:'Baloo 2';font-weight:800;color:var(--deep);font-size:16px;margin-bottom:8px;}
 .trick-point{font-family:'Lexend';color:#4a5b74;font-size:14.5px;line-height:1.6;}
 .trick-point b{color:var(--sky-deep,#2f7ed8);}
+.achievement-card{padding-top:38px;padding-bottom:38px;}
+.achievement-badge{font-size:72px;line-height:1;margin-bottom:8px;animation:starpop .6s ease both;}
 .overlay{position:fixed;inset:0;background:rgba(10,20,38,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:50;}
 .overlay.active{display:flex;}
 .panel{background:var(--paper);border-radius:24px;max-width:520px;width:100%;padding:26px 24px;max-height:88dvh;overflow-y:auto;}
