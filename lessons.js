@@ -76,6 +76,8 @@ const GUESSWORDS=[
   {from:'rab...bit', to:'rabbit'},
   {from:'hap...pen', to:'happen'},
   {from:'mag...net', to:'magnet'}];
+const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','splash','scram',
+  'scratch','splat','sprout','strap'];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
@@ -161,6 +163,24 @@ let LESSONS=[
       {engine:'syllablesplit', pool:SPLIT, rounds:6, label:'Split the Word'},
       {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESSWORDS}, rounds:4, label:'Guess What I\'m Saying'}
     ]
+  },
+  {id:'L8', n:8, title:'Three-Letter Blends', emoji:'🔗', cls:'c-sound',
+    intro:{
+      topic:'Three-Letter Blends',
+      lines:[
+        'You already learned two-letter blends. This lesson zooms in on blends made of three consonants grouped together at the start of a word.',
+        'There are only four common initial three-letter blends to start with: <b>scr</b> like in scrap, <b>spl</b> like in split, <b>spr</b> like in spring, <b>str</b> like in strong.'
+      ],
+      words:['scrap','split','spring','strong'],
+      review:['scrub','scram','scratch','splash','splat','sprout','string','stress','strap'],
+      trick:{
+        title:'Leap word: her',
+        points:[
+          {w:'her', note:'the e and r work together to make the “er” sound — we haven’t studied this sound yet, so “her” is a leap word. Say it in a sentence: her dress is red.'}
+        ]
+      }
+    },
+    engine:'review', pool:THREEBLENDS
   }
 ];
 
