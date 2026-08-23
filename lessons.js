@@ -84,6 +84,20 @@ const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','
 const SIGHTWORDS=['the','said','was','they','what','who','come','some','one','two',
   'could','would','should','were','does','want','give','live','been','again',
   'you','are','from','have','her'];
+const GUESS10=[
+  {from:'o...pen', to:'open'},
+  {from:'pre...tend', to:'pretend'},
+  {from:'be...gan', to:'began'},
+  {from:'e...ven', to:'even'},
+  {from:'be...gin', to:'begin'},
+  {from:'be...long', to:'belong'},
+  {from:'si...lent', to:'silent'},
+  {from:'bro...ken', to:'broken'},
+  {from:'stu...dent', to:'student'},
+  {from:'ze...ro', to:'zero'},
+  {from:'ro...bot', to:'robot'},
+  {from:'fro...zen', to:'frozen'},
+  {from:'de...mand', to:'demand'}];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
@@ -189,6 +203,18 @@ let LESSONS=[
       }
     },
     engine:'review', pool:THREEBLENDS
+  },
+  {id:'L10', n:10, title:'Multisyllable Words: Open + Closed', emoji:'🧲', cls:'c-contr',
+    intro:{
+      topic:'Two syllables, two syllable types',
+      lines:[
+        'Remember open and closed syllables from Lesson 1? Longer words are often built from one open syllable (ends in a vowel — long sound) and one closed syllable (ends in a consonant — short sound) stuck together.',
+        'Play Guess What I\'m Saying: say each part slow with a pause, then blend them into the whole word. <b>o...pen</b> → open. <b>ze...ro</b> → zero.'
+      ],
+      words:['open','zero','robot'],
+      review:['open','pretend','began','even','begin','belong','silent','broken','student','zero']
+    },
+    engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESS10}
   }
 ];
 
