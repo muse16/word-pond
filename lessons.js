@@ -43,17 +43,54 @@ const OPENCLOSED=[
 const SYLLABLES=[{w:'rabbit',n:2},{w:'sunset',n:2},{w:'napkin',n:2},{w:'basket',n:2},{w:'picnic',n:2},{w:'muffin',n:2},
   {w:'kitten',n:2},{w:'magnet',n:2},{w:'cat',n:1},{w:'dog',n:1},{w:'ship',n:1},{w:'frog',n:1},
   {w:'umbrella',n:3},{w:'butterfly',n:3},{w:'fantastic',n:3},{w:'banana',n:3}];
+const BLENDS=['bland','slump','grunt','trust','cramp','branch','slept','frost','grand','plant','print','spend','craft'];
+const WORDCHANGE=[
+  {from:'plan',to:'plant',note:'add t at the end → nt blend'},
+  {from:'plum',to:'plump',note:'add p before the end → mp blend'},
+  {from:'ban',to:'band',note:'add d at the end → nd blend'},
+  {from:'win',to:'wind',note:'add d at the end → nd blend'},
+  {from:'ten',to:'tent',note:'add t at the end → nt blend'},
+  {from:'top',to:'stop',note:'add s at the start → st blend'},
+  {from:'ramp',to:'cramp',note:'add c at the start → cr blend'},
+  {from:'rip',to:'trip',note:'add t at the start → tr blend'}];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
-   Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}.
+   Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
+   for a single-activity lesson, OR {id, n, title, emoji, cls, stages:[...]}
+   for a multi-activity lesson (each stage = {engine, pool, rounds, label}).
    Engines: 'review'(word array), 'phonogram'({focus:[keys],all:PHONOGRAMS}),
             'magic'(MAGIC subset), 'ed'(ED), 'contraction'(subset),
-            'syllable'(subset), 'syllabletype'(OPENCLOSED subset)
+            'syllable'(subset), 'syllabletype'(OPENCLOSED subset),
+            'wordchange'(array of {from,to,note})
+   An optional `intro` object shows a teaching screen before practice starts:
+   {topic, lines:[...], words:[...] (optional tap-to-hear list), trick:{title,points:[...]} (optional)}
    See README.md for the full guide on adding a lesson.
    ========================================================= */
 let LESSONS=[
-  {id:'L1', n:1, title:'Open & Closed Syllables', emoji:'🚪', cls:'c-review', engine:'syllabletype', pool:OPENCLOSED}
+  {id:'L1', n:1, title:'Open & Closed Syllables', emoji:'🚪', cls:'c-review', engine:'syllabletype', pool:OPENCLOSED},
+  {id:'L2', n:2, title:'Beginning & End Blends', emoji:'🧩', cls:'c-ed',
+    intro:{
+      topic:'Blends at the beginning AND the end',
+      lines:[
+        'Some words have two consonants that team up and blend their sounds together — sometimes right at the start, sometimes right at the end, and sometimes both! Say each one slow, then fast.',
+        'Now watch what happens when we add a blend to a smaller word: <b>plan</b> → <b>plant</b> (add a t at the end). <b>plum</b> → <b>plump</b> (add a p before the end). In the practice, you\'ll change words just like this.'
+      ],
+      words:['bland','slump','grunt','trust','cramp'],
+      review:['branch','slept','frost','grand','plant','print','spend','trust','craft'],
+      trick:{
+        title:'Two tricky words',
+        points:[
+          {w:'you', note:'the letters y and ou team up to say “oo”'},
+          {w:'are', note:'ar says its own sound — the e at the end is silent'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'review', pool:BLENDS, rounds:6, label:'Find the Blend Word'},
+      {engine:'wordchange', pool:WORDCHANGE, rounds:4, label:'Change the Word'}
+    ]
+  }
 ];
 
 /* Extra-practice general games (toggle in panel) */

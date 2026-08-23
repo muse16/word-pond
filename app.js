@@ -42,6 +42,24 @@ function renderSkillList(){
 }
 function togglePanel(show){$('overlay').classList.toggle('active',show);if(show)renderSkillList();}
 
+function renderIntro(deck){
+  const intro=deck.intro;
+  const wordChips=w=>`<button class="speak-btn" style="width:34px;height:34px;box-shadow:0 3px 0 #2f7ed8;margin:4px 6px 4px 0" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button>`;
+  const words=(intro.words||[]).map(w=>`<span class="intro-word">${w}${wordChips(w)}</span>`).join('');
+  const review=(intro.review||[]).length?`<p class="intro-review"><b>Words to review:</b> ${intro.review.join(', ')}</p>`:'';
+  const trick=intro.trick?`<div class="trick-box"><div class="trick-title">🐸 ${intro.trick.title}</div>
+    ${intro.trick.points.map(p=>`<div class="trick-point"><b>${p.w}</b> — ${p.note}</div>`).join('')}</div>`:'';
+  $('introArea').innerHTML=`<div class="card">
+    <div class="lesson-badge">Lesson ${deck.n}</div>
+    <h2 class="intro-topic">${intro.topic}</h2>
+    ${intro.lines.map(l=>`<p class="intro-line">${l}</p>`).join('')}
+    <div class="intro-words">${words}</div>
+    ${review}
+    ${trick}
+    <button class="next-btn" onclick="Game.begin()">Start Practice ▶</button>
+  </div>`;
+}
+
 /* ---------------- Engines ---------------- */
 const ENGINES={
   review(pool){const target=rand(pool);
@@ -104,6 +122,16 @@ const ENGINES={
         <button class="opt" onclick="Game.pickType(this,'closed','${item.t}','${item.w}')">Closed<small>ends in a consonant · short sound</small></button>
       </div><div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
+  wordchange(pool){const pair=rand(pool);
+    const others=shuffle(pool.filter(p=>p.to!==pair.to)).slice(0,2).map(p=>p.to);
+    const opts=shuffle([pair.to,...others]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Change the word! Add a blend to make a new word.</div>
+      <div class="big-target word-target">${pair.from}
+        <button class="speak-btn" onclick="speak('${pair.from}')" aria-label="hear ${pair.from}">${SPKR}</button></div></div>
+      <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(pair.from);},
+
   syllable(pool){const s=rand(pool);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Say it and clap. How many syllables?</div>
@@ -115,16 +143,26 @@ const ENGINES={
 /* ---------------- Game controller ---------------- */
 const Game={
   deck:null,round:0,total:10,correct:0,locked:false,
-  home(){speechSynthesis&&speechSynthesis.cancel();$('home').classList.add('active');$('game').classList.remove('active');},
+  home(){speechSynthesis&&speechSynthesis.cancel();$('home').classList.add('active');
+    $('game').classList.remove('active');$('lessonIntro').classList.remove('active');},
   launch(kind,id){
     this.deck = kind==='L' ? LESSONS.find(l=>l.id===id) : GAMES.find(g=>g.id===id);
+    this.total = this.deck.stages ? this.deck.stages.reduce((a,s)=>a+s.rounds,0) : 10;
     this.round=0;this.correct=0;
+    if(this.deck.intro){$('home').classList.remove('active');$('lessonIntro').classList.add('active');renderIntro(this.deck);return;}
     $('home').classList.remove('active');$('game').classList.add('active');this.next();
+  },
+  begin(){$('lessonIntro').classList.remove('active');$('game').classList.add('active');this.next();},
+  currentStage(){
+    if(!this.deck.stages)return{engine:this.deck.engine,pool:this.deck.pool,label:null};
+    let acc=0;for(const s of this.deck.stages){acc+=s.rounds;if(this.round<=acc)return s;}
+    return this.deck.stages[this.deck.stages.length-1];
   },
   next(){this.locked=false;this.round++;
     if(this.round>this.total){this.finish();return;}
-    $('progress').textContent=this.round+' / '+this.total;
-    ENGINES[this.deck.engine].call(ENGINES,this.deck.pool);},
+    const stage=this.currentStage();
+    $('progress').textContent=this.round+' / '+this.total+(stage.label?' · '+stage.label:'');
+    ENGINES[stage.engine].call(ENGINES,stage.pool);},
   win(){this.correct++;addStar();},
   good(msg){$('fb').textContent=msg;$('fb').className='feedback good';},
   bad(msg){$('fb').textContent=msg;$('fb').className='feedback try';},

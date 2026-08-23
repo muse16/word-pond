@@ -107,6 +107,19 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .rs.earned{animation:starpop .4s ease both;}
 @keyframes starpop{0%{transform:scale(0) rotate(-40deg);opacity:0;}70%{transform:scale(1.25) rotate(6deg);}100%{transform:scale(1) rotate(0);opacity:1;}}
 .score-caption{font-family:'Baloo 2';font-weight:700;color:#8a97a9;font-size:18px;margin-bottom:14px;}
+.lesson-badge{display:inline-block;background:var(--sun);color:#4a3200;font-family:'Baloo 2';font-weight:800;
+  font-size:13px;letter-spacing:.5px;text-transform:uppercase;padding:5px 14px;border-radius:999px;margin-bottom:12px;}
+.intro-topic{font-family:'Baloo 2';font-weight:800;color:var(--deep);font-size:clamp(22px,5vw,28px);margin-bottom:14px;}
+.intro-line{font-family:'Lexend';color:#4a5b74;font-size:15.5px;line-height:1.6;margin-bottom:14px;}
+.intro-line b{color:var(--deep);}
+.intro-words{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+.intro-word{display:inline-flex;align-items:center;background:#fff6df;border:2px solid #f0dfa8;border-radius:14px;
+  padding:8px 6px 8px 16px;font-family:'Baloo 2';font-weight:700;font-size:18px;color:var(--deep);}
+.intro-review{font-family:'Lexend';color:#6a7890;font-size:14px;line-height:1.6;margin-bottom:14px;}
+.trick-box{background:#eef7ff;border:2px solid #cfe6fb;border-radius:18px;padding:16px 18px;margin-bottom:6px;}
+.trick-title{font-family:'Baloo 2';font-weight:800;color:var(--deep);font-size:16px;margin-bottom:8px;}
+.trick-point{font-family:'Lexend';color:#4a5b74;font-size:14.5px;line-height:1.6;}
+.trick-point b{color:var(--sky-deep,#2f7ed8);}
 .overlay{position:fixed;inset:0;background:rgba(10,20,38,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:50;}
 .overlay.active{display:flex;}
 .panel{background:var(--paper);border-radius:24px;max-width:520px;width:100%;padding:26px 24px;max-height:88dvh;overflow-y:auto;}
