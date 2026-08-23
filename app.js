@@ -134,6 +134,17 @@ const ENGINES={
       <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(pair.from);},
 
+  syllablesplit(pool){const item=rand(pool);const w=item.w;const correct=item.parts.join('-');
+    const splitIdx=item.parts[0].length;const candidates=[];
+    for(let i=2;i<=w.length-2;i++){const opt=w.slice(0,i)+'-'+w.slice(i);if(i!==splitIdx&&!candidates.includes(opt))candidates.push(opt);}
+    const opts=shuffle([correct,...shuffle(candidates).slice(0,2)]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Where does this word split into syllables?</div>
+      <div class="big-target word-target">${w}
+        <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div></div>
+      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(w);},
+
   syllable(pool){const s=rand(pool);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Say it and clap. How many syllables?</div>

@@ -61,6 +61,21 @@ const YCHANGE=[
   {from:'try',to:'cry'},
   {from:'sky',to:'shy'},
   {from:'by',to:'my'}];
+const SPLIT=[
+  {w:'picnic', parts:['pic','nic']},
+  {w:'insect', parts:['in','sect']},
+  {w:'kitten', parts:['kit','ten']},
+  {w:'magnet', parts:['mag','net']},
+  {w:'napkin', parts:['nap','kin']},
+  {w:'rabbit', parts:['rab','bit']},
+  {w:'contest', parts:['con','test']},
+  {w:'suntan', parts:['sun','tan']}];
+const GUESSWORDS=[
+  {from:'pup...pet', to:'puppet'},
+  {from:'pil...grim', to:'pilgrim'},
+  {from:'rab...bit', to:'rabbit'},
+  {from:'hap...pen', to:'happen'},
+  {from:'mag...net', to:'magnet'}];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
@@ -71,7 +86,10 @@ const YCHANGE=[
             'magic'(MAGIC subset), 'ed'(ED), 'contraction'(subset),
             'syllable'(subset), 'syllabletype'(OPENCLOSED subset),
             'wordchange'(array of {from,to,note}, OR {instruction, pairs:[{from,to}]}
-              to customize the prompt text — see YCHANGE/L4 for an example)
+              to customize the prompt text — see YCHANGE/L4 for an example),
+            'syllablesplit'(array of {w, parts:[p1,p2]} — student picks the correctly
+              hyphenated split, e.g. "pic-nic"; wrong-split distractors are generated
+              automatically from other letter positions in the word)
    An optional `intro` object shows a teaching screen before practice starts:
    {topic, lines:[...], words:[...] (optional tap-to-hear list), trick:{title,points:[...]} (optional)}
    See README.md for the full guide on adding a lesson.
@@ -120,6 +138,28 @@ let LESSONS=[
     stages:[
       {engine:'review', pool:YWORDS, rounds:6, label:'Find the Y Word'},
       {engine:'wordchange', pool:{instruction:'Change the word! Swap the beginning sound to make a new -y word.', pairs:YCHANGE}, rounds:4, label:'Change the Word'}
+    ]
+  },
+  {id:'L6', n:6, title:'Splitting Words into Syllables', emoji:'✂️', cls:'c-syll',
+    intro:{
+      topic:'Two rules for splitting a word',
+      lines:[
+        'Rule 1 — compound words: split right between the two smaller words. <b>suntan</b> is sun + tan — two whole words stuck together.',
+        'Rule 2 — two consonants between two vowels: split right between those two consonants. <b>napkin</b> becomes nap + kin.',
+        'Try the pause trick with <b>problem</b>: say it slow — prob...lem. It splits right between the b and the l. Always pause between syllables when you practice.'
+      ],
+      words:['suntan','napkin','problem'],
+      review:['picnic','insect','kitten','magnet','napkin','rabbit','contest'],
+      trick:{
+        title:'Tricky word: have',
+        points:[
+          {w:'have', note:'the e is silent, but it does NOT make the a say its long sound — say a short a, like “I have six fish.”'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'syllablesplit', pool:SPLIT, rounds:6, label:'Split the Word'},
+      {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESSWORDS}, rounds:4, label:'Guess What I\'m Saying'}
     ]
   }
 ];

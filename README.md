@@ -49,7 +49,8 @@ Fields:
 | `contraction`  | array of `{two, one}` pairs                                                  | `CONTRACTIONS` |
 | `syllabletype` | array of `{w, t}` where `t` is `'open'` or `'closed'`                        | `OPENCLOSED` |
 | `syllable`     | array of `{w, n}` where `n` is syllable count                                | `SYLLABLES` |
-| `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text | `WORDCHANGE`, `YCHANGE` |
+| `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text | `WORDCHANGE`, `YCHANGE`, `GUESSWORDS` |
+| `syllablesplit`| array of `{w, parts:[p1,p2]}` — student picks the correctly hyphenated split (e.g. "pic-nic"); wrong-split distractors are generated automatically | `SPLIT` |
 
 ### Multi-stage lessons and the intro screen
 
