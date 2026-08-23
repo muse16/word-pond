@@ -51,6 +51,7 @@ Fields:
 | `syllable`     | array of `{w, n}` where `n` is syllable count                                | `SYLLABLES` |
 | `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text | `WORDCHANGE`, `YCHANGE`, `GUESSWORDS` |
 | `syllablesplit`| array of `{w, parts:[p1,p2]}` — student picks the correctly hyphenated split (e.g. "pic-nic"); wrong-split distractors are generated automatically | `SPLIT` |
+| `sightword`    | flat word array — no multiple choice; the word is shown, the child reads it aloud, and self-reports "I read it!" or "Still tricky" (only the former earns a star) | `SIGHTWORDS` |
 
 ### Multi-stage lessons and the intro screen
 

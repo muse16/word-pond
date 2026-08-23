@@ -78,6 +78,12 @@ const GUESSWORDS=[
   {from:'mag...net', to:'magnet'}];
 const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','splash','scram',
   'scratch','splat','sprout','strap'];
+/* High-frequency "heart words" — many don't follow regular phonics rules, so they're
+   practiced by sight rather than sounded out. Includes the leap/trick words already
+   taught in lessons (you, are, from, have, her) for extra reinforcement. */
+const SIGHTWORDS=['the','said','was','they','what','who','come','some','one','two',
+  'could','would','should','were','does','want','give','live','been','again',
+  'you','are','from','have','her'];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
@@ -91,7 +97,9 @@ const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','
               to customize the prompt text — see YCHANGE/L4 for an example),
             'syllablesplit'(array of {w, parts:[p1,p2]} — student picks the correctly
               hyphenated split, e.g. "pic-nic"; wrong-split distractors are generated
-              automatically from other letter positions in the word)
+              automatically from other letter positions in the word),
+            'sightword'(flat word array — no multiple choice; the word is shown, the
+              child reads it aloud, and self-reports "I read it!" or "Still tricky")
    An optional `intro` object shows a teaching screen before practice starts:
    {topic, lines:[...], words:[...] (optional tap-to-hear list), trick:{title,points:[...]} (optional)}
    See README.md for the full guide on adding a lesson.
@@ -191,5 +199,6 @@ const GAMES=[
   {id:'sound',    name:'Sound Match', emoji:'🔊', cls:'c-sound', sub:'Find the word with the sound.', engine:'phonogram', pool:{all:PHONOGRAMS}, on:false, hint:'Vowel phonograms (ee, ar, or, oy, oi, aw, ow, ou, wh, er). — Later lessons'},
   {id:'magic',    name:'Magic E', emoji:'✨', cls:'c-magic', sub:'Add an E, change the word!', engine:'magic', pool:MAGIC, on:false, hint:'Silent E makes a short vowel say its long sound.'},
   {id:'ed',       name:'-ed Endings', emoji:'🏁', cls:'c-ed', sub:'Sort by the -ed sound.', engine:'ed', pool:ED, on:false, hint:'The three sounds of -ed: /t/, /d/, /id/.'},
-  {id:'contraction', name:'Squish It', emoji:'🤝', cls:'c-contr', sub:'Two words into one.', engine:'contraction', pool:CONTRACTIONS, on:false, hint:'Contractions like do not → don’t.'}
+  {id:'contraction', name:'Squish It', emoji:'🤝', cls:'c-contr', sub:'Two words into one.', engine:'contraction', pool:CONTRACTIONS, on:false, hint:'Contractions like do not → don’t.'},
+  {id:'sight', name:'Sight Word Flash', emoji:'⚡', cls:'c-review', sub:'Read it out loud!', engine:'sightword', pool:SIGHTWORDS, on:true, hint:'High-frequency "heart words" that don\'t follow regular phonics rules — read by sight, not by sounding out.'}
 ];

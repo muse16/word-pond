@@ -145,6 +145,17 @@ const ENGINES={
       <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(w);},
 
+  sightword(pool){const w=rand(pool);
+    $('gameArea').innerHTML=`<div class="card" style="text-align:center">
+      <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the word out loud! Stuck? Tap the speaker.</div>
+      <div class="big-target word-target">${w}
+        <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div>
+      <div class="sight-controls">
+        <button class="btn-mint" onclick="Game.sightAnswer(true)">✓ I read it!</button>
+        <button class="btn-soft" onclick="Game.sightAnswer(false)">🔁 Still tricky</button>
+      </div>
+      <div class="feedback" id="fb"></div></div>`;},
+
   syllable(pool){const s=rand(pool);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Say it and clap. How many syllables?</div>
@@ -211,6 +222,12 @@ const Game={
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim().toLowerCase()===correct)o.classList.add('correct');});
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
+    this.showNext();
+  },
+  sightAnswer(knewIt){
+    if(this.locked)return;this.locked=true;
+    if(knewIt){this.win();this.good('⭐ Way to read it!');}
+    else{this.bad('Nice try — that one will come back around.');}
     this.showNext();
   },
   doMagic(shortW,longW,mean){
