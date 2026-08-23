@@ -79,11 +79,28 @@ const GUESSWORDS=[
 const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','splash','scram',
   'scratch','splat','sprout','strap'];
 /* High-frequency "heart words" — many don't follow regular phonics rules, so they're
-   practiced by sight rather than sounded out. Includes the leap/trick words already
-   taught in lessons (you, are, from, have, her) for extra reinforcement. */
-const SIGHTWORDS=['the','said','was','they','what','who','come','some','one','two',
-  'could','would','should','were','does','want','give','live','been','again',
-  'you','are','from','have','her'];
+   practiced by sight rather than sounded out. This is the standard Dolch pre-primer +
+   primer + first-grade word lists (133 words, the widely used baseline for "first
+   grade sight words"), plus 4 commonly-taught harder/irregular words (been, does,
+   should, would) that many first-grade programs introduce early even though Dolch
+   classifies them a level up. 137 words total. */
+const SIGHTWORDS=[
+  // Dolch pre-primer (40)
+  'a','and','away','big','blue','can','come','down','find','for','funny','go','help',
+  'here','i','in','is','it','jump','little','look','make','me','my','not','one','play',
+  'red','run','said','see','the','three','to','two','up','we','where','yellow','you',
+  // Dolch primer (52)
+  'all','am','are','at','ate','be','black','brown','but','came','did','do','eat','four',
+  'get','good','have','he','into','like','must','new','no','now','on','our','out',
+  'please','pretty','ran','ride','saw','say','she','so','soon','that','there','they',
+  'this','too','under','want','was','well','went','what','white','who','will','with','yes',
+  // Dolch first grade (41)
+  'after','again','an','any','as','ask','by','could','every','fly','from','give','going',
+  'had','has','her','him','his','how','just','know','let','live','may','of','old','once',
+  'open','over','put','round','some','stop','take','thank','them','then','think','walk',
+  'were','when',
+  // extra harder/irregular words commonly taught in first grade
+  'been','does','should','would'];
 const GUESS10=[
   {from:'o...pen', to:'open'},
   {from:'pre...tend', to:'pretend'},
