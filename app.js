@@ -122,11 +122,13 @@ const ENGINES={
         <button class="opt" onclick="Game.pickType(this,'closed','${item.t}','${item.w}')">Closed<small>ends in a consonant · short sound</small></button>
       </div><div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
-  wordchange(pool){const pair=rand(pool);
-    const others=shuffle(pool.filter(p=>p.to!==pair.to)).slice(0,2).map(p=>p.to);
+  wordchange(pool){const arr=Array.isArray(pool)?pool:pool.pairs;
+    const instruction=Array.isArray(pool)?'Change the word! Add a blend to make a new word.':(pool.instruction||'Change the word!');
+    const pair=rand(arr);
+    const others=shuffle(arr.filter(p=>p.to!==pair.to)).slice(0,2).map(p=>p.to);
     const opts=shuffle([pair.to,...others]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
-      <div class="instruction">Change the word! Add a blend to make a new word.</div>
+      <div class="instruction">${instruction}</div>
       <div class="big-target word-target">${pair.from}
         <button class="speak-btn" onclick="speak('${pair.from}')" aria-label="hear ${pair.from}">${SPKR}</button></div></div>
       <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>

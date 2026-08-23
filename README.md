@@ -49,6 +49,29 @@ Fields:
 | `contraction`  | array of `{two, one}` pairs                                                  | `CONTRACTIONS` |
 | `syllabletype` | array of `{w, t}` where `t` is `'open'` or `'closed'`                        | `OPENCLOSED` |
 | `syllable`     | array of `{w, n}` where `n` is syllable count                                | `SYLLABLES` |
+| `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text | `WORDCHANGE`, `YCHANGE` |
+
+### Multi-stage lessons and the intro screen
+
+A lesson can also run more than one activity back to back, and show a teaching screen before practice starts. Use `stages` instead of `engine`/`pool`:
+
+```js
+{id:'L4', n:4, title:'The Four Sounds of Y', emoji:'🔤', cls:'c-magic',
+  intro:{
+    topic:'Phonogram Y — four sounds, one letter',
+    lines:['One or more paragraphs of teaching text. <b>Bold</b> is allowed.'],
+    words:['yarn','gym','my','happy'],       // optional tap-to-hear example chips
+    review:['by','fly','try','cry'],          // optional plain-text word list
+    trick:{title:'Tricky word: from', points:[{w:'from', note:'the o says "uh", not its usual short o sound'}]} // optional callout
+  },
+  stages:[
+    {engine:'review', pool:YWORDS, rounds:6, label:'Find the Y Word'},
+    {engine:'wordchange', pool:{instruction:'Custom prompt text', pairs:YCHANGE}, rounds:4, label:'Change the Word'}
+  ]
+}
+```
+
+`stages` round counts should add up to 10 to keep pacing and the star-reward math (a perfect run earns 2 bonus stars) consistent with every other lesson and game. `intro` is optional — omit it and use `engine`/`pool` directly (like `L1`) for a lesson that jumps straight into practice.
 
 To add brand-new words, either extend an existing data array at the top of `lessons.js`, or declare a new `const` and point a lesson's `pool` at it (for `phonogram`, wrap it as `{all: YOUR_NEW_OBJECT}`).
 

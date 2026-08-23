@@ -53,6 +53,14 @@ const WORDCHANGE=[
   {from:'top',to:'stop',note:'add s at the start → st blend'},
   {from:'ramp',to:'cramp',note:'add c at the start → cr blend'},
   {from:'rip',to:'trip',note:'add t at the start → tr blend'}];
+const YWORDS=['my','cry','try','dry','by','sky','fly','shy'];
+const YCHANGE=[
+  {from:'dry',to:'pry'},
+  {from:'pry',to:'fry'},
+  {from:'fry',to:'try'},
+  {from:'try',to:'cry'},
+  {from:'sky',to:'shy'},
+  {from:'by',to:'my'}];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
@@ -62,7 +70,8 @@ const WORDCHANGE=[
    Engines: 'review'(word array), 'phonogram'({focus:[keys],all:PHONOGRAMS}),
             'magic'(MAGIC subset), 'ed'(ED), 'contraction'(subset),
             'syllable'(subset), 'syllabletype'(OPENCLOSED subset),
-            'wordchange'(array of {from,to,note})
+            'wordchange'(array of {from,to,note}, OR {instruction, pairs:[{from,to}]}
+              to customize the prompt text — see YCHANGE/L4 for an example)
    An optional `intro` object shows a teaching screen before practice starts:
    {topic, lines:[...], words:[...] (optional tap-to-hear list), trick:{title,points:[...]} (optional)}
    See README.md for the full guide on adding a lesson.
@@ -89,6 +98,28 @@ let LESSONS=[
     stages:[
       {engine:'review', pool:BLENDS, rounds:6, label:'Find the Blend Word'},
       {engine:'wordchange', pool:WORDCHANGE, rounds:4, label:'Change the Word'}
+    ]
+  },
+  {id:'L4', n:4, title:'The Four Sounds of Y', emoji:'🔤', cls:'c-magic',
+    intro:{
+      topic:'Phonogram Y — four sounds, one letter',
+      lines:[
+        'Y is a phonogram with four sounds: the consonant /y/ like in <b>yarn</b>, short i like in <b>gym</b>, long i like in <b>my</b>, and long e like in <b>happy</b>. Y is unusual because it can be a consonant sound or a vowel sound.',
+        'Handy rule: at the end of a one-syllable word, y almost always says its long i sound. Say these slow, then fast — you\'ll hear the i.',
+        'Now play Change the Word again: dry → pry → fry → try... keep the chain going!'
+      ],
+      words:['yarn','gym','my','happy'],
+      review:['by','fly','try','cry','my','shy','dry','sky'],
+      trick:{
+        title:'Tricky word: from',
+        points:[
+          {w:'from', note:'the o says “uh” like in drum — not its usual short o sound'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'review', pool:YWORDS, rounds:6, label:'Find the Y Word'},
+      {engine:'wordchange', pool:{instruction:'Change the word! Swap the beginning sound to make a new -y word.', pairs:YCHANGE}, rounds:4, label:'Change the Word'}
     ]
   }
 ];
