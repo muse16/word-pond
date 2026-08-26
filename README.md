@@ -1,6 +1,12 @@
 # Word Pond
 
-A kids' phonics practice web app — a companion for a homeschool reading program. Pip the pond frog hosts short 10-round games; kids tap a speaker to hear a word, then answer, and earn stars saved in the browser (localStorage).
+A kids' phonics practice web app — a companion for a homeschool reading program. Pip the pond frog hosts 25-round games; kids tap a speaker to hear a word, then answer, and earn stars saved in the browser (localStorage). The reader's name (shown in the greeting and end screens) is editable in the grown-ups settings panel.
+
+## No-repeat sessions
+
+The game controller draws each round's question **without replacement** from a shuffled copy of the pool, built fresh every time a lesson/game launches or "Play again" is tapped — so a single sitting never asks the same question twice. Multiple-choice distractors are also deduped so the 3 options shown in any one round are always distinct from each other (they can still recur across *different* rounds — that's normal). Because of this, every pool in `lessons.js` needs at least as many unique items as the rounds drawn from it: 25 for a single-stage lesson/game, or at least each stage's `rounds` count for a multi-stage lesson. `resolveOrder()` in `app.js` handles the shuffling; if a pool you add is smaller than the rounds needed, that stage will just quietly loop through fewer unique questions rather than crash — grow the pool if you want a full 25.
+
+`Sight Word Flash` works differently — see the `sightword` row below.
 
 ## Files
 
@@ -75,7 +81,7 @@ A lesson can also run more than one activity back to back, and show a teaching s
 }
 ```
 
-`stages` round counts should add up to 10 to keep pacing and the star-reward math (a perfect run earns 2 bonus stars) consistent with every other lesson and game. `intro` is optional — omit it and use `engine`/`pool` directly (like `L1`) for a lesson that jumps straight into practice.
+`stages` round counts should add up to 25 to keep pacing and the star-reward math (a perfect run earns 2 bonus stars) consistent with every other lesson and game. `intro` is optional — omit it and use `engine`/`pool` directly (like `L1`) for a lesson that jumps straight into practice.
 
 To add brand-new words, either extend an existing data array at the top of `lessons.js`, or declare a new `const` and point a lesson's `pool` at it (for `phonogram`, wrap it as `{all: YOUR_NEW_OBJECT}`).
 
@@ -84,6 +90,12 @@ All practice words are original/generic phonics content — do not paste in copy
 ### Extra-practice games
 
 The `GAMES` array (also in `lessons.js`) is the "Extra Practice" section — general skill-practice games a grown-up can toggle on/off from the settings panel. Same shape as `LESSONS` plus `sub` (subtitle), `on` (default enabled), and `hint` (shown in settings).
+
+## Personalization & Pip
+
+The reader's name is stored in `childName` (`app.js`), defaults to `'Mckenna'`, and is editable via the "Reader's name" field in the grown-ups settings panel — it persists to `localStorage` and appears in the home greeting, the end-of-session screen, and the sight-word mastery achievement screen.
+
+Pip the frog (`pipSVG(size)` in `app.js`) appears in the header (always visible), the lesson-intro screen, the game screen's top bar, the settings panel header, the end-of-session screen, and the achievement screen. Every Pip on screen bounces together whenever a star is earned (`addStar()` targets every `.mascot` element, not just one).
 
 ## Local preview
 

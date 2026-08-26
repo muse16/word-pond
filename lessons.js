@@ -1,6 +1,9 @@
 /* ---------------- Word data ----------------
    All practice words below are original/generic phonics content
-   (not copied from any curriculum). Safe to expand freely. */
+   (not copied from any curriculum). Safe to expand freely.
+   Every pool below is sized to at least cover a 25-question, no-repeat
+   session for whichever game/lesson draws from it (see README for how
+   session round counts map to pool size requirements). */
 const REVIEW=['cat','dog','run','big','hen','map','sit','fox','bug','net','pig','cup','red','top','sun','bat',
   'stop','frog','clap','hand','jump','milk','desk','lamp','sled','flag','drum','nest','swim','crab','grin','spot'];
 const PHONOGRAMS={
@@ -21,18 +24,29 @@ const CONSPHON={
   'ch':['chin','chip','chop','much','rich','chat','chest','chomp','munch','chill'],
   'th':['this','that','then','bath','math','with','moth','path','thin','cloth'],
   'qu':['quit','quiz','quilt','quill','quest','queen','quiet','squid','quip','squint']};
-const ED={'/t/':['jumped','chipped','walked','kissed','washed','picked','hoped','laughed'],
-  '/d/':['snowed','played','rained','cleaned','filled','buzzed','called','opened'],
-  '/id/':['wanted','needed','landed','painted','planted','hunted','melted','started']};
+const ED={'/t/':['jumped','chipped','walked','kissed','washed','picked','hoped','laughed','hopped','watched'],
+  '/d/':['snowed','played','rained','cleaned','filled','buzzed','called','opened','loved','smiled'],
+  '/id/':['wanted','needed','landed','painted','planted','hunted','melted','started','rested','lifted']};
 const MAGIC=[{short:'cap',long:'cape',v:1,mean:'a hat → a cape you wear'},{short:'hop',long:'hope',v:1,mean:'to jump → to wish for'},
   {short:'kit',long:'kite',v:1,mean:'a set → a kite in the sky'},{short:'tub',long:'tube',v:1,mean:'a bath tub → a tube'},
   {short:'pin',long:'pine',v:1,mean:'a sharp pin → a pine tree'},{short:'cub',long:'cube',v:1,mean:'a baby bear → an ice cube'},
   {short:'tap',long:'tape',v:1,mean:'to tap → sticky tape'},{short:'rob',long:'robe',v:1,mean:'to rob → a cozy robe'},
   {short:'cut',long:'cute',v:1,mean:'to cut → very cute'},{short:'rip',long:'ripe',v:1,mean:'to rip → a ripe apple'},
-  {short:'man',long:'mane',v:1,mean:'a man → a lion’s mane'},{short:'not',long:'note',v:1,mean:'not → a note you write'}];
+  {short:'man',long:'mane',v:1,mean:'a man → a lion’s mane'},{short:'not',long:'note',v:1,mean:'not → a note you write'},
+  {short:'fin',long:'fine',v:1,mean:'a fish’s fin → I feel fine'},{short:'hid',long:'hide',v:1,mean:'you hid it → now hide again'},
+  {short:'dim',long:'dime',v:1,mean:'a dim light → a shiny dime'},{short:'plan',long:'plane',v:2,mean:'make a plan → fly on a plane'},
+  {short:'shin',long:'shine',v:2,mean:'your shin bone → let it shine'},{short:'twin',long:'twine',v:2,mean:'a twin sister → wrap it in twine'},
+  {short:'strip',long:'stripe',v:3,mean:'a strip of paper → a striped shirt'},{short:'slid',long:'slide',v:2,mean:'she slid → down the slide'},
+  {short:'spin',long:'spine',v:2,mean:'spin around → your backbone is your spine'},{short:'pan',long:'pane',v:1,mean:'a frying pan → a window pane'},
+  {short:'rid',long:'ride',v:1,mean:'get rid of it → take a ride'},{short:'bit',long:'bite',v:1,mean:'a little bit → take a bite'},
+  {short:'glob',long:'globe',v:2,mean:'a glob of paint → a globe of the world'},{short:'quit',long:'quite',v:2,mean:'don’t quit → you’re quite good!'}];
 const CONTRACTIONS=[{two:'do not',one:"don't"},{two:'I am',one:"I'm"},{two:'can not',one:"can't"},{two:'it is',one:"it's"},
   {two:'we are',one:"we're"},{two:'you are',one:"you're"},{two:'I will',one:"I'll"},{two:'is not',one:"isn't"},
-  {two:'did not',one:"didn't"},{two:'let us',one:"let's"},{two:'they are',one:"they're"},{two:'we will',one:"we'll"}];
+  {two:'did not',one:"didn't"},{two:'let us',one:"let's"},{two:'they are',one:"they're"},{two:'we will',one:"we'll"},
+  {two:'he is',one:"he's"},{two:'she is',one:"she's"},{two:'does not',one:"doesn't"},{two:'was not',one:"wasn't"},
+  {two:'were not',one:"weren't"},{two:'has not',one:"hasn't"},{two:'have not',one:"haven't"},{two:'will not',one:"won't"},
+  {two:'that is',one:"that's"},{two:'what is',one:"what's"},{two:'here is',one:"here's"},{two:'there is',one:"there's"},
+  {two:'who is',one:"who's"},{two:'I have',one:"I've"},{two:'you have',one:"you've"}];
 const OPENCLOSED=[
   {w:'me',t:'open'},{w:'go',t:'open'},{w:'hi',t:'open'},{w:'she',t:'open'},{w:'we',t:'open'},
   {w:'no',t:'open'},{w:'so',t:'open'},{w:'be',t:'open'},{w:'my',t:'open'},{w:'fly',t:'open'},
@@ -42,8 +56,11 @@ const OPENCLOSED=[
   {w:'cup',t:'closed'},{w:'net',t:'closed'},{w:'pig',t:'closed'},{w:'hot',t:'closed'}];
 const SYLLABLES=[{w:'rabbit',n:2},{w:'sunset',n:2},{w:'napkin',n:2},{w:'basket',n:2},{w:'picnic',n:2},{w:'muffin',n:2},
   {w:'kitten',n:2},{w:'magnet',n:2},{w:'cat',n:1},{w:'dog',n:1},{w:'ship',n:1},{w:'frog',n:1},
-  {w:'umbrella',n:3},{w:'butterfly',n:3},{w:'fantastic',n:3},{w:'banana',n:3}];
-const BLENDS=['bland','slump','grunt','trust','cramp','branch','slept','frost','grand','plant','print','spend','craft'];
+  {w:'umbrella',n:3},{w:'butterfly',n:3},{w:'fantastic',n:3},{w:'banana',n:3},
+  {w:'bell',n:1},{w:'shoe',n:1},{w:'candle',n:2},{w:'pencil',n:2},{w:'monkey',n:2},{w:'tiger',n:2},
+  {w:'garden',n:2},{w:'elephant',n:3},{w:'dinosaur',n:3}];
+const BLENDS=['bland','slump','grunt','trust','cramp','branch','slept','frost','grand','plant','print','spend','craft',
+  'twist','clamp','swept','blast','crisp','flask','grasp','stunt','blend','drift','stand','crust'];
 const WORDCHANGE=[
   {from:'plan',to:'plant',note:'add t at the end → nt blend'},
   {from:'plum',to:'plump',note:'add p before the end → mp blend'},
@@ -52,15 +69,32 @@ const WORDCHANGE=[
   {from:'ten',to:'tent',note:'add t at the end → nt blend'},
   {from:'top',to:'stop',note:'add s at the start → st blend'},
   {from:'ramp',to:'cramp',note:'add c at the start → cr blend'},
-  {from:'rip',to:'trip',note:'add t at the start → tr blend'}];
-const YWORDS=['my','cry','try','dry','by','sky','fly','shy'];
+  {from:'rip',to:'trip',note:'add t at the start → tr blend'},
+  {from:'pin',to:'spin',note:'add s at the start → sp blend'},
+  {from:'lap',to:'clap',note:'add c at the start → cl blend'},
+  {from:'rust',to:'crust',note:'add c at the start → cr blend'},
+  {from:'ran',to:'rant',note:'add t at the end → nt blend'},
+  {from:'pan',to:'plan',note:'add l at the start → pl blend'},
+  {from:'dip',to:'drip',note:'add r at the start → dr blend'},
+  {from:'rag',to:'drag',note:'add d at the start → dr blend'},
+  {from:'pot',to:'spot',note:'add s at the start → sp blend'},
+  {from:'lot',to:'slot',note:'add s at the start → sl blend'},
+  {from:'lid',to:'slid',note:'add s at the start → sl blend'},
+  {from:'rack',to:'track',note:'add t at the start → tr blend'},
+  {from:'rim',to:'trim',note:'add t at the start → tr blend'},
+  {from:'lack',to:'black',note:'add b at the start → bl blend'},
+  {from:'low',to:'slow',note:'add s at the start → sl blend'},
+  {from:'an',to:'ant',note:'add t at the end → nt blend'},
+  {from:'en',to:'end',note:'add d at the end → nd blend'},
+  {from:'rot',to:'trot',note:'add t at the start → tr blend'},
+  {from:'rick',to:'trick',note:'add t at the start → tr blend'}];
+const YWORDS=['my','cry','try','dry','by','sky','fly','shy','fry','ply','pry','sly','spy','sty','why','guy'];
 const YCHANGE=[
-  {from:'dry',to:'pry'},
-  {from:'pry',to:'fry'},
-  {from:'fry',to:'try'},
-  {from:'try',to:'cry'},
-  {from:'sky',to:'shy'},
-  {from:'by',to:'my'}];
+  {from:'dry',to:'pry'},{from:'pry',to:'fry'},{from:'fry',to:'try'},{from:'try',to:'cry'},
+  {from:'sky',to:'shy'},{from:'by',to:'my'},{from:'cry',to:'fry'},{from:'fry',to:'fly'},
+  {from:'fly',to:'ply'},{from:'ply',to:'pry'},{from:'spy',to:'sky'},{from:'sky',to:'sly'},
+  {from:'sly',to:'shy'},{from:'shy',to:'sty'},{from:'sty',to:'spy'},{from:'why',to:'shy'},
+  {from:'try',to:'fry'},{from:'my',to:'by'},{from:'dry',to:'try'},{from:'shy',to:'sky'}];
 const SPLIT=[
   {w:'picnic', parts:['pic','nic']},
   {w:'insect', parts:['in','sect']},
@@ -69,15 +103,53 @@ const SPLIT=[
   {w:'napkin', parts:['nap','kin']},
   {w:'rabbit', parts:['rab','bit']},
   {w:'contest', parts:['con','test']},
-  {w:'suntan', parts:['sun','tan']}];
+  {w:'suntan', parts:['sun','tan']},
+  {w:'basket', parts:['bas','ket']},
+  {w:'muffin', parts:['muf','fin']},
+  {w:'publish', parts:['pub','lish']},
+  {w:'velvet', parts:['vel','vet']},
+  {w:'goblin', parts:['gob','lin']},
+  {w:'cactus', parts:['cac','tus']},
+  {w:'tennis', parts:['ten','nis']},
+  {w:'mitten', parts:['mit','ten']},
+  {w:'dentist', parts:['den','tist']},
+  {w:'combat', parts:['com','bat']},
+  {w:'helmet', parts:['hel','met']},
+  {w:'carpet', parts:['car','pet']},
+  {w:'cobweb', parts:['cob','web']},
+  {w:'pancake', parts:['pan','cake']},
+  {w:'sandbox', parts:['sand','box']},
+  {w:'catfish', parts:['cat','fish']},
+  {w:'sunset', parts:['sun','set']}];
 const GUESSWORDS=[
   {from:'pup...pet', to:'puppet'},
   {from:'pil...grim', to:'pilgrim'},
   {from:'rab...bit', to:'rabbit'},
   {from:'hap...pen', to:'happen'},
-  {from:'mag...net', to:'magnet'}];
+  {from:'mag...net', to:'magnet'},
+  {from:'sud...den', to:'sudden'},
+  {from:'but...ton', to:'button'},
+  {from:'din...ner', to:'dinner'},
+  {from:'hid...den', to:'hidden'},
+  {from:'prob...lem', to:'problem'},
+  {from:'sig...nal', to:'signal'},
+  {from:'ob...ject', to:'object'},
+  {from:'traf...fic', to:'traffic'},
+  {from:'sis...ter', to:'sister'},
+  {from:'win...ter', to:'winter'},
+  {from:'af...ter', to:'after'},
+  {from:'dol...lar', to:'dollar'},
+  {from:'lad...der', to:'ladder'},
+  {from:'ham...mer', to:'hammer'},
+  {from:'hap...py', to:'happy'},
+  {from:'rock...et', to:'rocket'},
+  {from:'blan...ket', to:'blanket'},
+  {from:'trum...pet', to:'trumpet'},
+  {from:'pock...et', to:'pocket'},
+  {from:'jack...et', to:'jacket'}];
 const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','splash','scram',
-  'scratch','splat','sprout','strap'];
+  'scratch','splat','sprout','strap','scream','screen','script','scrape','splinter','splotch',
+  'sprint','spray','sprig','stream','stroll','strand'];
 /* High-frequency "heart words" — many don't follow regular phonics rules, so they're
    practiced by sight rather than sounded out. This is the standard Dolch pre-primer +
    primer + first-grade word lists (133 words, the widely used baseline for "first
@@ -114,7 +186,19 @@ const GUESS10=[
   {from:'ze...ro', to:'zero'},
   {from:'ro...bot', to:'robot'},
   {from:'fro...zen', to:'frozen'},
-  {from:'de...mand', to:'demand'}];
+  {from:'de...mand', to:'demand'},
+  {from:'ba...sic', to:'basic'},
+  {from:'i...tem', to:'item'},
+  {from:'pi...lot', to:'pilot'},
+  {from:'mo...ment', to:'moment'},
+  {from:'pro...gram', to:'program'},
+  {from:'hu...mid', to:'humid'},
+  {from:'mu...sic', to:'music'},
+  {from:'ti...ger', to:'tiger'},
+  {from:'pa...per', to:'paper'},
+  {from:'mo...tel', to:'motel'},
+  {from:'to...tal', to:'total'},
+  {from:'fi...nal', to:'final'}];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
@@ -133,6 +217,11 @@ const GUESS10=[
               child reads it aloud, and self-reports "I read it!" or "Still tricky")
    An optional `intro` object shows a teaching screen before practice starts:
    {topic, lines:[...], words:[...] (optional tap-to-hear list), trick:{title,points:[...]} (optional)}
+
+   A single-activity lesson/game plays 25 rounds by default; a multi-stage lesson's
+   stage `rounds` should sum to 25. Every pool above is sized to have at least as
+   many unique items as the rounds drawn from it, since the game controller now
+   draws WITHOUT replacement (no repeated questions in one sitting) — see README.md.
    See README.md for the full guide on adding a lesson.
    ========================================================= */
 let LESSONS=[
@@ -155,8 +244,8 @@ let LESSONS=[
       }
     },
     stages:[
-      {engine:'review', pool:BLENDS, rounds:6, label:'Find the Blend Word'},
-      {engine:'wordchange', pool:WORDCHANGE, rounds:4, label:'Change the Word'}
+      {engine:'review', pool:BLENDS, rounds:15, label:'Find the Blend Word'},
+      {engine:'wordchange', pool:WORDCHANGE, rounds:10, label:'Change the Word'}
     ]
   },
   {id:'L4', n:4, title:'The Four Sounds of Y', emoji:'🔤', cls:'c-magic',
@@ -177,8 +266,8 @@ let LESSONS=[
       }
     },
     stages:[
-      {engine:'review', pool:YWORDS, rounds:6, label:'Find the Y Word'},
-      {engine:'wordchange', pool:{instruction:'Change the word! Swap the beginning sound to make a new -y word.', pairs:YCHANGE}, rounds:4, label:'Change the Word'}
+      {engine:'review', pool:YWORDS, rounds:15, label:'Find the Y Word'},
+      {engine:'wordchange', pool:{instruction:'Change the word! Swap the beginning sound to make a new -y word.', pairs:YCHANGE}, rounds:10, label:'Change the Word'}
     ]
   },
   {id:'L6', n:6, title:'Splitting Words into Syllables', emoji:'✂️', cls:'c-syll',
@@ -199,8 +288,8 @@ let LESSONS=[
       }
     },
     stages:[
-      {engine:'syllablesplit', pool:SPLIT, rounds:6, label:'Split the Word'},
-      {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESSWORDS}, rounds:4, label:'Guess What I\'m Saying'}
+      {engine:'syllablesplit', pool:SPLIT, rounds:15, label:'Split the Word'},
+      {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESSWORDS}, rounds:10, label:'Guess What I\'m Saying'}
     ]
   },
   {id:'L8', n:8, title:'Three-Letter Blends', emoji:'🔗', cls:'c-sound',

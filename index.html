@@ -30,7 +30,7 @@
   </header>
 
   <section class="screen active" id="home">
-    <p class="menu-intro">Hi, I'm Pip the pond frog! 🐸 Pick a game, tap the blue speaker to hear a word, and grab a star for every one you get right. Ready? Let's hop to it!</p>
+    <p class="menu-intro" id="menuIntro">Hi! I'm Pip the pond frog! 🐸 Pick a game, tap the blue speaker to hear a word, and grab a star for every one you get right. Ready? Let's hop to it!</p>
     <button class="grownups-btn" onclick="togglePanel(true)">⚙️ Grown-ups: settings &amp; extra games</button>
     <div class="section-label">Your Lessons</div>
     <div class="grid" id="lessonGrid"></div>
@@ -40,19 +40,26 @@
   </section>
 
   <section class="screen" id="lessonIntro">
-    <div class="topbar"><button class="back" onclick="Game.home()">← Menu</button></div>
+    <div class="topbar"><button class="back" onclick="Game.home()">← Menu</button><span class="mini-mascot" id="pipIntroTopbar"></span></div>
     <div id="introArea"></div>
   </section>
 
   <section class="screen" id="game">
-    <div class="topbar"><button class="back" onclick="Game.home()">← Menu</button><div class="progress-pill" id="progress">1 / 10</div></div>
+    <div class="topbar">
+      <button class="back" onclick="Game.home()">← Menu</button>
+      <div class="topbar-right"><span class="mini-mascot" id="pipGameTopbar"></span><div class="progress-pill" id="progress">1 / 25</div></div>
+    </div>
     <div id="gameArea"></div>
   </section>
 </div>
 
 <div class="overlay" id="overlay">
   <div class="panel">
-    <h2>Settings &amp; extra games</h2>
+    <h2><span class="mini-mascot" id="pipPanel"></span> Settings &amp; extra games</h2>
+    <div class="name-field">
+      <label for="nameInput">Reader's name</label>
+      <input type="text" id="nameInput" maxlength="24" placeholder="e.g. Mckenna" onchange="updateName()" />
+    </div>
     <p class="note">Turn on a general practice game when your reader reaches that skill. The lesson hints are a rough guide — follow your Teacher's Manual, not these.</p>
     <div id="skillList"></div>
     <button class="panel-close" onclick="togglePanel(false)">Done</button>

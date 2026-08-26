@@ -47,10 +47,13 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .screen.active{display:block;animation:fade .3s ease;}
 @keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
 .back{background:rgba(255,255,255,.14);color:var(--paper);border:2px solid rgba(255,255,255,.2);border-radius:999px;
   padding:8px 16px;font-family:'Baloo 2';font-weight:700;font-size:15px;cursor:pointer;}
 .back:hover{background:rgba(255,255,255,.24);}
 .progress-pill{color:#cfe0f0;font-family:'Baloo 2';font-weight:700;font-size:15px;}
+.mini-mascot{display:inline-flex;line-height:0;}
+.mini-mascot svg{transition:transform .25s;}
 .card{background:var(--paper);border-radius:26px;padding:30px 24px 34px;box-shadow:0 18px 40px rgba(0,0,0,.3);}
 .prompt{text-align:center;margin-bottom:24px;}
 .prompt .instruction{font-family:'Lexend';font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px;}
@@ -106,6 +109,8 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .bucket .ex{font-size:12px;color:#8a97a9;margin-top:3px;}
 .bucket.correct{background:#d6f7ec;border-style:solid;border-color:var(--mint);}
 .bucket.wrong{background:#ffe0e0;border-style:solid;border-color:var(--coral);}
+.done-mascot{margin-bottom:8px;}
+.done-mascot svg{margin:0 auto;}
 .done-card{text-align:center;}
 .done-card h2{font-family:'Baloo 2';font-weight:800;font-size:30px;color:var(--deep);margin-bottom:6px;}
 .done-card p{color:#5a6b82;margin-bottom:20px;}
@@ -115,6 +120,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .rs.earned{animation:starpop .4s ease both;}
 @keyframes starpop{0%{transform:scale(0) rotate(-40deg);opacity:0;}70%{transform:scale(1.25) rotate(6deg);}100%{transform:scale(1) rotate(0);opacity:1;}}
 .score-caption{font-family:'Baloo 2';font-weight:700;color:#8a97a9;font-size:18px;margin-bottom:14px;}
+.intro-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;}
 .lesson-badge{display:inline-block;background:var(--sun);color:#4a3200;font-family:'Baloo 2';font-weight:800;
   font-size:13px;letter-spacing:.5px;text-transform:uppercase;padding:5px 14px;border-radius:999px;margin-bottom:12px;}
 .intro-topic{font-family:'Baloo 2';font-weight:800;color:var(--deep);font-size:clamp(22px,5vw,28px);margin-bottom:14px;}
@@ -133,7 +139,13 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .overlay{position:fixed;inset:0;background:rgba(10,20,38,.72);display:none;align-items:center;justify-content:center;padding:20px;z-index:50;}
 .overlay.active{display:flex;}
 .panel{background:var(--paper);border-radius:24px;max-width:520px;width:100%;padding:26px 24px;max-height:88dvh;overflow-y:auto;}
-.panel h2{font-family:'Baloo 2';font-weight:800;color:var(--deep);font-size:24px;margin-bottom:6px;}
+.panel h2{font-family:'Baloo 2';font-weight:800;color:var(--deep);font-size:24px;margin-bottom:6px;
+  display:flex;align-items:center;gap:8px;}
+.name-field{margin-bottom:18px;}
+.name-field label{display:block;font-family:'Baloo 2';font-weight:700;color:var(--deep);font-size:14px;margin-bottom:6px;}
+.name-field input{width:100%;border:2px solid #e6ddc6;border-radius:12px;padding:10px 14px;
+  font-family:'Lexend';font-size:15px;color:var(--deep);background:#fff;}
+.name-field input:focus{outline:none;border-color:var(--sky);}
 .panel .note{color:#5a6b82;font-size:14px;line-height:1.5;margin-bottom:18px;}
 .skillrow{display:flex;align-items:center;gap:12px;padding:12px 4px;border-bottom:1px solid #eee4cc;}
 .skillrow:last-of-type{border-bottom:none;}
