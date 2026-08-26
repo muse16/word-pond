@@ -32,7 +32,13 @@ function speak(t){
     if(!cachedVoice)cachedVoice=pickVoice();
     if(cachedVoice)u.voice=cachedVoice;
     u.onstart=()=>{speechFailStreak=0;};
-    u.onerror=()=>{speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();};
+    u.onerror=(e)=>{
+      // A new speak() call cancels whatever utterance was already playing — that
+      // fires 'canceled'/'interrupted' on the OLD utterance as completely normal
+      // behavior, not a real failure. Only count genuine errors toward the streak.
+      if(e&&(e.error==='canceled'||e.error==='interrupted'))return;
+      speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();
+    };
     setTimeout(()=>{try{speechSynthesis.speak(u);}catch(e){speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();}},0);
   }catch(e){speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();}
 }
