@@ -65,6 +65,19 @@
       <label for="nameInput">Reader's name</label>
       <input type="text" id="nameInput" maxlength="24" placeholder="e.g. Mckenna" onchange="updateName()" />
     </div>
+    <div class="name-field">
+      <label for="voiceSelect">Reading voice</label>
+      <select id="voiceSelect" onchange="updateVoice()"></select>
+    </div>
+    <div class="name-field">
+      <label for="rateSelect">Reading speed</label>
+      <select id="rateSelect" onchange="updateRate()">
+        <option value="0.65">Slower</option>
+        <option value="0.82">Normal</option>
+        <option value="1">Faster</option>
+        <option value="1.2">Fastest</option>
+      </select>
+    </div>
     <p class="note">Turn on a general practice game when your reader reaches that skill. The lesson hints are a rough guide — follow your Teacher's Manual, not these.</p>
     <div id="skillList"></div>
     <button class="panel-close" onclick="togglePanel(false)">Done</button>

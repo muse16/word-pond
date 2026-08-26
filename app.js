@@ -8,15 +8,27 @@
    handles that so later delayed calls, like Magic E's, still work). */
 const SPEECH_OK='speechSynthesis' in window;
 let cachedVoice=null,speechFailStreak=0,speechWarned=false;
+let speechRate=0.82,speechVoiceURI='';
+function englishVoices(){return SPEECH_OK?speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith('en')):[];}
 function pickVoice(){
   if(!SPEECH_OK)return null;
-  const voices=speechSynthesis.getVoices();
-  if(!voices.length)return null;
-  return voices.find(v=>v.lang&&v.lang.startsWith('en'))||voices[0];
+  const pool=englishVoices().length?englishVoices():speechSynthesis.getVoices();
+  if(!pool.length)return null;
+  if(speechVoiceURI){const match=pool.find(v=>v.voiceURI===speechVoiceURI);if(match)return match;}
+  return pool[0];
 }
+function renderVoiceOptions(){
+  const sel=$('voiceSelect');if(!sel)return;
+  const voices=englishVoices();
+  if(!voices.length){sel.innerHTML='<option value="">Default voice</option>';return;}
+  sel.innerHTML=voices.map(v=>`<option value="${v.voiceURI}">${v.name}${v.lang?' ('+v.lang+')':''}</option>`).join('');
+  if(speechVoiceURI&&voices.some(v=>v.voiceURI===speechVoiceURI))sel.value=speechVoiceURI;
+}
+function updateVoice(){speechVoiceURI=$('voiceSelect').value;cachedVoice=pickVoice();persist();}
+function updateRate(){speechRate=parseFloat($('rateSelect').value)||0.82;persist();}
 if(SPEECH_OK){
   cachedVoice=pickVoice();
-  speechSynthesis.onvoiceschanged=()=>{cachedVoice=pickVoice();};
+  speechSynthesis.onvoiceschanged=()=>{cachedVoice=pickVoice();renderVoiceOptions();};
   const unlock=()=>{try{const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);}catch(e){}
     document.removeEventListener('click',unlock);document.removeEventListener('touchstart',unlock);};
   document.addEventListener('click',unlock,{once:true});
@@ -28,7 +40,7 @@ function speak(t){
     if(speechSynthesis.paused)speechSynthesis.resume();
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(t);
-    u.rate=0.82;u.pitch=1.05;u.lang='en-US';
+    u.rate=speechRate;u.pitch=1.05;u.lang='en-US';
     if(!cachedVoice)cachedVoice=pickVoice();
     if(cachedVoice)u.voice=cachedVoice;
     u.onstart=()=>{speechFailStreak=0;};
@@ -69,11 +81,13 @@ let stars=0; const enabled={}; GAMES.forEach(g=>enabled[g.id]=g.on);
 let masteredWords=new Set();
 let childName='Mckenna';
 let storageOK=true;
-function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords],name:childName}));}catch(e){storageOK=false;}}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords],name:childName,rate:speechRate,voiceURI:speechVoiceURI}));}catch(e){storageOK=false;}}
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s){if(typeof s.stars==='number')stars=s.stars;
   if(s.enabled)GAMES.forEach(g=>{if(g.id in s.enabled)enabled[g.id]=s.enabled[g.id];});
   if(Array.isArray(s.mastered))masteredWords=new Set(s.mastered);
-  if(typeof s.name==='string'&&s.name.trim())childName=s.name.trim();}}catch(e){storageOK=false;}}
+  if(typeof s.name==='string'&&s.name.trim())childName=s.name.trim();
+  if(typeof s.rate==='number')speechRate=s.rate;
+  if(typeof s.voiceURI==='string')speechVoiceURI=s.voiceURI;}}catch(e){storageOK=false;}}
 function resetProgress(){stars=0;GAMES.forEach(g=>enabled[g.id]=g.on);masteredWords=new Set();persist();$('starCount').textContent=0;renderMenu();renderSkillList();}
 function updateName(){const v=$('nameInput').value.trim();childName=v||'Reader';persist();renderGreeting();}
 
@@ -105,7 +119,8 @@ function renderSkillList(){
       onchange="enabled['${g.id}']=this.checked;persist();renderMenu();"><span class="slider"></span></label></div>`).join('')
     + (storageOK?'':'<p class="note" style="margin-top:14px;color:#b06">Note: this browser is blocking saved progress (common when a file is opened directly from a folder). Stars will still work during a session but won’t be remembered after closing.</p>');
 }
-function togglePanel(show){$('overlay').classList.toggle('active',show);if(show){$('nameInput').value=childName;renderSkillList();}}
+function togglePanel(show){$('overlay').classList.toggle('active',show);
+  if(show){$('nameInput').value=childName;renderVoiceOptions();$('rateSelect').value=String(speechRate);renderSkillList();}}
 
 function renderIntro(deck){
   const intro=deck.intro;
