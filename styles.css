@@ -15,6 +15,11 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .stars{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.18);
   padding:8px 14px;border-radius:999px;color:var(--paper);font-family:'Baloo 2';font-weight:700;font-size:18px;backdrop-filter:blur(4px);}
 .stars svg{width:22px;height:22px;}
+.speech-warning{display:none;align-items:center;gap:10px;background:rgba(255,201,60,.14);border:2px solid rgba(255,201,60,.4);
+  color:#ffe9b3;font-size:13px;line-height:1.5;border-radius:16px;padding:12px 14px;margin-bottom:16px;}
+.speech-warning.show{display:flex;}
+.speech-warning button{background:none;border:none;color:#ffe9b3;font-size:15px;cursor:pointer;flex-shrink:0;opacity:.8;}
+.speech-warning button:hover{opacity:1;}
 .menu-intro{color:#d9e6f2;font-size:15px;margin-bottom:16px;line-height:1.5;}
 .grownups-btn{background:rgba(255,255,255,.1);color:#cfe0f0;border:2px solid rgba(255,255,255,.16);border-radius:999px;
   padding:8px 16px;font-family:'Lexend';font-weight:600;font-size:13px;cursor:pointer;margin-bottom:22px;}

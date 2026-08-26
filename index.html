@@ -29,6 +29,11 @@
     </div>
   </header>
 
+  <div class="speech-warning" id="speechWarning">
+    🔇 This device doesn't seem to have a voice available for reading words aloud. The games still work without sound — try checking your browser or system's text-to-speech / accessibility settings, or a different browser.
+    <button onclick="$('speechWarning').classList.remove('show')" aria-label="dismiss">✕</button>
+  </div>
+
   <section class="screen active" id="home">
     <p class="menu-intro" id="menuIntro">Hi! I'm Pip the pond frog! 🐸 Pick a game, tap the blue speaker to hear a word, and grab a star for every one you get right. Ready? Let's hop to it!</p>
     <button class="grownups-btn" onclick="togglePanel(true)">⚙️ Grown-ups: settings &amp; extra games</button>

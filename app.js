@@ -1,6 +1,45 @@
-/* ---------------- Speech ---------------- */
-function speak(t){try{if(!('speechSynthesis' in window))return;speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(t);u.rate=0.82;u.pitch=1.05;u.lang='en-US';speechSynthesis.speak(u);}catch(e){}}
+/* ---------------- Speech ----------------
+   Speech Synthesis has a few well-known real-device failure modes this guards
+   against: the voice list loads asynchronously (a speak() call before it's
+   ready can go silent on some browsers), Chrome can leave the engine "paused"
+   after idle periods, calling cancel()+speak() in the same tick can drop the
+   new utterance, and iOS/Safari requires the very first speak() to happen
+   inside a direct user gesture (a silent "unlock" utterance on first tap
+   handles that so later delayed calls, like Magic E's, still work). */
+const SPEECH_OK='speechSynthesis' in window;
+let cachedVoice=null,speechFailStreak=0,speechWarned=false;
+function pickVoice(){
+  if(!SPEECH_OK)return null;
+  const voices=speechSynthesis.getVoices();
+  if(!voices.length)return null;
+  return voices.find(v=>v.lang&&v.lang.startsWith('en'))||voices[0];
+}
+if(SPEECH_OK){
+  cachedVoice=pickVoice();
+  speechSynthesis.onvoiceschanged=()=>{cachedVoice=pickVoice();};
+  const unlock=()=>{try{const u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);}catch(e){}
+    document.removeEventListener('click',unlock);document.removeEventListener('touchstart',unlock);};
+  document.addEventListener('click',unlock,{once:true});
+  document.addEventListener('touchstart',unlock,{once:true});
+}
+function speak(t){
+  if(!SPEECH_OK){showSpeechWarning();return;}
+  try{
+    if(speechSynthesis.paused)speechSynthesis.resume();
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(t);
+    u.rate=0.82;u.pitch=1.05;u.lang='en-US';
+    if(!cachedVoice)cachedVoice=pickVoice();
+    if(cachedVoice)u.voice=cachedVoice;
+    u.onstart=()=>{speechFailStreak=0;};
+    u.onerror=()=>{speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();};
+    setTimeout(()=>{try{speechSynthesis.speak(u);}catch(e){speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();}},0);
+  }catch(e){speechFailStreak++;if(speechFailStreak>=3)showSpeechWarning();}
+}
+function showSpeechWarning(){
+  if(speechWarned)return;speechWarned=true;
+  const el=$('speechWarning');if(el)el.classList.add('show');
+}
 const SPKR='<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4zM14 3.2v2.1a7 7 0 010 13.4v2.1a9 9 0 000-17.6z"/></svg>';
 const rand=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
