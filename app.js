@@ -182,17 +182,22 @@ const ENGINES={
       <div class="feedback" id="fb"></div></div>`;speak(target);},
 
   phonogram(item,pool){const all=pool.all||pool;const {phon,word:correctWord}=item;
+    // Browser TTS can't reliably pronounce a bare 2-letter grapheme like "nk" or "ck" —
+    // it reads out letter names or guesses wrong. Speak a real word from the same
+    // phonogram family instead; the chip still shows the letters for the print match.
+    const sameFamily=all[phon].filter(w=>w!==correctWord);
+    const spokenWord=sameFamily.length?rand(sameFamily):correctWord;
     const otherKeys=shuffle(Object.keys(all).filter(p=>p!==phon));
     const seen=new Set([correctWord]);const others=[];
     for(const k of otherKeys){const w=rand(all[k]);if(!seen.has(w)){seen.add(w);others.push(w);if(others.length>=3)break;}}
     const opts=shuffle([correctWord,...others]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
-      <div class="instruction">Which word has this sound?</div>
+      <div class="instruction">Listen to the word — which one has the same sound?</div>
       <div class="big-target"><span class="phon-chip">${phon}</span>
-        <button class="speak-btn" onclick="speak('${phon}')" aria-label="hear sound">${SPKR}</button></div></div>
+        <button class="speak-btn" onclick="speak('${spokenWord}')" aria-label="hear word">${SPKR}</button></div></div>
       <div class="options">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${correctWord}','${phon} sound')">${w}
         <button class="speak-btn" style="width:34px;height:34px;box-shadow:0 3px 0 #2f7ed8;margin-top:8px" onclick="event.stopPropagation();speak('${w}')" aria-label="hear ${w}">${SPKR}</button></button>`).join('')}</div>
-      <div class="feedback" id="fb"></div></div>`;speak(phon);},
+      <div class="feedback" id="fb"></div></div>`;speak(spokenWord);},
 
   ed(item){const {sound,word}=item;
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
