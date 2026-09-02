@@ -241,14 +241,19 @@ const ENGINES={
 
   wordchange(pair,poolMeta){const arr=Array.isArray(poolMeta)?poolMeta:poolMeta.pairs;
     const instruction=Array.isArray(poolMeta)?'Change the word! Add a blend to make a new word.':(poolMeta.instruction||'Change the word!');
+    // The child SEES pair.from ("ro...bot"), but browser TTS reads a bare syllable with
+    // letter-to-sound rules and gets the vowel wrong -- "ro" comes out short, which is the
+    // opposite of the long vowel an open syllable teaches. When a pair supplies `say`, speak
+    // that respelling instead (see GUESS10 in lessons.js); display is untouched either way.
+    const spoken=pair.say||pair.from;
     const distract=pickUnique(arr.filter(p=>p.to!==pair.to),p=>p.to,pair.to,2).map(p=>p.to);
     const opts=shuffle([pair.to,...distract]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">${instruction}</div>
       <div class="big-target word-target">${pair.from}
-        <button class="speak-btn" onclick="speak('${pair.from}')" aria-label="hear ${pair.from}">${SPKR}</button></div></div>
+        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${pair.from}">${SPKR}</button></div></div>
       <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
-      <div class="feedback" id="fb"></div></div>`;speak(pair.from);},
+      <div class="feedback" id="fb"></div></div>`;speak(spoken);},
 
   syllablesplit(item){const w=item.w;const correct=item.parts.join('-');
     const splitIdx=item.parts[0].length;const candidates=[];
@@ -332,10 +337,13 @@ const Game={
 
   pickWord(btn,word,correct,label){
     if(this.locked)return;this.locked=true;
-    if(word===correct){btn.classList.add('correct');this.win();this.good('✓ Yes! '+correct);speak(correct);}
+    // The syllable-split game's answer is hyphenated for print ("pic-nic"); read it back as
+    // the whole word so the child hears the real pronunciation, not two chopped pieces.
+    const answer=correct.replace(/-/g,'');
+    if(word===correct){btn.classList.add('correct');this.win();this.good('✓ Yes! '+correct);speak(answer);}
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===correct)o.classList.add('correct');});
-      this.bad(label?('That’s not the '+label):('This one says '+correct));speak(correct);}
+      this.bad(label?('That’s not the '+label):('This one says '+correct));speak(answer);}
     this.showNext();
   },
   pickBucket(el,picked,correct){

@@ -55,11 +55,33 @@ Fields:
 | `contraction`  | array of `{two, one}` pairs                                                  | `CONTRACTIONS` |
 | `syllabletype` | array of `{w, t}` where `t` is `'open'` or `'closed'`                        | `OPENCLOSED` |
 | `syllable`     | array of `{w, n}` where `n` is syllable count                                | `SYLLABLES` |
-| `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text | `WORDCHANGE`, `YCHANGE`, `GUESSWORDS` |
+| `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text. Any pair may add `say` — a spoken respelling used instead of `from` for the audio (see "Making the voice say it right") | `WORDCHANGE`, `YCHANGE`, `GUESSWORDS`, `GUESS10` |
 | `syllablesplit`| array of `{w, parts:[p1,p2]}` — student picks the correctly hyphenated split (e.g. "pic-nic"); wrong-split distractors are generated automatically | `SPLIT` |
 | `sightword`    | flat word array — no multiple choice; the word is shown, the child reads it aloud, and self-reports "I read it!" or "Still tricky" (only the former earns a star) | `SIGHTWORDS` |
 
 `sightword` is special-cased in the game controller (by the `sight` game id) to track long-term mastery rather than just session rounds: every word marked "I read it!" is saved to `localStorage` permanently, the header shows "N / total left to master" instead of a round counter, and mastered words drop out of the rotation so practice always focuses on what's left. Marking the last word triggers a full-screen congratulations achievement. "Reset stars & progress" in settings clears mastery too.
+
+### Making the voice say it right
+
+Browser text-to-speech pronounces whole dictionary words well and bare fragments badly. Given a
+piece of a word it falls back to letter-to-sound rules, which routinely produces the wrong vowel:
+`"ro"` from *robot* comes out with a short o ("rah"), the exact opposite of the long o an open
+syllable is supposed to teach. Two rules follow from this:
+
+1. **Never pass a fragment to `speak()`.** This bit the `phonogram` engine (it used to speak the
+   bare grapheme "nk"; it now speaks a real word from that sound family) and then the
+   `wordchange` engine's syllable pairs.
+2. **When the display text isn't a word, give it a `say`.** A `wordchange` pair shows `from` and
+   speaks `say` when present, so the child reads `ro...bot` but hears syllables respelled as words
+   the voice already knows: `say:'roe, bot'`. The comma adds a short pause between the parts.
+
+Respellings that work for open (long-vowel) syllables: `oh` `ee` `bee` `zee` `pree` `dee` (long e/o),
+`roe` `moe` `bro` `fro` `pro` `toe` (long o), `sigh` `pie` `tie` `fie` `eye` (long i),
+`bay` `pay` (long a), `stew` `hue` `mew` (long u). Also respell a closed syllable whose spelling
+is itself a word with a different sound — `gin` reads as the drink, so *begin* uses `ghin`.
+
+There is no way to unit-test pronunciation; it has to be listened to. After adding `say` values,
+play the lesson once with sound on and check each new word.
 
 ### Multi-stage lessons and the intro screen
 

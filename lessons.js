@@ -141,12 +141,12 @@ const GUESSWORDS=[
   {from:'dol...lar', to:'dollar'},
   {from:'lad...der', to:'ladder'},
   {from:'ham...mer', to:'hammer'},
-  {from:'hap...py', to:'happy'},
-  {from:'rock...et', to:'rocket'},
+  {from:'hap...py', to:'happy', say:'hap, pee'},
+  {from:'rock...et', to:'rocket', say:'rock, ett'},
   {from:'blan...ket', to:'blanket'},
   {from:'trum...pet', to:'trumpet'},
-  {from:'pock...et', to:'pocket'},
-  {from:'jack...et', to:'jacket'}];
+  {from:'pock...et', to:'pocket', say:'pock, ett'},
+  {from:'jack...et', to:'jacket', say:'jack, ett'}];
 const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','splash','scram',
   'scratch','splat','sprout','strap','scream','screen','script','scrape','splinter','splotch',
   'sprint','spray','sprig','stream','stroll','strand'];
@@ -173,32 +173,39 @@ const SIGHTWORDS=[
   'were','when',
   // extra harder/irregular words commonly taught in first grade
   'been','does','should','would'];
+/* Two-syllable open+closed words for Lesson 10's "Guess What I'm Saying".
+   `from` is what the CHILD SEES; `say` is what the BROWSER SPEAKS.
+   They differ on purpose: browser text-to-speech runs letter-to-sound rules over a
+   bare syllable, so an open syllable like "ro" comes out with a SHORT o ("rah-bot")
+   -- the exact opposite of the long vowel this lesson teaches. Respelling each open
+   syllable as a real word the voice already knows ("roe", "bee", "sigh", "stew")
+   forces the correct long sound. The comma gives a short pause between the parts. */
 const GUESS10=[
-  {from:'o...pen', to:'open'},
-  {from:'pre...tend', to:'pretend'},
-  {from:'be...gan', to:'began'},
-  {from:'e...ven', to:'even'},
-  {from:'be...gin', to:'begin'},
-  {from:'be...long', to:'belong'},
-  {from:'si...lent', to:'silent'},
-  {from:'bro...ken', to:'broken'},
-  {from:'stu...dent', to:'student'},
-  {from:'ze...ro', to:'zero'},
-  {from:'ro...bot', to:'robot'},
-  {from:'fro...zen', to:'frozen'},
-  {from:'de...mand', to:'demand'},
-  {from:'ba...sic', to:'basic'},
-  {from:'i...tem', to:'item'},
-  {from:'pi...lot', to:'pilot'},
-  {from:'mo...ment', to:'moment'},
-  {from:'pro...gram', to:'program'},
-  {from:'hu...mid', to:'humid'},
-  {from:'mu...sic', to:'music'},
-  {from:'ti...ger', to:'tiger'},
-  {from:'pa...per', to:'paper'},
-  {from:'mo...tel', to:'motel'},
-  {from:'to...tal', to:'total'},
-  {from:'fi...nal', to:'final'}];
+  {from:'o...pen',    to:'open',    say:'oh, pen'},
+  {from:'pre...tend', to:'pretend', say:'pree, tend'},
+  {from:'be...gan',   to:'began',   say:'bee, gan'},
+  {from:'e...ven',    to:'even',    say:'ee, ven'},
+  {from:'be...gin',   to:'begin',   say:'bee, ghin'},
+  {from:'be...long',  to:'belong',  say:'bee, long'},
+  {from:'si...lent',  to:'silent',  say:'sigh, lent'},
+  {from:'bro...ken',  to:'broken',  say:'bro, ken'},
+  {from:'stu...dent', to:'student', say:'stew, dent'},
+  {from:'ze...ro',    to:'zero',    say:'zee, roe'},
+  {from:'ro...bot',   to:'robot',   say:'roe, bot'},
+  {from:'fro...zen',  to:'frozen',  say:'fro, zen'},
+  {from:'de...mand',  to:'demand',  say:'dee, mand'},
+  {from:'ba...sic',   to:'basic',   say:'bay, sick'},
+  {from:'i...tem',    to:'item',    say:'eye, tem'},
+  {from:'pi...lot',   to:'pilot',   say:'pie, lot'},
+  {from:'mo...ment',  to:'moment',  say:'moe, ment'},
+  {from:'pro...gram', to:'program', say:'pro, gram'},
+  {from:'hu...mid',   to:'humid',   say:'hue, mid'},
+  {from:'mu...sic',   to:'music',   say:'mew, sick'},
+  {from:'ti...ger',   to:'tiger',   say:'tie, gurr'},
+  {from:'pa...per',   to:'paper',   say:'pay, per'},
+  {from:'mo...tel',   to:'motel',   say:'moe, tell'},
+  {from:'to...tal',   to:'total',   say:'toe, tal'},
+  {from:'fi...nal',   to:'final',   say:'fie, nal'}];
 
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
