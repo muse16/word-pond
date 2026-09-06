@@ -230,6 +230,22 @@ const ENGINES={
       <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o.one.replace(/'/g,"\\'")}','${c.one.replace(/'/g,"\\'")}')">${o.one}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(c.two);},
 
+  /* Lesson 15 adds the third syllable type, so unlike `syllabletype` (open vs
+     closed) this one is a three-way sort and the options carry their definitions
+     as captions -- the child is learning the tags themselves, not just applying
+     one they already know. Pool words are all single-syllable so the tag describes
+     the whole word, the way the manual's syllable tags do. */
+  syllabletag(item){
+    const TAGS=[['closed','Closed','ends in a consonant \u00b7 short vowel'],
+                ['open','Open','ends in a vowel \u00b7 long vowel'],
+                ['name','Name Game','ends in Silent E \u00b7 vowel says its name']];
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Which syllable tag does this word get?</div>
+      <div class="big-target word-target">${item.w}
+        <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="options three">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(item.w);},
+
   syllabletype(item){
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Open or closed? Say the word and listen to the vowel.</div>
@@ -251,7 +267,8 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">${instruction}</div>
       <div class="big-target word-target">${pair.from}
-        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${pair.from}">${SPKR}</button></div></div>
+        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${pair.from}">${SPKR}</button></div>
+      ${pair.hint?`<div class="instruction" style="font-size:15px;margin-top:2px">${pair.hint}</div>`:''}</div>
       <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(spoken);},
 
@@ -401,6 +418,19 @@ const Game={
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim().toLowerCase()===correct)o.classList.add('correct');});
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
+    this.showNext();
+  },
+  pickTag(btn,picked,correct,word){
+    if(this.locked)return;this.locked=true;
+    const LABEL={closed:'Closed',open:'Open',name:'Name Game'};
+    const WHY={
+      closed:word+' ends in a consonant, so the vowel stays short.',
+      open:word+' ends in a vowel, so the vowel says its long sound.',
+      name:word+' ends in Silent E, so the vowel says its name.'};
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('\u2713 '+LABEL[correct]+'! '+WHY[correct]);}
+    else{btn.classList.add('wrong');
+      document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===LABEL[correct])o.classList.add('correct');});
+      this.bad(LABEL[correct]+' \u2014 '+WHY[correct]);}
     this.showNext();
   },
   /* Minimal-pair feedback names the reason, not just the answer: the whole point

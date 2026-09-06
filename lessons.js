@@ -322,6 +322,77 @@ const SILENTE14=[
    cards are used at the table. */
 const CARDS14=['ate','bite','made','tape','time','hate','note','hope','dime','ride'];
 
+/* Lesson 15 -- Name Game Syllables, the third syllable type.
+   Closed ends in a consonant (short vowel), open ends in a vowel (long vowel),
+   and Name Game is vowel + one consonant + Silent E, where the vowel says its
+   name. `t` is 'closed', 'open' or 'name'. Every word is single-syllable so the
+   tag applies to the whole word, the way the manual's tags do.
+   Deliberately left out: -are and -ore words like care and more. Silent E is
+   doing its job there, but r bends the vowel enough that the manual itself flags
+   them as regional and suggests teaching them as Leap Words. They still appear in
+   the Word Card reading stage, where they are only read, never tagged. */
+const SYLTAG15=[
+  {w:'cake',  t:'name'},
+  {w:'bike',  t:'name'},
+  {w:'game',  t:'name'},
+  {w:'home',  t:'name'},
+  {w:'five',  t:'name'},
+  {w:'size',  t:'name'},
+  {w:'date',  t:'name'},
+  {w:'like',  t:'name'},
+  {w:'make',  t:'name'},
+  {w:'hide',  t:'name'},
+  {w:'joke',  t:'name'},
+  {w:'step',  t:'closed'},
+  {w:'glop',  t:'closed'},
+  {w:'pop',   t:'closed'},
+  {w:'thump', t:'closed'},
+  {w:'gift',  t:'closed'},
+  {w:'smash', t:'closed'},
+  {w:'lick',  t:'closed'},
+  {w:'went',  t:'closed'},
+  {w:'milk',  t:'closed'},
+  {w:'hand',  t:'closed'},
+  {w:'we',    t:'open'},
+  {w:'go',    t:'open'},
+  {w:'me',    t:'open'},
+  {w:'she',   t:'open'},
+  {w:'hi',    t:'open'},
+  {w:'so',    t:'open'},
+  {w:'no',    t:'open'},
+  {w:'my',    t:'open'},
+  {w:'be',    t:'open'}];
+/* Word Flippers -- the manual's activity where the ending stays put and you flip
+   a new letter onto the front. Every pair carries a `hint` naming the exact letter
+   to swap, because without it the question has several right answers: "change the
+   first sound of cake" is satisfied by bake, lake, take and make alike, and the
+   other options shown are drawn from this same list. The hint makes exactly one
+   option correct. */
+const WORDFLIP15=[
+  {from:'cake', to:'bake', hint:'flip the c to a b'},
+  {from:'bake', to:'lake', hint:'flip the b to an l'},
+  {from:'lake', to:'take', hint:'flip the l to a t'},
+  {from:'take', to:'make', hint:'flip the t to an m'},
+  {from:'bike', to:'hike', hint:'flip the b to an h'},
+  {from:'hike', to:'like', hint:'flip the h to an l'},
+  {from:'like', to:'bike', hint:'flip the l to a b'},
+  {from:'nine', to:'line', hint:'flip the n to an l'},
+  {from:'line', to:'vine', hint:'flip the l to a v'},
+  {from:'vine', to:'mine', hint:'flip the v to an m'},
+  {from:'hide', to:'side', hint:'flip the h to an s'},
+  {from:'side', to:'wide', hint:'flip the s to a w'},
+  {from:'wide', to:'ride', hint:'flip the w to an r'},
+  {from:'cave', to:'wave', hint:'flip the c to a w'},
+  {from:'wave', to:'save', hint:'flip the w to an s'},
+  {from:'save', to:'gave', hint:'flip the s to a g'},
+  {from:'rope', to:'hope', hint:'flip the r to an h'},
+  {from:'hole', to:'pole', hint:'flip the h to a p'},
+  {from:'gate', to:'date', hint:'flip the g to a d'},
+  {from:'date', to:'late', hint:'flip the d to an l'}];
+/* Word Cards 71-79 -- Lesson 15's Practice Reading Words, exactly as listed.
+   Nine cards against a nine-round stage, so every card comes up once per sitting. */
+const CARDS15=['home','five','size','date','here','more','name','like','make'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -493,6 +564,32 @@ let LESSONS=[
       {engine:'magic', pool:MAGIC14, rounds:8, label:'Add Silent E'},
       {engine:'minimalpair', pool:SILENTE14, rounds:7, label:'Kit or Kite?'},
       {engine:'sightword', pool:CARDS14, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L15', n:15, title:'Name Game Syllables', emoji:'🎉', cls:'c-syll',
+    intro:{
+      topic:'The third syllable type: Name Game',
+      lines:[
+        'You already know two syllable types. A <b>closed</b> syllable ends in a consonant and its vowel stays short, like <b>step</b>. An <b>open</b> syllable ends in a vowel and its vowel goes long, like <b>we</b>.',
+        'Here is the third one. When Silent E gets in line at the end, after a consonant, you have a <b>Name Game</b> syllable. Silent E asks the vowel what its name is, and the vowel answers by saying it: <b>cake</b>, <b>bike</b>, <b>game</b>.',
+        'Picture the vowels at a party wearing a party hat. The hat is how you spot this type — a vowel, then one consonant, then Silent E on the end.',
+        'Making the vowel long is Silent E\'s most common job, but it is not the only one. You will meet its other jobs in later lessons.'
+      ],
+      words:['cake','bike','game'],
+      review:['home','five','size','date','here','more','name','like','make'],
+      trick:{
+        title:'The three tags',
+        points:[
+          {w:'Closed', note:'ends in a consonant — step, gift, lick'},
+          {w:'Open', note:'ends in a vowel — we, go, she'},
+          {w:'Name Game', note:'vowel, one consonant, then Silent E — cake, bike, five'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'syllabletag', pool:SYLTAG15, rounds:10, label:'Tag the Syllable'},
+      {engine:'wordchange', pool:{instruction:'Word Flipper! Read the hint, then pick the new word.', pairs:WORDFLIP15}, rounds:6, label:'Word Flippers'},
+      {engine:'sightword', pool:CARDS15, rounds:9, label:'Read the Word Cards'}
     ]
   }
 ];
