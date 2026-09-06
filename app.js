@@ -266,6 +266,25 @@ const ENGINES={
       <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(w);},
 
+  /* Lesson 12: the child sees ONE word and the two splits that are genuinely in
+     contention -- consonant forward (open first syllable, long vowel) versus
+     consonant slid back (closed first syllable, short vowel). Unlike
+     `syllablesplit`, the distractor is never invented from an arbitrary letter
+     position: the wrong option here is the exact mistake the rule exists to
+     correct, so a right answer means the child applied the rule rather than
+     ruled out nonsense. Only the real word is ever spoken -- hearing whether the
+     first vowel is long or short IS the clue that decides which split works. */
+  vcvsplit(item){
+    const correct=item.correct==='open'?item.open:item.closed;
+    const other=item.correct==='open'?item.closed:item.open;
+    const opts=shuffle([item.open,item.closed]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Listen to the word. Which split makes a real word?</div>
+      <div class="big-target word-target">${item.w}
+        <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickSplit(this,'${o}','${correct}','${other}','${item.correct}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(item.w);},
+
   sightword(w){
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
       <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the word out loud! Stuck? Tap the speaker.</div>
@@ -369,6 +388,19 @@ const Game={
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim().toLowerCase()===correct)o.classList.add('correct');});
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
+    this.showNext();
+  },
+  pickSplit(btn,picked,correct,other,type){
+    if(this.locked)return;this.locked=true;
+    const first=correct.split('-')[0];
+    const why=type==='open'
+      ? first+' ends in a vowel, so it’s open — long vowel sound.'
+      : first+' ends in a consonant, so it’s closed — short vowel sound.';
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('✓ Yes! '+correct+' — '+why);}
+    else{btn.classList.add('wrong');
+      document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===correct)o.classList.add('correct');});
+      this.bad('It’s '+correct+'. '+other+' isn’t a real word.');}
+    speak(correct.replace(/-/g,''));
     this.showNext();
   },
   sightAnswer(knewIt,word){

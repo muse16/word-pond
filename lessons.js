@@ -207,6 +207,72 @@ const GUESS10=[
   {from:'to...tal',   to:'total',   say:'toe, tal'},
   {from:'fi...nal',   to:'final',   say:'fie, nal'}];
 
+/* Lesson 12 -- Syllable Division Rule for One Consonant Tile, Part 2.
+   Each entry holds BOTH plausible splits of a VCV word. `open` sends the single
+   consonant (or consonant team) to the SECOND syllable, which leaves the first
+   syllable open and its vowel long. `closed` slides that consonant back to the
+   FIRST syllable, closing it and making the vowel short. `correct` names the one
+   that is a real word -- which is exactly the test the child is taught to apply:
+   split it, say it, and ask whether it sounds like a real word.
+   Consonant teams (ck, nk) are never split, so for those words the `open` option
+   is the precise mistake this lesson warns about ("po-cket"). The pool mixes both
+   answers on purpose -- 18 closed, 13 open -- so neither becomes the safe guess. */
+const VCV12=[
+  {w:'robin',   open:'ro-bin',    closed:'rob-in',   correct:'closed'},
+  {w:'cabin',   open:'ca-bin',    closed:'cab-in',   correct:'closed'},
+  {w:'habit',   open:'ha-bit',    closed:'hab-it',   correct:'closed'},
+  {w:'finish',  open:'fi-nish',   closed:'fin-ish',  correct:'closed'},
+  {w:'limit',   open:'li-mit',    closed:'lim-it',   correct:'closed'},
+  {w:'planet',  open:'pla-net',   closed:'plan-et',  correct:'closed'},
+  {w:'visit',   open:'vi-sit',    closed:'vis-it',   correct:'closed'},
+  {w:'seven',   open:'se-ven',    closed:'sev-en',   correct:'closed'},
+  {w:'radish',  open:'ra-dish',   closed:'rad-ish',  correct:'closed'},
+  {w:'lemon',   open:'le-mon',    closed:'lem-on',   correct:'closed'},
+  {w:'panic',   open:'pa-nic',    closed:'pan-ic',   correct:'closed'},
+  {w:'denim',   open:'de-nim',    closed:'den-im',   correct:'closed'},
+  {w:'timid',   open:'ti-mid',    closed:'tim-id',   correct:'closed'},
+  {w:'pocket',  open:'po-cket',   closed:'pock-et',  correct:'closed'},
+  {w:'rocket',  open:'ro-cket',   closed:'rock-et',  correct:'closed'},
+  {w:'jacket',  open:'ja-cket',   closed:'jack-et',  correct:'closed'},
+  {w:'cricket', open:'cri-cket',  closed:'crick-et', correct:'closed'},
+  {w:'blanket', open:'bla-nket',  closed:'blank-et', correct:'closed'},
+  {w:'frozen',  open:'fro-zen',   closed:'froz-en',  correct:'open'},
+  {w:'spoken',  open:'spo-ken',   closed:'spok-en',  correct:'open'},
+  {w:'begin',   open:'be-gin',    closed:'beg-in',   correct:'open'},
+  {w:'silent',  open:'si-lent',   closed:'sil-ent',  correct:'open'},
+  {w:'hotel',   open:'ho-tel',    closed:'hot-el',   correct:'open'},
+  {w:'relax',   open:'re-lax',    closed:'rel-ax',   correct:'open'},
+  {w:'humid',   open:'hu-mid',    closed:'hum-id',   correct:'open'},
+  {w:'hero',    open:'he-ro',     closed:'her-o',    correct:'open'},
+  {w:'minus',   open:'mi-nus',    closed:'min-us',   correct:'open'},
+  {w:'open',    open:'o-pen',     closed:'op-en',    correct:'open'},
+  {w:'pilot',   open:'pi-lot',    closed:'pil-ot',   correct:'open'},
+  {w:'music',   open:'mu-sic',    closed:'mus-ic',   correct:'open'},
+  {w:'robot',   open:'ro-bot',    closed:'rob-ot',   correct:'open'}];
+/* Lesson 12's blending stage. Same display/speech split as GUESS10: `from` is what
+   the child SEES, `say` is what the browser SPEAKS. Browser text-to-speech runs
+   letter-to-sound rules over a bare syllable, so open syllables are respelled as
+   words the voice already knows ("hoe", "hee", "my", "hue") to force the long
+   vowel, and an unstressed -et ending is doubled to "ett" so it isn't read as a
+   long e. The comma gives a short pause between the two parts. */
+const GUESS12=[
+  {from:'rob...in',   to:'robin',   say:'rob, in'},
+  {from:'cab...in',   to:'cabin',   say:'cab, in'},
+  {from:'hab...it',   to:'habit',   say:'hab, it'},
+  {from:'fin...ish',  to:'finish',  say:'fin, ish'},
+  {from:'plan...et',  to:'planet',  say:'plan, ett'},
+  {from:'vis...it',   to:'visit',   say:'viz, it'},
+  {from:'sev...en',   to:'seven',   say:'sev, en'},
+  {from:'rad...ish',  to:'radish',  say:'rad, ish'},
+  {from:'pock...et',  to:'pocket',  say:'pock, ett'},
+  {from:'jack...et',  to:'jacket',  say:'jack, ett'},
+  {from:'crick...et', to:'cricket', say:'krick, ett'},
+  {from:'blank...et', to:'blanket', say:'blank, ett'},
+  {from:'ho...tel',   to:'hotel',   say:'hoe, tell'},
+  {from:'he...ro',    to:'hero',    say:'hee, roe'},
+  {from:'mi...nus',   to:'minus',   say:'my, nuss'},
+  {from:'hu...mid',   to:'humid',   say:'hue, mid'}];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -328,6 +394,31 @@ let LESSONS=[
       review:['open','pretend','began','even','begin','belong','silent','broken','student','zero']
     },
     engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESS10}
+  },
+  {id:'L12', n:12, title:'One Consonant Between Two Vowels', emoji:'↔️', cls:'c-phon',
+    intro:{
+      topic:'Which syllable does the consonant join?',
+      lines:[
+        'Last lesson you learned that when one consonant sits between two vowels, it usually hops over to the second syllable. That leaves the first syllable <b>open</b>, so its vowel says its long name: <b>fro-zen</b>, <b>si-lent</b>, <b>ho-tel</b>.',
+        'But that doesn\'t always work. Try it on <b>robin</b>. Splitting it ro-bin gives the o its long sound, and /roe-bin/ isn\'t a real word. So slide the consonant back one spot: <b>rob-in</b>. Now the first syllable is <b>closed</b> and the o says its short sound.',
+        'The test is always the same. Split it the first way, say it out loud, and ask yourself whether that is a real word. If it isn\'t, slide the consonant back and say it again.',
+        'One more thing to watch for: consonant teams like <b>ck</b> and <b>nk</b> stick together on one tile and never get split apart. That\'s why <b>pocket</b> divides as pock-et, never po-cket.'
+      ],
+      words:['frozen','robin','pocket'],
+      review:['cricket','planet','pocket','habit','seven','finish','jacket','visit','radish','blanket'],
+      trick:{
+        title:'Just remember',
+        points:[
+          {w:'Try open first', note:'the consonant usually goes with the second syllable — fro-zen, ho-tel'},
+          {w:'Not a real word?', note:'slide the consonant back so the first syllable is closed — rob-in, hab-it'},
+          {w:'Teams stay together', note:'ck and nk never split apart — pock-et, blank-et'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'vcvsplit', pool:VCV12, rounds:15, label:'Split the Word'},
+      {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESS12}, rounds:10, label:'Guess What I\'m Saying'}
+    ]
   }
 ];
 

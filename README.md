@@ -57,6 +57,7 @@ Fields:
 | `syllable`     | array of `{w, n}` where `n` is syllable count                                | `SYLLABLES` |
 | `wordchange`   | array of `{from, to}` pairs, OR `{instruction, pairs:[{from,to}]}` to customize the prompt text. Any pair may add `say` — a spoken respelling used instead of `from` for the audio (see "Making the voice say it right") | `WORDCHANGE`, `YCHANGE`, `GUESSWORDS`, `GUESS10` |
 | `syllablesplit`| array of `{w, parts:[p1,p2]}` — student picks the correctly hyphenated split (e.g. "pic-nic"); wrong-split distractors are generated automatically | `SPLIT` |
+| `vcvsplit`     | array of `{w, open, closed, correct}` — one VCV word with BOTH plausible splits: `open` sends the middle consonant to the second syllable (open first syllable, long vowel), `closed` slides it back to the first (closed first syllable, short vowel), and `correct` is `'open'` or `'closed'`. Exactly two options are shown, so the wrong answer is always the specific mistake the rule corrects rather than an invented split | `VCV12` |
 | `sightword`    | flat word array — no multiple choice; the word is shown, the child reads it aloud, and self-reports "I read it!" or "Still tricky" (only the former earns a star) | `SIGHTWORDS` |
 
 `sightword` is special-cased in the game controller (by the `sight` game id) to track long-term mastery rather than just session rounds: every word marked "I read it!" is saved to `localStorage` permanently, the header shows "N / total left to master" instead of a round counter, and mastered words drop out of the rotation so practice always focuses on what's left. Marking the last word triggers a full-screen congratulations achievement. "Reset stars & progress" in settings clears mastery too.
@@ -79,6 +80,8 @@ Respellings that work for open (long-vowel) syllables: `oh` `ee` `bee` `zee` `pr
 `roe` `moe` `bro` `fro` `pro` `toe` (long o), `sigh` `pie` `tie` `fie` `eye` (long i),
 `bay` `pay` (long a), `stew` `hue` `mew` (long u). Also respell a closed syllable whose spelling
 is itself a word with a different sound — `gin` reads as the drink, so *begin* uses `ghin`.
+
+Closed syllables need care too when they are unstressed: a bare `et` is read as a long e, so *pocket* uses `say:'pock, ett'`. And a syllable whose spelling implies a soft c needs a k — *cricket* uses `krick`.
 
 There is no way to unit-test pronunciation; it has to be listened to. After adding `say` values,
 play the lesson once with sound on and check each new word.
