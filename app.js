@@ -274,7 +274,8 @@ const ENGINES={
     const ALL=[['closed','Closed','ends in a consonant \u00b7 short vowel'],
                ['open','Open','ends in a vowel \u00b7 long vowel'],
                ['name','Name Game','ends in Silent E \u00b7 vowel says its name'],
-               ['team','Vowel Team','letters teaming up for one vowel sound']];
+               ['team','Vowel Team','letters teaming up for one vowel sound'],
+               ['bossy','Bossy R','a vowel with an r bossing it around']];
     // Buttons come from the types the pool actually uses, so Lesson 15 still asks a
     // three-way question and Lesson 25, which adds Vowel Team, asks a four-way one.
     const present=new Set((pool||[]).map(x=>x.t));
@@ -283,7 +284,7 @@ const ENGINES={
       <div class="instruction">Which syllable tag does this word get?</div>
       <div class="big-target word-target">${item.w}
         <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="options${TAGS.length===3?' three':''}">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
+      <div class="options${TAGS.length===3?' three':TAGS.length===5?' five':''}">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   /* The mirror of `contraction`, and the other half of the manual's rubber-band
@@ -497,12 +498,13 @@ const Game={
   },
   pickTag(btn,picked,correct,word){
     if(this.locked)return;this.locked=true;
-    const LABEL={closed:'Closed',open:'Open',name:'Name Game',team:'Vowel Team'};
+    const LABEL={closed:'Closed',open:'Open',name:'Name Game',team:'Vowel Team',bossy:'Bossy R'};
     const WHY={
       closed:word+' ends in a consonant, so the vowel stays short.',
       open:word+' ends in a vowel, so the vowel says its long sound.',
       name:word+' ends in Silent E, so the vowel says its name.',
-      team:word+' gets its vowel sound from a team of letters working as one.'};
+      team:word+' gets its vowel sound from a team of letters working as one.',
+      bossy:word+' has an r right after the vowel, and the r decides how it sounds.'};
     if(picked===correct){btn.classList.add('correct');this.win();this.good('\u2713 '+LABEL[correct]+'! '+WHY[correct]);}
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===LABEL[correct])o.classList.add('correct');});

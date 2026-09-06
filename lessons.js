@@ -771,6 +771,74 @@ const CARDS29=['told','wild','both','child','hold','most','find','behind',"don't
    (wh saying /h/, and o saying /oo/), and move has an o that also says /oo/. */
 const LEAP29=['who','move'];
 
+/* Lesson 31 -- phonogram er and the Bossy R syllable, the fifth type.
+   Dividing the multisyllable er words the manual works through with tiles: paper,
+   better, river, ruler, winter. The er counts as the vowel of its syllable, which
+   is the whole point -- a child who does not see that will try to split inside it.
+   `syllablesplit` generates the wrong options from other letter positions, and for
+   these words that lands on exactly the plausible mistakes (pap-er, be-tter). */
+const ERSPLIT31=[
+  {w:'paper',   parts:['pa','per']},
+  {w:'better',  parts:['bet','ter']},
+  {w:'river',   parts:['riv','er']},
+  {w:'ruler',   parts:['ru','ler']},
+  {w:'winter',  parts:['win','ter']},
+  {w:'never',   parts:['nev','er']},
+  {w:'summer',  parts:['sum','mer']},
+  {w:'under',   parts:['un','der']},
+  {w:'after',   parts:['af','ter']},
+  {w:'over',    parts:['o','ver']},
+  {w:'tender',  parts:['ten','der']},
+  {w:'perfect', parts:['per','fect']},
+  {w:'sister',  parts:['sis','ter']},
+  {w:'ladder',  parts:['lad','der']},
+  {w:'finger',  parts:['fin','ger']},
+  {w:'number',  parts:['num','ber']}];
+/* Party Monsters Make Dinner -- now a FIVE-way sort. Bossy R joins the closed,
+   open and Name Game tags from Lesson 15 and the Vowel Team tag from Lesson 25.
+   The `syllabletag` engine derives its buttons from the types present in the
+   pool, so each of those lessons still asks its own narrower question.
+   A Bossy R syllable is a vowel with an r right behind it: the r takes charge and
+   changes what the vowel says, which is why herd and fern are NOT closed
+   syllables with short vowels. All five types are represented so none is a safe
+   guess, and every word is single-syllable so the tag describes the whole word. */
+const SYLTAG31=[
+  {w:'her',    t:'bossy'},
+  {w:'fern',   t:'bossy'},
+  {w:'herd',   t:'bossy'},
+  {w:'stern',  t:'bossy'},
+  {w:'verb',   t:'bossy'},
+  {w:'term',   t:'bossy'},
+  {w:'perch',  t:'bossy'},
+  {w:'step',   t:'closed'},
+  {w:'munch',  t:'closed'},
+  {w:'gift',   t:'closed'},
+  {w:'lick',   t:'closed'},
+  {w:'milk',   t:'closed'},
+  {w:'plop',   t:'closed'},
+  {w:'go',     t:'open'},
+  {w:'she',    t:'open'},
+  {w:'we',     t:'open'},
+  {w:'hi',     t:'open'},
+  {w:'me',     t:'open'},
+  {w:'cake',   t:'name'},
+  {w:'bike',   t:'name'},
+  {w:'five',   t:'name'},
+  {w:'home',   t:'name'},
+  {w:'rule',   t:'name'},
+  {w:'seek',   t:'team'},
+  {w:'teeth',  t:'team'},
+  {w:'green',  t:'team'},
+  {w:'sheep',  t:'team'},
+  {w:'feet',   t:'team'}];
+/* Word Cards 152-158 -- the Practice Reading Words, exactly as listed. Seven
+   cards against a seven-round stage, so each comes up once per sitting. */
+const CARDS31=['never','paper','after','summer','winter','over','under'];
+/* Word Cards 159-161 -- three Leap Words that all rhyme. done and none take the
+   fourth sound of o, and one says /wu/, which is odder still. In each, Silent E
+   is there only to keep the word from being read as Don, non or on. */
+const LEAP31=['done','none','one'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1155,6 +1223,33 @@ let LESSONS=[
       {engine:'sortsound', pool:GOLDSORT29, rounds:7, label:'Long or Short?'},
       {engine:'sightword', pool:CARDS29, rounds:10, label:'Read the Word Cards'},
       {engine:'sightword', pool:LEAP29, rounds:2, label:'Leap Words'}
+    ]
+  },
+  {id:'L31', n:31, title:'ER and Bossy R', emoji:'👑', cls:'c-magic',
+    intro:{
+      topic:'The fifth syllable type',
+      lines:[
+        'Two letters, one sound, again. <b>e</b> and <b>r</b> together say <b>/er/</b>, the sound you hear at the end of <b>her</b>. You will meet it everywhere, because thousands of longer words finish with it \u2014 <b>winter</b>, <b>paper</b>, <b>summer</b>, <b>under</b>.',
+        'Here is what makes it special. When a vowel has an <b>r</b> right behind it, the r takes charge and changes what that vowel says. We pretend the r is <b>bossy</b>, telling the vowel what to do.',
+        'That gives you the fifth syllable type: <b>Bossy R</b>. It is why <b>herd</b> and <b>fern</b> are not Closed syllables. Do not go looking for a short vowel in them, because the r has already decided.',
+        'And when you split a longer word, the er counts as the vowel of its syllable. <b>paper</b> has one consonant sitting between its two vowels, so it divides <b>pa-per</b> \u2014 Open first, then Bossy R.'
+      ],
+      words:['her','fern','paper'],
+      review:['never','paper','after','summer','winter','over','under'],
+      trick:{
+        title:'Three Leap Words that rhyme',
+        points:[
+          {w:'done', note:'the o says /u/ like in up, and the silent e is there only so it is not read as Don'},
+          {w:'none', note:'rhymes with done, same o \u2014 the e keeps it from looking like non'},
+          {w:'one', note:'the o says /wu/, which is unusual \u2014 stop and remember this one'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'syllablesplit', pool:ERSPLIT31, rounds:8, label:'Split the Word'},
+      {engine:'syllabletag', pool:SYLTAG31, rounds:7, label:'Form Teams'},
+      {engine:'sightword', pool:CARDS31, rounds:7, label:'Read the Word Cards'},
+      {engine:'sightword', pool:LEAP31, rounds:3, label:'Leap Words'}
     ]
   }
 ];
