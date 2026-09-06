@@ -255,6 +255,19 @@ const ENGINES={
       <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(spoken);},
 
+  /* Lesson 14's "Kit or Kite?" -- a pure listening contrast where the two options
+     differ only by whether Silent E is doing its job. Nothing is shown before the
+     answer, so the child has to hear the vowel length rather than read it. Both
+     members of the pair are real words, which is why the pool alternates which
+     one is the target: otherwise "pick the one with the e" would always win. */
+  minimalpair(item){
+    const opts=shuffle([item.w,item.other]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Listen closely. Which word did you hear?</div>
+      <button class="speak-btn" style="width:74px;height:74px;box-shadow:0 7px 0 #2f7ed8" onclick="speak('${item.w}')" aria-label="hear word">${SPKR}</button></div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickHeard(this,'${o}','${item.w}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(item.w);},
+
   syllablesplit(item){const w=item.w;const correct=item.parts.join('-');
     const splitIdx=item.parts[0].length;const candidates=[];
     for(let i=2;i<=w.length-2;i++){const opt=w.slice(0,i)+'-'+w.slice(i);if(i!==splitIdx&&!candidates.includes(opt))candidates.push(opt);}
@@ -390,6 +403,19 @@ const Game={
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
     this.showNext();
   },
+  /* Minimal-pair feedback names the reason, not just the answer: the whole point
+     of the round is that the vowel length is the ONLY difference between the two
+     words, so the child should walk away knowing which one they heard and why. */
+  pickHeard(btn,picked,correct){
+    if(this.locked)return;this.locked=true;
+    const why=correct.endsWith('e')?'Silent E made that vowel long.':'No Silent E, so that vowel stayed short.';
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('✓ Yes! You heard '+correct+'. '+why);}
+    else{btn.classList.add('wrong');
+      document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===correct)o.classList.add('correct');});
+      this.bad('You heard '+correct+'. '+why);}
+    speak(correct);
+    this.showNext();
+  },
   pickSplit(btn,picked,correct,other,type){
     if(this.locked)return;this.locked=true;
     const first=correct.split('-')[0];
@@ -406,7 +432,7 @@ const Game={
   sightAnswer(knewIt,word){
     if(this.locked)return;this.locked=true;
     if(knewIt){
-      if(word&&!masteredWords.has(word)){masteredWords.add(word);persist();}
+      if(word&&this.deck&&this.deck.id==='sight'&&!masteredWords.has(word)){masteredWords.add(word);persist();}
       this.win();this.good('⭐ Way to read it!');
     }else{this.bad('Nice try — that one will come back around.');}
     this.showNext();

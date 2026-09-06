@@ -273,6 +273,55 @@ const GUESS12=[
   {from:'mi...nus',   to:'minus',   say:'my, nuss'},
   {from:'hu...mid',   to:'humid',   say:'hue, mid'}];
 
+/* Lesson 14 -- The First Job of Silent E (the vowel-consonant-e pattern).
+   Silent E reaches back over one consonant and makes the vowel before it say its
+   long sound; take the e away and the vowel snaps back to short. Same {short,
+   long, v, mean} shape as MAGIC, where `v` is the index of the vowel inside the
+   SHORT word. Every long form here is either one of the lesson's ten Word Cards
+   or one of the words the manual builds with tiles (kite, robe, pine, cane). */
+const MAGIC14=[
+  {short:'at',  long:'ate',  v:0, mean:'look at me → I ate my lunch'},
+  {short:'bit', long:'bite', v:1, mean:'a little bit → take a bite'},
+  {short:'mad', long:'made', v:1, mean:'feeling mad → I made a robot'},
+  {short:'tap', long:'tape', v:1, mean:'to tap → sticky tape'},
+  {short:'hat', long:'hate', v:1, mean:'a sun hat → I hate mud'},
+  {short:'not', long:'note', v:1, mean:'not now → a note you write'},
+  {short:'hop', long:'hope', v:1, mean:'to hop → to wish for'},
+  {short:'dim', long:'dime', v:1, mean:'a dim light → a shiny dime'},
+  {short:'rid', long:'ride', v:1, mean:'get rid of it → take a ride'},
+  {short:'kit', long:'kite', v:1, mean:'a set of tools → a kite in the sky'},
+  {short:'rob', long:'robe', v:1, mean:'to rob → a cozy robe'},
+  {short:'pin', long:'pine', v:1, mean:'a sharp pin → a pine tree'},
+  {short:'can', long:'cane', v:1, mean:'a tin can → a walking cane'},
+  {short:'cap', long:'cape', v:1, mean:'a baseball cap → a cape you wear'}];
+/* "Kit or Kite?" -- the manual's listening activity, where the only difference
+   between the two choices is whether Silent E is doing its job. `w` is the word
+   spoken and the right answer; `other` is its minimal pair. Targets deliberately
+   alternate between the long and the short member so "pick the one with the e"
+   is never a winning strategy. */
+const SILENTE14=[
+  {w:'ate',  other:'at'},
+  {w:'bite', other:'bit'},
+  {w:'made', other:'mad'},
+  {w:'tape', other:'tap'},
+  {w:'hate', other:'hat'},
+  {w:'note', other:'not'},
+  {w:'hope', other:'hop'},
+  {w:'dime', other:'dim'},
+  {w:'ride', other:'rid'},
+  {w:'kite', other:'kit'},
+  {w:'tap',  other:'tape'},
+  {w:'hop',  other:'hope'},
+  {w:'kit',  other:'kite'},
+  {w:'rob',  other:'robe'},
+  {w:'pin',  other:'pine'},
+  {w:'can',  other:'cane'}];
+/* Word Cards 61-70 -- the lesson's Practice Reading Words, exactly as listed in
+   the manual. The stage that uses this runs 10 rounds against a 10-word pool, so
+   every card comes up once per sitting. Read aloud and self-reported, the way the
+   cards are used at the table. */
+const CARDS14=['ate','bite','made','tape','time','hate','note','hope','dime','ride'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -418,6 +467,32 @@ let LESSONS=[
     stages:[
       {engine:'vcvsplit', pool:VCV12, rounds:15, label:'Split the Word'},
       {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESS12}, rounds:10, label:'Guess What I\'m Saying'}
+    ]
+  },
+  {id:'L14', n:14, title:'The First Job of Silent E', emoji:'🪄', cls:'c-magic',
+    intro:{
+      topic:'Silent E and its very first job',
+      lines:[
+        'When <b>e</b> lands at the end of a word it almost always stays quiet, so we call it <b>Silent E</b>. It makes no sound of its own — but it still changes the word.',
+        'Its first and most common job is to reach back over one consonant and make the vowel in front of it say its <b>long</b> sound, which is just the vowel\'s name. <b>mad</b> turns into <b>made</b>. <b>hop</b> turns into <b>hope</b>. <b>kit</b> turns into <b>kite</b>.',
+        'Take the e away again and the vowel snaps right back to its short sound. That is the whole trick: <b>tap</b> and <b>tape</b> are the same letters until Silent E shows up.',
+        'So when you meet a word that ends in e, look at the vowel earlier in the word and expect it to be long. Sound it out that way first — d-i-m-e says dime.'
+      ],
+      words:['made','hope','kite'],
+      review:['ate','bite','made','tape','time','hate','note','hope','dime','ride'],
+      trick:{
+        title:'Just remember',
+        points:[
+          {w:'Silent E is quiet', note:'it never makes a sound of its own'},
+          {w:'It works backwards', note:'it reaches back over one consonant to the vowel — hop, hope'},
+          {w:'Long means its name', note:'the vowel says its alphabet name — made, note, dime'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'magic', pool:MAGIC14, rounds:8, label:'Add Silent E'},
+      {engine:'minimalpair', pool:SILENTE14, rounds:7, label:'Kit or Kite?'},
+      {engine:'sightword', pool:CARDS14, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
