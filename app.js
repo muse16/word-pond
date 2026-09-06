@@ -153,6 +153,8 @@ function resolveOrder(engine,pool,count){
     items=[];focus.forEach(phon=>all[phon].forEach(word=>items.push({phon,word})));
   }else if(engine==='ed'){
     items=[];Object.keys(pool).forEach(sound=>pool[sound].forEach(word=>items.push({sound,word})));
+  }else if(engine==='sortsound'){
+    items=pool.items.slice();
   }else if(engine==='wordchange'){
     items=(Array.isArray(pool)?pool:pool.pairs).slice();
   }else{
@@ -235,6 +237,22 @@ const ENGINES={
      as captions -- the child is learning the tags themselves, not just applying
      one they already know. Pool words are all single-syllable so the tag describes
      the whole word, the way the manual's syllable tags do. */
+  /* Lesson 17 asks the same question twice about different letters -- "which of
+     these two sounds do you hear?" -- so this engine is generic over its buckets
+     rather than hard-coded like `ed`. The word is always spoken, because both
+     halves of the lesson are ear questions: nothing in the spelling of cute vs
+     rule, or nose vs goose, tells you the answer. Feedback carries the bucket's
+     own explanation so a wrong guess teaches the distinction, not just the label. */
+  sortsound(item,pool){
+    const right=pool.buckets.find(b=>b.key===item.k);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">${pool.instruction}</div>
+      <div class="big-target word-target">${item.w}
+        <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="bucket-row two">${pool.buckets.map(b=>`<div class="bucket" onclick="Game.pickSound(this,'${b.key}','${item.k}','${item.w}',\`${right.why}\`)">
+        <div class="snd">${b.key}</div><div class="ex">like <b>${b.ex}</b></div></div>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(item.w);},
+
   syllabletag(item){
     const TAGS=[['closed','Closed','ends in a consonant \u00b7 short vowel'],
                 ['open','Open','ends in a vowel \u00b7 long vowel'],
@@ -418,6 +436,15 @@ const Game={
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim().toLowerCase()===correct)o.classList.add('correct');});
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
+    this.showNext();
+  },
+  pickSound(btn,picked,correct,word,why){
+    if(this.locked)return;this.locked=true;
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('\u2713 '+correct+'! '+word+' \u2014 '+why+'.');}
+    else{btn.classList.add('wrong');
+      document.querySelectorAll('.bucket').forEach(b=>{if(b.querySelector('.snd').textContent===correct)b.classList.add('correct');});
+      this.bad(word+' is '+correct+' \u2014 '+why+'.');}
+    speak(word);
     this.showNext();
   },
   pickTag(btn,picked,correct,word){

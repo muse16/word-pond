@@ -393,6 +393,74 @@ const WORDFLIP15=[
    Nine cards against a nine-round stage, so every card comes up once per sitting. */
 const CARDS15=['home','five','size','date','here','more','name','like','make'];
 
+/* Lesson 17 -- Long U's two sounds, and S between two vowels.
+   Both halves are the same shape of question ("which sound do you hear?"), so
+   both use the `sortsound` engine: {instruction, buckets:[{key,ex,why}], items:
+   [{w,k}]} where `k` is the key of the bucket the word belongs in.
+   Long u splits into the sound that carries a /y/ (cute, music -- say the letter
+   u's name) and the one that has dropped it (rule, June). There is no rule for
+   which words do which; the manual's position is that a reader saying the word
+   aloud lands on the right one, so this is deliberately an ear question. */
+const LONGU17={
+  instruction:'Listen to the u. Which long u sound do you hear?',
+  buckets:[
+    {key:'/\u016b/', ex:'cute', why:'you can hear a little y in it, like the letter u\u2019s name'},
+    {key:'/oo/',     ex:'rule', why:'no y sound at all \u2014 the u just says oo'}],
+  items:[
+    {w:'cute',    k:'/\u016b/'},
+    {w:'use',     k:'/\u016b/'},
+    {w:'music',   k:'/\u016b/'},
+    {w:'mule',    k:'/\u016b/'},
+    {w:'unit',    k:'/\u016b/'},
+    {w:'fume',    k:'/\u016b/'},
+    {w:'uniform', k:'/\u016b/'},
+    {w:'cube',    k:'/\u016b/'},
+    {w:'huge',    k:'/\u016b/'},
+    {w:'human',   k:'/\u016b/'},
+    {w:'rule',    k:'/oo/'},
+    {w:'rude',    k:'/oo/'},
+    {w:'tuna',    k:'/oo/'},
+    {w:'dude',    k:'/oo/'},
+    {w:'June',    k:'/oo/'},
+    {w:'tulip',   k:'/oo/'},
+    {w:'flute',   k:'/oo/'},
+    {w:'super',   k:'/oo/'},
+    {w:'prune',   k:'/oo/'},
+    {w:'ruby',    k:'/oo/'}]};
+/* S between two vowels usually buzzes as /z/, but not always -- the manual names
+   goose, case and house as words that keep the hiss. Weighted 12 to 6 toward /z/
+   so the lesson's "most of the time" stays true while the exception still shows
+   up often enough to be learned rather than guessed past.
+   Every word here has s sitting between two vowels; words where s does anything
+   else are not the question this stage is asking. */
+const SSOUND17={
+  instruction:'The s is between two vowels. Which sound is it making?',
+  buckets:[
+    {key:'/z/', ex:'nose',  why:'s between two vowels usually buzzes'},
+    {key:'/s/', ex:'goose', why:'this one keeps the hissing s even between two vowels'}],
+  items:[
+    {w:'nose',  k:'/z/'},
+    {w:'rose',  k:'/z/'},
+    {w:'hose',  k:'/z/'},
+    {w:'those', k:'/z/'},
+    {w:'these', k:'/z/'},
+    {w:'wise',  k:'/z/'},
+    {w:'rise',  k:'/z/'},
+    {w:'chose', k:'/z/'},
+    {w:'use',   k:'/z/'},
+    {w:'music', k:'/z/'},
+    {w:'pose',  k:'/z/'},
+    {w:'muse',  k:'/z/'},
+    {w:'goose', k:'/s/'},
+    {w:'case',  k:'/s/'},
+    {w:'house', k:'/s/'},
+    {w:'mouse', k:'/s/'},
+    {w:'loose', k:'/s/'},
+    {w:'chase', k:'/s/'}]};
+/* Word Cards 80-89 -- Lesson 17's Practice Reading Words, exactly as listed.
+   Ten cards against a ten-round stage, so every card comes up once per sitting. */
+const CARDS17=['use','cute','wise','rule','these','those','nose','June','chose','hose'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -590,6 +658,32 @@ let LESSONS=[
       {engine:'syllabletag', pool:SYLTAG15, rounds:10, label:'Tag the Syllable'},
       {engine:'wordchange', pool:{instruction:'Word Flipper! Read the hint, then pick the new word.', pairs:WORDFLIP15}, rounds:6, label:'Word Flippers'},
       {engine:'sightword', pool:CARDS15, rounds:9, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L17', n:17, title:'Long U and the Sound of S', emoji:'🎧', cls:'c-sound',
+    intro:{
+      topic:'Two sounds for u, and a job for s',
+      lines:[
+        'Say the name of the letter <b>u</b> out loud. Hear how it starts with a little <b>y</b>? That is one of long u\'s two sounds, and it is the one in <b>cute</b>, <b>use</b> and <b>music</b>.',
+        'In plenty of other words that little y gets dropped and long u just says <b>oo</b>. Listen to <b>rule</b>, <b>June</b> and <b>tuna</b>. There is no rule for which words do which, so say the word out loud and let your mouth pick.',
+        'Now the second half. You already know s can say /s/ or /z/. Here is the pattern: when s sits <b>between two vowels</b>, it usually says /z/. That is why <b>nose</b> buzzes at the end, and so do <b>these</b> and <b>chose</b>.',
+        'Usually, though, is not always. A few words keep the hissing s in that very same spot — <b>goose</b>, <b>case</b> and <b>house</b>. Your ear is the judge.'
+      ],
+      words:['cute','rule','nose'],
+      review:['use','cute','wise','rule','these','those','nose','June','chose','hose'],
+      trick:{
+        title:'Two things to listen for',
+        points:[
+          {w:'Long u, two ways', note:'one has a little y in it — cute, music. The other does not — rule, June'},
+          {w:'S between two vowels', note:'usually buzzes as /z/ — nose, these, chose'},
+          {w:'But not always', note:'goose, case and house keep the hissing s'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'sortsound', pool:LONGU17, rounds:8, label:'Two Sounds of U'},
+      {engine:'sortsound', pool:SSOUND17, rounds:7, label:'The Sound of S'},
+      {engine:'sightword', pool:CARDS17, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];

@@ -108,6 +108,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .btn-soft:hover{border-color:var(--sky);}
 .btn-soft:active{transform:scale(.97);}
 .bucket-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px;}
+.bucket-row.two{grid-template-columns:repeat(2,1fr);}
 .bucket{border:3px dashed #d9cfae;border-radius:18px;cursor:pointer;padding:18px 8px;text-align:center;background:#fff;transition:transform .1s,background .15s;}
 .bucket:active{transform:scale(.97);}
 .bucket .snd{font-family:'Baloo 2';font-weight:800;font-size:26px;color:var(--deep);}
