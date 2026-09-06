@@ -548,6 +548,67 @@ const HETERO21=[
    100 is close, which is taught in the heteronym stage rather than read here. */
 const CARDS21=['drive','smile','store','frame','brave','trade','state','grape','square'];
 
+/* Lesson 23 -- reading plural Silent E words.
+   The manual's "One plate, two ____" exercise. No hints are needed here, unlike
+   the other wordchange pools: only one option is ever the plural of the word
+   shown, so the distractors drawn from this same list cannot also be right. */
+const PLURAL23=[
+  {from:'plate', to:'plates'},
+  {from:'prize', to:'prizes'},
+  {from:'grape', to:'grapes'},
+  {from:'cake',  to:'cakes'},
+  {from:'joke',  to:'jokes'},
+  {from:'mile',  to:'miles'},
+  {from:'note',  to:'notes'},
+  {from:'hole',  to:'holes'},
+  {from:'game',  to:'games'},
+  {from:'gate',  to:'gates'},
+  {from:'lake',  to:'lakes'},
+  {from:'rope',  to:'ropes'},
+  {from:'vine',  to:'vines'},
+  {from:'kite',  to:'kites'},
+  {from:'nose',  to:'noses'},
+  {from:'rule',  to:'rules'},
+  {from:'store', to:'stores'},
+  {from:'bite',  to:'bites'},
+  {from:'vote',  to:'votes'},
+  {from:'size',  to:'sizes'}];
+/* The insight the manual singles out: suffix s usually adds no syllable at all --
+   ropes, vines and kites are each one clap -- but when the base word already ends
+   in a hissing or buzzing sound, the s has to start a syllable of its own, so
+   noses and prizes are two. Weighted 11 to 7 toward one-syllable so "most of the
+   time" stays true while the exception comes up often enough to be learned.
+   Uses the existing `syllable` engine, whose buttons offer 1, 2 or 3; nothing in
+   this pool is three, which is fine -- no round is ever unanswerable. */
+const CLAP23=[
+  {w:'ropes',  n:1},
+  {w:'vines',  n:1},
+  {w:'kites',  n:1},
+  {w:'cakes',  n:1},
+  {w:'jokes',  n:1},
+  {w:'miles',  n:1},
+  {w:'notes',  n:1},
+  {w:'holes',  n:1},
+  {w:'games',  n:1},
+  {w:'grapes', n:1},
+  {w:'plates', n:1},
+  {w:'noses',  n:2},
+  {w:'prizes', n:2},
+  {w:'roses',  n:2},
+  {w:'hoses',  n:2},
+  {w:'sizes',  n:2},
+  {w:'faces',  n:2},
+  {w:'places', n:2}];
+/* Word Cards 110-117 -- the Practice Reading Words. Eight cards against an
+   eight-round stage, so every card comes up once per sitting.
+   NOTE: gates and lakes are read from the edge of the photo and were partly cut
+   off; the other six are certain. Swap those two if the manual says otherwise. */
+const CARDS23=['miles','cakes','games','gates','notes','holes','jokes','lakes'];
+/* Word Cards 118-119 -- the lesson's two Leap Words, in their own stage as in
+   Lesson 19. pony has a y saying long e at the end of a two-syllable word, and
+   sandwich splits by a rule not taught yet; both are read by sight for now. */
+const LEAP23=['pony','sandwich'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -826,6 +887,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:BLENDE21}, rounds:8, label:'Change the Word'},
       {engine:'heteronym', pool:HETERO21, rounds:8, label:'Same Word, Two Ways'},
       {engine:'sightword', pool:CARDS21, rounds:9, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L23', n:23, title:'Plural Silent E Words', emoji:'🐛', cls:'c-ed',
+    intro:{
+      topic:'More than one, with Silent E still working',
+      lines:[
+        'Adding an <b>s</b> to the end of a word makes it mean more than one. One <b>cake</b>, two <b>cakes</b>. One <b>joke</b>, two <b>jokes</b>.',
+        'Here is the trap to dodge. When you meet <b>cakes</b>, do not read it as <b>cak</b> plus <b>es</b>. Cover the s with your finger and read the base word <b>cake</b>, with Silent E still doing its job. Then uncover the s and say <b>cakes</b>.',
+        'Most of the time that s does not add a syllable at all. <b>ropes</b>, <b>vines</b> and <b>kites</b> are each just one clap.',
+        'But when the base word already ends in a hissing or buzzing sound, the s has to start a whole new syllable. <b>noses</b> is two claps, and so is <b>prizes</b>. Say them slowly and you will hear the extra beat.'
+      ],
+      words:['cakes','ropes','prizes'],
+      review:['miles','cakes','games','gates','notes','holes','jokes','lakes'],
+      trick:{
+        title:'Handy to remember',
+        points:[
+          {w:'Stuck on a plural?', note:'cover the s, read the base word, then put the s back on'},
+          {w:'pony', note:'a Leap Word — the y at the end says long e, which you have not studied yet'},
+          {w:'sandwich', note:'a Leap Word — sand plus wich, split by a rule you have not learned yet'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'You have one of these. Now pick the word that means more than one.', pairs:PLURAL23}, rounds:8, label:'Make It Plural'},
+      {engine:'syllable', pool:CLAP23, rounds:7, label:'Clap the Plural'},
+      {engine:'sightword', pool:CARDS23, rounds:8, label:'Read the Word Cards'},
+      {engine:'sightword', pool:LEAP23, rounds:2, label:'Leap Words'}
     ]
   }
 ];

@@ -436,10 +436,10 @@ const Game={
   },
   pickNumber(btn,picked,correct){
     if(this.locked)return;this.locked=true;
-    if(picked===correct){btn.classList.add('correct');this.win();this.good('✓ '+correct+' claps!');}
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('✓ '+correct+(correct===1?' clap!':' claps!'));}
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(parseInt(o.childNodes[0].textContent)===correct)o.classList.add('correct');});
-      this.bad('It has '+correct+' syllables');}
+      this.bad('It has '+correct+(correct===1?' syllable':' syllables'));}
     this.showNext();
   },
   pickType(btn,picked,correct,word){
