@@ -461,6 +461,42 @@ const SSOUND17={
    Ten cards against a ten-round stage, so every card comes up once per sitting. */
 const CARDS17=['use','cute','wise','rule','these','those','nose','June','chose','hose'];
 
+/* Lesson 19 -- phonogram WH, which says /hw/ at the start of a word.
+   Every distractor in this stage is itself a wh word, so the round is decided by
+   the sounds AFTER the team (whip vs whim vs whiff) rather than by spotting the
+   only wh word on screen. That is the discrimination worth drilling here.
+   Left out on purpose: who, whose and whole. Those are spelled with wh but the
+   w is silent and they say /h/, which is a different phonogram sound this lesson
+   does not teach -- including them would contradict the rule being learned. */
+const WHWORDS19=['when','while','white','whale','which','why','whip','whim','whiff',
+  'wheel','wheat','whisk','whack','whine','whirl','whisper'];
+/* The manual's "Change the Word" chain, where one or two tiles move at a time and
+   the wh team stays put. Hints are required for the same reason as Lesson 15's
+   Word Flippers: the other options are drawn from this very list, so without a
+   hint naming the change, several of them would answer the question equally well. */
+const WHCHANGE19=[
+  {from:'whip',  to:'whim',  hint:'change the p to an m'},
+  {from:'whim',  to:'whip',  hint:'change the m to a p'},
+  {from:'whip',  to:'whiff', hint:'change the p to a double f'},
+  {from:'whiff', to:'whip',  hint:'change the double f to a p'},
+  {from:'while', to:'white', hint:'change the l to a t'},
+  {from:'white', to:'while', hint:'change the t to an l'},
+  {from:'while', to:'whine', hint:'change the l to an n'},
+  {from:'whine', to:'while', hint:'change the n to an l'},
+  {from:'white', to:'whine', hint:'change the t to an n'},
+  {from:'whine', to:'white', hint:'change the n to a t'},
+  {from:'while', to:'whale', hint:'change the i to an a'},
+  {from:'whale', to:'while', hint:'change the a to an i'}];
+/* Word Cards 90-95 -- the Practice Reading Words, exactly as listed. Six cards
+   against a six-round stage, so every card comes up once per sitting. */
+const CARDS19=['when','while','white','whale','which','why'];
+/* Word Cards 96-99 -- the lesson's four Leap Words, kept in their own stage
+   because they are learned by sight rather than sounded out: some and come have
+   an o saying /u/ with a silent e that does NOT stretch it, something is a
+   compound of those, and what has an a saying /u/. Their explanations live in the
+   lesson intro, since the reading stage only shows the word. */
+const LEAP19=['some','something','come','what'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -684,6 +720,34 @@ let LESSONS=[
       {engine:'sortsound', pool:LONGU17, rounds:8, label:'Two Sounds of U'},
       {engine:'sortsound', pool:SSOUND17, rounds:7, label:'The Sound of S'},
       {engine:'sightword', pool:CARDS17, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L19', n:19, title:'Phonogram WH', emoji:'🐋', cls:'c-contr',
+    intro:{
+      topic:'Two letters, one sound',
+      lines:[
+        'When <b>w</b> and <b>h</b> team up at the front of a word they make one sound together, /hw/. You hear it in <b>white</b>, <b>when</b> and <b>whale</b>.',
+        'Here is how to feel it. Hold your hand in front of your mouth and say <b>when</b>. That little puff of breath on your palm is the h doing its part. Now try plain w in <b>wet</b> and notice how much less breath there is.',
+        'In a lot of places the difference between wh and w is very small, so do not worry if the two sound nearly the same when you say them. What matters for reading is seeing the two letters together and knowing they work as one team.',
+        'This lesson also brings four <b>Leap Words</b>. Those are words that break the rules you have learned so far, so instead of sounding them out you leap right over and just know them.'
+      ],
+      words:['white','when','whale'],
+      review:['when','while','white','whale','which','why'],
+      trick:{
+        title:'The four Leap Words',
+        points:[
+          {w:'some', note:'the o says /u/ like in up, and the silent e does not stretch it'},
+          {w:'come', note:'the very same trick as some'},
+          {w:'something', note:'a compound word — some and thing stuck together'},
+          {w:'what', note:'the a says /u/, not the sound you would expect'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'review', pool:WHWORDS19, rounds:9, label:'Find the WH Word'},
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:WHCHANGE19}, rounds:6, label:'Change the Word'},
+      {engine:'sightword', pool:CARDS19, rounds:6, label:'Read the Word Cards'},
+      {engine:'sightword', pool:LEAP19, rounds:4, label:'Leap Words'}
     ]
   }
 ];
