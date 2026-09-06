@@ -705,6 +705,72 @@ const CONTRACT27=[
    against a ten-round stage, so every card comes up once per sitting. */
 const CARDS27=["I'm","can't","aren't","she's","you'll","that's","isn't","let's","what's","it's"];
 
+/* Lesson 29 -- the Find Gold rule: in a one-syllable word, i or o followed by
+   two consonants often says its long sound. Named for find and gold.
+   The manual's Change the Word chains (gold to fold to cold to told, and child
+   to wild to mild), extended across the rule's other families: -ind, -ost, -olt. */
+const GOLDCHANGE29=[
+  {from:'gold',  to:'fold',  hint:'change the g to an f'},
+  {from:'fold',  to:'cold',  hint:'change the f to a c'},
+  {from:'cold',  to:'told',  hint:'change the c to a t'},
+  {from:'told',  to:'hold',  hint:'change the t to an h'},
+  {from:'hold',  to:'bold',  hint:'change the h to a b'},
+  {from:'bold',  to:'gold',  hint:'change the b to a g'},
+  {from:'child', to:'wild',  hint:'change the ch to a w'},
+  {from:'wild',  to:'mild',  hint:'change the w to an m'},
+  {from:'mild',  to:'child', hint:'change the m to a ch'},
+  {from:'find',  to:'mind',  hint:'change the f to an m'},
+  {from:'mind',  to:'kind',  hint:'change the m to a k'},
+  {from:'kind',  to:'bind',  hint:'change the k to a b'},
+  {from:'most',  to:'post',  hint:'change the m to a p'},
+  {from:'post',  to:'host',  hint:'change the p to an h'},
+  {from:'colt',  to:'bolt',  hint:'change the c to a b'},
+  {from:'bolt',  to:'jolt',  hint:'change the b to a j'}];
+/* The heart of the lesson, and the part the manual is careful about: the rule
+   says i and o MAY go long, not that they always do. Every word here has the
+   Find Gold shape -- i or o followed by two consonants -- but only some take the
+   long sound. lost, frost and cost are the manual's own counterexamples, and
+   build is too; list, fist, gift, soft and doll are the same trap in commoner
+   words. Weighted 13 to 9 toward long so "often" stays true while the exception
+   comes up enough to be learned rather than guessed past.
+   Deliberately an ear question: the spelling looks identical either way, so the
+   word is spoken and the child decides by listening. */
+const GOLDSORT29={
+  instruction:'Two consonants after the vowel. Is that vowel long or short here?',
+  buckets:[
+    {key:'long',  ex:'gold', why:'the vowel says its name, the way it does in find and gold'},
+    {key:'short', ex:'lost', why:'this one keeps its short sound even with two consonants after it'}],
+  items:[
+    {w:'find',   k:'long'},
+    {w:'gold',   k:'long'},
+    {w:'child',  k:'long'},
+    {w:'mild',   k:'long'},
+    {w:'wild',   k:'long'},
+    {w:'bold',   k:'long'},
+    {w:'cold',   k:'long'},
+    {w:'told',   k:'long'},
+    {w:'hold',   k:'long'},
+    {w:'most',   k:'long'},
+    {w:'colt',   k:'long'},
+    {w:'roll',   k:'long'},
+    {w:'behind', k:'long'},
+    {w:'lost',   k:'short'},
+    {w:'frost',  k:'short'},
+    {w:'cost',   k:'short'},
+    {w:'list',   k:'short'},
+    {w:'fist',   k:'short'},
+    {w:'gift',   k:'short'},
+    {w:'soft',   k:'short'},
+    {w:'doll',   k:'short'},
+    {w:'build',  k:'short'}]};
+/* Word Cards 140-149 -- the Practice Reading Words, exactly as listed. don't and
+   won't ride along here rather than getting their own stage; the intro explains
+   what makes them odd. Ten cards against a ten-round stage, so each comes up once. */
+const CARDS29=['told','wild','both','child','hold','most','find','behind',"don't","won't"];
+/* Word Cards 150-151 -- the two Leap Words. who breaks two expectations at once
+   (wh saying /h/, and o saying /oo/), and move has an o that also says /oo/. */
+const LEAP29=['who','move'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1062,6 +1128,33 @@ let LESSONS=[
       {engine:'contraction', pool:CONTRACT27, rounds:8, label:'Contract It'},
       {engine:'expand', pool:CONTRACT27, rounds:7, label:'Expand It'},
       {engine:'sightword', pool:CARDS27, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L29', n:29, title:'The Find Gold Rule', emoji:'🪙', cls:'c-syll',
+    intro:{
+      topic:'A fourth way a vowel goes long',
+      lines:[
+        'You already know three ways a vowel can go long. It can sit at the end of an open syllable like <b>be</b>, it can wear a Silent E like <b>bone</b>, or it can join a team like the ee in <b>sheep</b>. Here is the fourth.',
+        'In a one-syllable word, when <b>i</b> or <b>o</b> is followed by <b>two consonants</b>, it often says its long sound. That is why <b>find</b> and <b>gold</b> sound the way they do. We call it the <b>Find Gold</b> rule, after exactly those two words.',
+        'Once you know the shape you will spot it everywhere: ch<b>ild</b>, beh<b>ind</b>, r<b>oll</b>, h<b>old</b>, c<b>olt</b>, m<b>ost</b>.',
+        'One catch, and it matters. The rule says the vowel <b>may</b> go long, not that it always does. Plenty of words with that very same shape keep the short sound, like <b>lost</b>, <b>cost</b> and <b>gift</b>. So say the word out loud and let your ear settle it.'
+      ],
+      words:['find','gold','child'],
+      review:['told','wild','both','child','hold','most','find','behind',"don't","won't"],
+      trick:{
+        title:'Two contractions worth a look',
+        points:[
+          {w:'don\'t', note:'do plus not \u2014 and the o goes long, because now two consonants follow it'},
+          {w:'won\'t', note:'will plus not \u2014 the one contraction where even the first word changes'},
+          {w:'Rule of thumb', note:'i or o, then two consonants, often means long \u2014 but say it aloud to be sure'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:GOLDCHANGE29}, rounds:6, label:'Change the Word'},
+      {engine:'sortsound', pool:GOLDSORT29, rounds:7, label:'Long or Short?'},
+      {engine:'sightword', pool:CARDS29, rounds:10, label:'Read the Word Cards'},
+      {engine:'sightword', pool:LEAP29, rounds:2, label:'Leap Words'}
     ]
   }
 ];
