@@ -669,6 +669,42 @@ const SYLTAG25=[
    stage, so every card comes up once per sitting. */
 const CARDS25=['deep','green','feet','keep','need','street','tree','queen','speed','been'];
 
+/* Lesson 27 -- contractions. Its own pool rather than the general CONTRACTIONS
+   list, for one reason: won't and don't are deliberately absent. The manual holds
+   both back until Lesson 29, where they arrive with the rule that explains them,
+   and won't is also the single case where the FIRST word changes -- the exact
+   thing this lesson teaches never happens. Seeded with the lesson's own list and
+   the phrases it has you build with tiles (he will, she will, she is, she had). */
+const CONTRACT27=[
+  {two:'I am',      one:"I'm"},
+  {two:'can not',   one:"can't"},
+  {two:'are not',   one:"aren't"},
+  {two:'she is',    one:"she's"},
+  {two:'you will',  one:"you'll"},
+  {two:'that is',   one:"that's"},
+  {two:'is not',    one:"isn't"},
+  {two:'let us',    one:"let's"},
+  {two:'what is',   one:"what's"},
+  {two:'it is',     one:"it's"},
+  {two:'did not',   one:"didn't"},
+  {two:'has not',   one:"hasn't"},
+  {two:'was not',   one:"wasn't"},
+  {two:'have not',  one:"haven't"},
+  {two:'I will',    one:"I'll"},
+  {two:'she will',  one:"she'll"},
+  {two:'he will',   one:"he'll"},
+  {two:'she had',   one:"she'd"},
+  {two:'he is',     one:"he's"},
+  {two:'we are',    one:"we're"},
+  {two:'we will',   one:"we'll"},
+  {two:'you are',   one:"you're"},
+  {two:'you have',  one:"you've"},
+  {two:'I have',    one:"I've"},
+  {two:'here is',   one:"here's"}];
+/* Word Cards 130-139 -- the Practice Reading Words, exactly as listed. Ten cards
+   against a ten-round stage, so every card comes up once per sitting. */
+const CARDS27=["I'm","can't","aren't","she's","you'll","that's","isn't","let's","what's","it's"];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1000,6 +1036,32 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:EECHANGE25}, rounds:7, label:'Change the Word'},
       {engine:'syllabletag', pool:SYLTAG25, rounds:8, label:'Form Teams'},
       {engine:'sightword', pool:CARDS25, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L27', n:27, title:'Contractions', emoji:'🤏', cls:'c-contr',
+    intro:{
+      topic:'Two words squeezed into one',
+      lines:[
+        'A <b>contraction</b> is a shorter way of saying something. You take two words, squeeze them together into one, and drop an <b>apostrophe</b> in where the missing letters used to be.',
+        'Think of a rubber band. Stretch it and it <b>expands</b>. Let go and it <b>contracts</b>, getting smaller. That is exactly what these words do.',
+        'Watch it happen. Put <b>we</b> and <b>will</b> side by side. Take the w and the i out of <b>will</b>, stand an apostrophe in their place, and you have <b>we\'ll</b>.',
+        'Here is the handy part. The first word never changes. The letters that vanish always come out of the second word, and the apostrophe marks the exact spot where they were.'
+      ],
+      words:["we'll","she's","can't"],
+      review:["I'm","can't","aren't","she's","you'll","that's","isn't","let's","what's","it's"],
+      trick:{
+        title:'Two things to remember',
+        points:[
+          {w:'The first word never changes', note:'she is becomes she\'s, and the she stays exactly as it was'},
+          {w:'The apostrophe marks the gap', note:'it stands right where the missing letters used to be'},
+          {w:'One word breaks the rule', note:'will not becomes won\'t, where even the first word changes \u2014 that one comes in a later lesson'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'contraction', pool:CONTRACT27, rounds:8, label:'Contract It'},
+      {engine:'expand', pool:CONTRACT27, rounds:7, label:'Expand It'},
+      {engine:'sightword', pool:CARDS27, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];

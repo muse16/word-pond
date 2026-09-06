@@ -61,6 +61,10 @@ function showSpeechWarning(){
 const SPKR='<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4zM14 3.2v2.1a7 7 0 010 13.4v2.1a9 9 0 000-17.6z"/></svg>';
 const rand=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+/* Escapes a word for an inline onclick's single-quoted JS string. Contractions
+   (Lesson 27) carry apostrophes that would otherwise close the string and break
+   the handler outright -- the button silently does nothing when clicked. */
+const jsq=s=>String(s).replace(/'/g,"\\'");
 const $=id=>document.getElementById(id);
 
 /* ---------------- Pip mascot ---------------- */
@@ -124,7 +128,7 @@ function togglePanel(show){$('overlay').classList.toggle('active',show);
 
 function renderIntro(deck){
   const intro=deck.intro;
-  const wordChips=w=>`<button class="speak-btn" style="width:34px;height:34px;box-shadow:0 3px 0 #2f7ed8;margin:4px 6px 4px 0" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button>`;
+  const wordChips=w=>`<button class="speak-btn" style="width:34px;height:34px;box-shadow:0 3px 0 #2f7ed8;margin:4px 6px 4px 0" onclick="speak('${jsq(w)}')" aria-label="hear ${w}">${SPKR}</button>`;
   const words=(intro.words||[]).map(w=>`<span class="intro-word">${w}${wordChips(w)}</span>`).join('');
   const review=(intro.review||[]).length?`<p class="intro-review"><b>Words to review:</b> ${intro.review.join(', ')}</p>`:'';
   const trick=intro.trick?`<div class="trick-box"><div class="trick-title">🐸 ${intro.trick.title}</div>
@@ -229,7 +233,7 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Squish these two words into one!</div>
       <div class="big-target">${c.two}<button class="speak-btn" onclick="speak('${c.two}')" aria-label="hear">${SPKR}</button></div></div>
-      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o.one.replace(/'/g,"\\'")}','${c.one.replace(/'/g,"\\'")}')">${o.one}</button>`).join('')}</div>
+      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(o.one)}','${jsq(c.one)}')">${o.one}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(c.two);},
 
   /* Lesson 15 adds the third syllable type, so unlike `syllabletype` (open vs
@@ -281,6 +285,22 @@ const ENGINES={
         <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
       <div class="options${TAGS.length===3?' three':''}">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
+
+  /* The mirror of `contraction`, and the other half of the manual's rubber-band
+     idea: that engine contracts two words into one, this one expands one back
+     into two. Distractors are other two-word phrases from the same pool, so the
+     child has to know what the contraction actually stands for rather than
+     picking the only grammatical-looking option. */
+  expand(c,pool){
+    const distract=pickUnique(pool.filter(x=>x.two!==c.two),x=>x.two,c.two,2);
+    const opts=shuffle([c,...distract]);
+    const spoken=jsq(c.one);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Stretch it back out! Which two words is this short for?</div>
+      <div class="big-target word-target">${c.one}
+        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${c.one}">${SPKR}</button></div></div>
+      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o.two}','${c.two}')">${o.two}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(c.one);},
 
   syllabletype(item){
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
@@ -352,13 +372,14 @@ const ENGINES={
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   sightword(w){
+    const q=jsq(w);
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
       <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the word out loud! Stuck? Tap the speaker.</div>
       <div class="big-target word-target">${w}
-        <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div>
+        <button class="speak-btn" onclick="speak('${q}')" aria-label="hear ${w}">${SPKR}</button></div>
       <div class="sight-controls">
-        <button class="btn-mint" onclick="Game.sightAnswer(true,'${w}')">✓ I read it!</button>
-        <button class="btn-soft" onclick="Game.sightAnswer(false,'${w}')">🔁 Still tricky</button>
+        <button class="btn-mint" onclick="Game.sightAnswer(true,'${q}')">✓ I read it!</button>
+        <button class="btn-soft" onclick="Game.sightAnswer(false,'${q}')">🔁 Still tricky</button>
       </div>
       <div class="feedback" id="fb"></div></div>`;},
 
