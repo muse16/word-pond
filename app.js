@@ -342,6 +342,27 @@ const ENGINES={
       <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickHeard(this,'${o}','${item.w}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
+  /* Lesson 33's three-syllable words. The wrong options carry TWO splits as well,
+     just in the wrong places -- if they had one split each, a child could win the
+     round by counting hyphens rather than deciding where the syllables break.
+     Every generated piece is at least two letters, so each option reads as a real
+     attempt at the word instead of obvious filler. */
+  syllablesplit3(item){
+    const w=item.w, correct=item.parts.join('-');
+    const a=item.parts[0].length, b=a+item.parts[1].length;
+    const cands=[];
+    for(let i=2;i<=w.length-4;i++)for(let j=i+2;j<=w.length-2;j++){
+      if(i===a&&j===b)continue;
+      cands.push(w.slice(0,i)+'-'+w.slice(i,j)+'-'+w.slice(j));
+    }
+    const opts=shuffle([correct,...shuffle(cands).slice(0,2)]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">This word has three syllables. Where do the splits go?</div>
+      <div class="big-target word-target">${w}
+        <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div></div>
+      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;speak(w);},
+
   syllablesplit(item){const w=item.w;const correct=item.parts.join('-');
     const splitIdx=item.parts[0].length;const candidates=[];
     for(let i=2;i<=w.length-2;i++){const opt=w.slice(0,i)+'-'+w.slice(i);if(i!==splitIdx&&!candidates.includes(opt))candidates.push(opt);}

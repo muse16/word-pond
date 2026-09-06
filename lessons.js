@@ -839,6 +839,55 @@ const CARDS31=['never','paper','after','summer','winter','over','under'];
    is there only to keep the word from being read as Don, non or on. */
 const LEAP31=['done','none','one'];
 
+/* Lesson 33 -- phonogram ar, and decoding three-syllable words.
+   The manual's Change the Word chain (bark to dark to mark to park to spark to
+   shark), extended through the other ar families. Hints name the exact change,
+   as in Lessons 15, 19, 21, 25 and 29, because the options come from this list. */
+const ARCHANGE33=[
+  {from:'bark',  to:'dark',  hint:'change the b to a d'},
+  {from:'dark',  to:'mark',  hint:'change the d to an m'},
+  {from:'mark',  to:'park',  hint:'change the m to a p'},
+  {from:'park',  to:'spark', hint:'add an s at the front'},
+  {from:'spark', to:'shark', hint:'change the p to an h'},
+  {from:'shark', to:'sharp', hint:'change the k to a p'},
+  {from:'barn',  to:'bark',  hint:'change the n to a k'},
+  {from:'bark',  to:'barn',  hint:'change the k to an n'},
+  {from:'yarn',  to:'barn',  hint:'change the y to a b'},
+  {from:'car',   to:'card',  hint:'add a d at the end'},
+  {from:'card',  to:'cart',  hint:'change the d to a t'},
+  {from:'cart',  to:'card',  hint:'change the t to a d'},
+  {from:'hard',  to:'harm',  hint:'change the d to an m'},
+  {from:'harm',  to:'farm',  hint:'change the h to an f'},
+  {from:'farm',  to:'harm',  hint:'change the f to an h'},
+  {from:'star',  to:'scar',  hint:'change the t to a c'}];
+/* The lesson's real headline: a word you have never seen is readable if you split
+   it twice instead of once. fantastic, different and cucumber are the three the
+   manual walks through with tiles; the rest are the same shape.
+   `syllablesplit3` builds its wrong options with TWO splits as well, at other
+   positions -- otherwise a child could win by counting hyphens instead of
+   thinking about where the syllables actually break. */
+const THREESYL33=[
+  {w:'fantastic',  parts:['fan','tas','tic']},
+  {w:'different',  parts:['dif','fer','ent']},
+  {w:'cucumber',   parts:['cu','cum','ber']},
+  {w:'carpenter',  parts:['car','pen','ter']},
+  {w:'hamburger',  parts:['ham','bur','ger']},
+  {w:'butterfly',  parts:['but','ter','fly']},
+  {w:'wonderful',  parts:['won','der','ful']},
+  {w:'yesterday',  parts:['yes','ter','day']},
+  {w:'basketball', parts:['bas','ket','ball']},
+  {w:'understand', parts:['un','der','stand']},
+  {w:'important',  parts:['im','por','tant']},
+  {w:'suddenly',   parts:['sud','den','ly']}];
+/* Word Cards 162-167 -- the Practice Reading Words, exactly as listed. Six cards
+   against a six-round stage, so each comes up once per sitting. */
+const CARDS33=['barn','sharp','hard','start','March','dark'];
+/* Word Cards 168-171 -- four Leap Words. In warm the ar says /or/ rather than
+   /ar/, though the manual notes some regions say it the regular way. Mr. and
+   Mrs. are abbreviations, which is why they carry a capital and a period; the
+   browser voice reads them as "mister" and "missus", which is what we want. */
+const LEAP33=['warm','Mr.','Mrs.','too'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1250,6 +1299,33 @@ let LESSONS=[
       {engine:'syllabletag', pool:SYLTAG31, rounds:7, label:'Form Teams'},
       {engine:'sightword', pool:CARDS31, rounds:7, label:'Read the Word Cards'},
       {engine:'sightword', pool:LEAP31, rounds:3, label:'Leap Words'}
+    ]
+  },
+  {id:'L33', n:33, title:'AR and Long Words', emoji:'⭐', cls:'c-sound',
+    intro:{
+      topic:'AR, and reading really long words',
+      lines:[
+        '<b>a</b> and <b>r</b> together say <b>/ar/</b>, the sound sitting in the middle of <b>car</b> and <b>barn</b>. Just like er, it is a vowel with an r right behind it, so any syllable holding it is a <b>Bossy R</b> syllable.',
+        'That makes <b>shark</b> and <b>start</b> Bossy R syllables from end to end, and it means <b>garden</b> divides into <b>gar-den</b> \u2014 Bossy R first, then Closed.',
+        'Now for the big one. You can read a word you have never laid eyes on before, however long it looks, by splitting it into syllables and taking them one at a time.',
+        'Try <b>fantastic</b>. Find the first two vowels, notice two consonants between them, and split: <b>fan</b>. Then do the very same thing again to what is left: <b>tas</b>, then <b>tic</b>. Three syllables, three easy pieces, and the word almost reads itself.'
+      ],
+      words:['car','barn','fantastic'],
+      review:['barn','sharp','hard','start','March','dark'],
+      trick:{
+        title:'Four Leap Words',
+        points:[
+          {w:'warm', note:'the ar says /or/ here instead of /ar/ \u2014 unless your part of the country says it the regular way'},
+          {w:'Mr. and Mrs.', note:'short forms of mister and missus, each with a capital letter and a period'},
+          {w:'too', note:'the pair of o letters works together to say /oo/'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:ARCHANGE33}, rounds:8, label:'Change the Word'},
+      {engine:'syllablesplit3', pool:THREESYL33, rounds:7, label:'Three Syllables'},
+      {engine:'sightword', pool:CARDS33, rounds:6, label:'Read the Word Cards'},
+      {engine:'sightword', pool:LEAP33, rounds:4, label:'Leap Words'}
     ]
   }
 ];
