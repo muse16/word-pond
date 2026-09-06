@@ -319,7 +319,10 @@ const ENGINES={
     // opposite of the long vowel an open syllable teaches. When a pair supplies `say`, speak
     // that respelling instead (see GUESS10 in lessons.js); display is untouched either way.
     const spoken=pair.say||pair.from;
-    const distract=pickUnique(arr.filter(p=>p.to!==pair.to),p=>p.to,pair.to,2).map(p=>p.to);
+    // Also drop any pair whose `to` is the word being SHOWN: these pools form chains
+    // (cake to bake to lake), so without this the prompt word can turn up among its
+    // own options, and "change the word" cannot be answered with the same word.
+    const distract=pickUnique(arr.filter(p=>p.to!==pair.to&&p.to!==pair.from),p=>p.to,pair.to,2).map(p=>p.to);
     const opts=shuffle([pair.to,...distract]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">${instruction}</div>

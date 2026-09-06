@@ -888,6 +888,51 @@ const CARDS33=['barn','sharp','hard','start','March','dark'];
    browser voice reads them as "mister" and "missus", which is what we want. */
 const LEAP33=['warm','Mr.','Mrs.','too'];
 
+/* Lesson 35 -- phonogram or, the third Bossy R spelling after ar and er.
+   The manual's Change the Word chain (fort to short to port to sport), extended
+   through the other or families. Hints name the exact change, since the options
+   are drawn from this same list. */
+const ORCHANGE35=[
+  {from:'fort',  to:'short', hint:'change the f to an s and an h'},
+  {from:'short', to:'port',  hint:'change the sh to a p'},
+  {from:'port',  to:'sport', hint:'add an s at the front'},
+  {from:'sport', to:'short', hint:'change the p to an h'},
+  {from:'fork',  to:'fort',  hint:'change the k to a t'},
+  {from:'fort',  to:'fork',  hint:'change the t to a k'},
+  {from:'form',  to:'fort',  hint:'change the m to a t'},
+  {from:'port',  to:'sort',  hint:'change the p to an s'},
+  {from:'corn',  to:'cord',  hint:'change the n to a d'},
+  {from:'cord',  to:'corn',  hint:'change the d to an n'},
+  {from:'corn',  to:'born',  hint:'change the c to a b'},
+  {from:'born',  to:'torn',  hint:'change the b to a t'},
+  {from:'torn',  to:'horn',  hint:'change the t to an h'},
+  {from:'horn',  to:'corn',  hint:'change the h to a c'},
+  {from:'north', to:'forth', hint:'change the n to an f'},
+  {from:'forth', to:'north', hint:'change the f to an n'}];
+/* Dividing the two-syllable or words. The point the manual makes here is that a
+   phonogram is not split apart: forest divides for-est, never fo-rest. The
+   `syllablesplit` engine builds its wrong options from other letter positions,
+   which for these words lands squarely on that mistake -- so the distractor is
+   the misconception itself rather than filler.
+   forever is a three-syllable word and belongs to the reading stage, not here. */
+const ORSPLIT35=[
+  {w:'forest',  parts:['for','est']},
+  {w:'report',  parts:['re','port']},
+  {w:'order',   parts:['or','der']},
+  {w:'morning', parts:['morn','ing']},
+  {w:'forget',  parts:['for','get']},
+  {w:'corner',  parts:['cor','ner']},
+  {w:'border',  parts:['bor','der']},
+  {w:'orbit',   parts:['or','bit']},
+  {w:'formal',  parts:['for','mal']},
+  {w:'shorter', parts:['short','er']},
+  {w:'torment', parts:['tor','ment']},
+  {w:'normal',  parts:['nor','mal']}];
+/* Word Cards 172-181 -- the Practice Reading Words, exactly as listed. Ten cards
+   against a ten-round stage, so every card comes up once per sitting.
+   This lesson has no Leap Words. */
+const CARDS35=['north','short','order','fork','corn','forest','morning','forever','forget','storm'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1326,6 +1371,32 @@ let LESSONS=[
       {engine:'syllablesplit3', pool:THREESYL33, rounds:7, label:'Three Syllables'},
       {engine:'sightword', pool:CARDS33, rounds:6, label:'Read the Word Cards'},
       {engine:'sightword', pool:LEAP33, rounds:4, label:'Leap Words'}
+    ]
+  },
+  {id:'L35', n:35, title:'Phonogram OR', emoji:'🌽', cls:'c-ed',
+    intro:{
+      topic:'The third Bossy R spelling',
+      lines:[
+        '<b>o</b> and <b>r</b> together say <b>/or/</b>, the sound sitting in <b>corn</b> and <b>fork</b>. It is another vowel with an r right behind it, so any syllable holding it is a <b>Bossy R</b> syllable, exactly like the ones with ar and er.',
+        'Listen for it: <b>storm</b>, <b>north</b>, <b>morning</b>, <b>short</b>. Once your ear has caught it, you will start hearing it everywhere.',
+        'When you split a longer word, keep the or together. <b>forest</b> divides <b>for-est</b>, never fo-rest, because we almost never break a phonogram in half. And <b>order</b> divides <b>or-der</b> \u2014 two Bossy R syllables in a row.',
+        'One thing to tuck away for later. or actually has a <b>second</b> sound, the /er/ you hear in <b>work</b>. You will meet that one further along in your books. Everything in this lesson uses the first sound.'
+      ],
+      words:['corn','fork','forest'],
+      review:['north','short','order','fork','corn','forest','morning','forever','forget','storm'],
+      trick:{
+        title:'Handy to remember',
+        points:[
+          {w:'Bossy R again', note:'ar, then er, and now or \u2014 a vowel with an r behind it, and the r decides the sound'},
+          {w:'Keep it together', note:'never split a phonogram in half \u2014 for-est, not fo-rest'},
+          {w:'Two in a row', note:'order divides or-der, and both halves are Bossy R syllables'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:ORCHANGE35}, rounds:8, label:'Change the Word'},
+      {engine:'syllablesplit', pool:ORSPLIT35, rounds:7, label:'Split the Word'},
+      {engine:'sightword', pool:CARDS35, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
