@@ -243,6 +243,19 @@ const ENGINES={
      halves of the lesson are ear questions: nothing in the spelling of cute vs
      rule, or nose vs goose, tells you the answer. Feedback carries the bucket's
      own explanation so a wrong guess teaches the distinction, not just the label. */
+  /* Lesson 21's heteronyms. The child picks the MEANING rather than a pronunciation
+     symbol, because meaning is what the sentence actually settles and it is what a
+     seven-year-old can read off a button. This is the only engine that never calls
+     speak(): saying the sentence aloud would hand over the answer outright, and
+     browser text-to-speech guesses heteronyms from context unreliably anyway. */
+  heteronym(item){
+    const opts=shuffle([item.right,item.wrong]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Read the sentence. What does the blue word mean here?</div>
+      <div class="sentence">${item.sentence}</div></div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickMeaning(this,\`${o}\`,\`${item.right}\`,'${item.word}',\`${item.note}\`)">${o}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;},
+
   sortsound(item,pool){
     const right=pool.buckets.find(b=>b.key===item.k);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
@@ -436,6 +449,15 @@ const Game={
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim().toLowerCase()===correct)o.classList.add('correct');});
       this.bad(correct==='open'?(word+' is open — it ends in a vowel'):(word+' is closed — it ends in a consonant'));}
+    this.showNext();
+  },
+  pickMeaning(btn,picked,correct,word,note){
+    if(this.locked)return;this.locked=true;
+    const why='Here '+word+' means '+correct+' \u2014 '+note+'.';
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('\u2713 Yes! '+why);}
+    else{btn.classList.add('wrong');
+      document.querySelectorAll('.opt').forEach(o=>{if(o.textContent.trim()===correct)o.classList.add('correct');});
+      this.bad(why);}
     this.showNext();
   },
   pickSound(btn,picked,correct,word,why){

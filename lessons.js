@@ -497,6 +497,57 @@ const CARDS19=['when','while','white','whale','which','why'];
    lesson intro, since the reading stage only shows the word. */
 const LEAP19=['some','something','come','what'];
 
+/* Lesson 21 -- initial blends combined with the Name Game (silent-e) pattern.
+   The manual's own Change the Word list, where a tile is added to the front of a
+   word to build the blend. Hints name the exact letter and where it goes, for the
+   same reason as Lessons 15 and 19: the other options come from this list. */
+const BLENDE21=[
+  {from:'side',  to:'slide', hint:'add an l after the s'},
+  {from:'sale',  to:'stale', hint:'add a t after the s'},
+  {from:'dive',  to:'drive', hint:'add an r after the d'},
+  {from:'sore',  to:'snore', hint:'add an n after the s'},
+  {from:'snore', to:'store', hint:'change the n to a t'},
+  {from:'bake',  to:'brake', hint:'add an r after the b'},
+  {from:'save',  to:'slave', hint:'add an l after the s'},
+  {from:'sake',  to:'snake', hint:'add an n after the s'},
+  {from:'fame',  to:'frame', hint:'add an r after the f'},
+  {from:'frame', to:'flame', hint:'change the r to an l'},
+  {from:'dove',  to:'drove', hint:'add an r after the d'}];
+/* Heteronyms -- words spelled the same but pronounced differently, where only the
+   sentence tells you which one you have. Word Card 100 introduces this with close.
+   The child picks the MEANING rather than a pronunciation symbol, because the
+   meaning is what the context actually settles and it is readable at this age.
+   This is the one stage with no audio on purpose: speaking the sentence would
+   hand over the answer, and browser text-to-speech guesses heteronyms in context
+   unreliably anyway. `note` explains the sound difference in plain words.
+   close, live, wind and tear are the manual's own examples; read is added as the
+   heteronym a child meets most often. */
+const HETERO21=[
+  {sentence:'Please <b>close</b> the door.',            word:'close', right:'to shut it',
+   wrong:'near to something',        note:'the s buzzes like a z'},
+  {sentence:'Sit <b>close</b> to me on the rug.',       word:'close', right:'near to something',
+   wrong:'to shut it',               note:'the s hisses like a snake'},
+  {sentence:'We <b>live</b> in a red house.',           word:'live',  right:'to have your home there',
+   wrong:'alive and moving',         note:'the i is short, like in big'},
+  {sentence:'The pet shop has <b>live</b> fish.',       word:'live',  right:'alive and moving',
+   wrong:'to have your home there',  note:'the i is long, like in five'},
+  {sentence:'The <b>wind</b> blew my hat off.',         word:'wind',  right:'moving air',
+   wrong:'to twist it around',       note:'the i is short, like in tin'},
+  {sentence:'<b>Wind</b> the string around the stick.', word:'wind',  right:'to twist it around',
+   wrong:'moving air',               note:'the i is long, like in kind'},
+  {sentence:'I will <b>read</b> this book after lunch.',word:'read',  right:'reading it now or later',
+   wrong:'already finished reading', note:'it sounds like reed'},
+  {sentence:'I <b>read</b> that book last week.',       word:'read',  right:'already finished reading',
+   wrong:'reading it now or later',  note:'it sounds like red'},
+  {sentence:'A <b>tear</b> ran down her cheek.',        word:'tear',  right:'a drop from your eye',
+   wrong:'to rip it',                note:'it sounds like deer'},
+  {sentence:'Do not <b>tear</b> the paper.',            word:'tear',  right:'to rip it',
+   wrong:'a drop from your eye',     note:'it sounds like bear'}];
+/* Word Cards 101-109 -- the Practice Reading Words, exactly as listed. Nine cards
+   against a nine-round stage, so every card comes up once per sitting. Word Card
+   100 is close, which is taught in the heteronym stage rather than read here. */
+const CARDS21=['drive','smile','store','frame','brave','trade','state','grape','square'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -748,6 +799,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:WHCHANGE19}, rounds:6, label:'Change the Word'},
       {engine:'sightword', pool:CARDS19, rounds:6, label:'Read the Word Cards'},
       {engine:'sightword', pool:LEAP19, rounds:4, label:'Leap Words'}
+    ]
+  },
+  {id:'L21', n:21, title:'Blends with Silent E', emoji:'🍇', cls:'c-review',
+    intro:{
+      topic:'Two things you know, stuck together',
+      lines:[
+        'You can already read a word that starts with a <b>blend</b>, like <b>slide</b> and <b>frame</b>. You can already read a <b>Name Game</b> word, where Silent E makes the vowel say its name. This lesson puts both in the same word.',
+        'Watch it get built. Start with <b>side</b>, slip an l in after the s, and you have <b>slide</b>. Start with <b>sale</b>, add a t after the s, and you have <b>stale</b>. The Silent E keeps doing its job the whole time.',
+        'Then something new. A <b>heteronym</b> is a word spelled one way but said two ways, and the sentence around it is the only thing that tells you which. Look at <b>close</b>: you <b>close</b> the door, but you also sit <b>close</b> to someone.',
+        'So when a word looks familiar but sounds wrong in the sentence, try it the other way. Read the whole sentence and let it tell you.'
+      ],
+      words:['slide','frame','grape'],
+      review:['drive','smile','store','frame','brave','trade','state','grape','square'],
+      trick:{
+        title:'Heteronyms to know',
+        points:[
+          {w:'close', note:'shut the door, or sit close by — the s buzzes, then it hisses'},
+          {w:'live', note:'where you live, or a live fish — short i, then long i'},
+          {w:'wind', note:'the wind blows, or you wind a string — short i, then long i'},
+          {w:'read', note:'read it today, or read it last week — reed, then red'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:BLENDE21}, rounds:8, label:'Change the Word'},
+      {engine:'heteronym', pool:HETERO21, rounds:8, label:'Same Word, Two Ways'},
+      {engine:'sightword', pool:CARDS21, rounds:9, label:'Read the Word Cards'}
     ]
   }
 ];

@@ -67,6 +67,9 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .phon-chip{background:var(--sun);color:#4a3200;border-radius:16px;padding:6px 22px;text-transform:lowercase;}
 .word-target{letter-spacing:1px;}
 .word-target .hl{color:var(--coral);}
+.sentence{font-family:'Baloo 2';font-weight:800;font-size:clamp(22px,5vw,30px);color:var(--deep);
+  line-height:1.4;text-align:center;padding:0 4px;}
+.sentence b{color:var(--sky);}
 .speak-btn{background:var(--sky);border:none;cursor:pointer;width:60px;height:60px;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #2f7ed8;transition:transform .1s;vertical-align:middle;}
 .speak-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #2f7ed8;}
