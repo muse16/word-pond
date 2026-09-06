@@ -600,9 +600,7 @@ const CLAP23=[
   {w:'faces',  n:2},
   {w:'places', n:2}];
 /* Word Cards 110-117 -- the Practice Reading Words. Eight cards against an
-   eight-round stage, so every card comes up once per sitting.
-   NOTE: gates and lakes are read from the edge of the photo and were partly cut
-   off; the other six are certain. Swap those two if the manual says otherwise. */
+   eight-round stage, so every card comes up once per sitting. */
 const CARDS23=['miles','cakes','games','gates','notes','holes','jokes','lakes'];
 /* Word Cards 118-119 -- the lesson's two Leap Words, in their own stage as in
    Lesson 19. pony has a y saying long e at the end of a two-syllable word, and
