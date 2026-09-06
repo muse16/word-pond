@@ -607,6 +607,68 @@ const CARDS23=['miles','cakes','games','gates','notes','holes','jokes','lakes'];
    sandwich splits by a rule not taught yet; both are read by sight for now. */
 const LEAP23=['pony','sandwich'];
 
+/* Lesson 25 -- phonogram ee and the Vowel Team syllable.
+   The manual's Change the Word chain (weed to feed to need to seed to seem to
+   seen to green), plus more ee words built the same way. Hints name the exact
+   change, as in Lessons 15, 19 and 21, because the options come from this list. */
+const EECHANGE25=[
+  {from:'weed',  to:'feed',  hint:'change the w to an f'},
+  {from:'feed',  to:'need',  hint:'change the f to an n'},
+  {from:'need',  to:'seed',  hint:'change the n to an s'},
+  {from:'seed',  to:'seem',  hint:'change the d to an m'},
+  {from:'seem',  to:'seen',  hint:'change the m to an n'},
+  {from:'seen',  to:'green', hint:'change the s to a g and an r'},
+  {from:'feet',  to:'feed',  hint:'change the t to a d'},
+  {from:'feed',  to:'feet',  hint:'change the d to a t'},
+  {from:'keep',  to:'deep',  hint:'change the k to a d'},
+  {from:'deep',  to:'sleep', hint:'change the d to an s and an l'},
+  {from:'sleep', to:'sheep', hint:'change the l to an h'},
+  {from:'sheep', to:'sheet', hint:'change the p to a t'},
+  {from:'tree',  to:'free',  hint:'change the t to an f'},
+  {from:'week',  to:'seek',  hint:'change the w to an s'}];
+/* Party Monsters Form Teams -- now a FOUR-way sort, since this lesson adds the
+   Vowel Team syllable to the closed, open and Name Game tags from Lesson 15.
+   The `syllabletag` engine derives its buttons from the types present in the
+   pool, so Lesson 15 still shows three and this one shows four.
+   Seeded with the manual's own answer key (go/no/she, munch/plop/grunt,
+   rule/scare/slime, seek/beep/teeth) and extended to fill a session. */
+const SYLTAG25=[
+  {w:'go',     t:'open'},
+  {w:'no',     t:'open'},
+  {w:'she',    t:'open'},
+  {w:'we',     t:'open'},
+  {w:'me',     t:'open'},
+  {w:'hi',     t:'open'},
+  {w:'munch',  t:'closed'},
+  {w:'plop',   t:'closed'},
+  {w:'grunt',  t:'closed'},
+  {w:'step',   t:'closed'},
+  {w:'gift',   t:'closed'},
+  {w:'lick',   t:'closed'},
+  {w:'milk',   t:'closed'},
+  {w:'hand',   t:'closed'},
+  {w:'rule',   t:'name'},
+  {w:'scare',  t:'name'},
+  {w:'slime',  t:'name'},
+  {w:'cake',   t:'name'},
+  {w:'bike',   t:'name'},
+  {w:'home',   t:'name'},
+  {w:'five',   t:'name'},
+  {w:'seek',   t:'team'},
+  {w:'beep',   t:'team'},
+  {w:'teeth',  t:'team'},
+  {w:'feet',   t:'team'},
+  {w:'green',  t:'team'},
+  {w:'tree',   t:'team'},
+  {w:'street', t:'team'},
+  {w:'sheep',  t:'team'}];
+/* Word Cards 120-129 -- the nine Practice Reading Words plus been on card 129.
+   been rides along in the reading stage rather than getting a Leap Word stage of
+   its own the way Lessons 19 and 23 did, because there is only one of it; its
+   explanation lives in the lesson intro instead. Ten cards against a ten-round
+   stage, so every card comes up once per sitting. */
+const CARDS25=['deep','green','feet','keep','need','street','tree','queen','speed','been'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -912,6 +974,32 @@ let LESSONS=[
       {engine:'syllable', pool:CLAP23, rounds:7, label:'Clap the Plural'},
       {engine:'sightword', pool:CARDS23, rounds:8, label:'Read the Word Cards'},
       {engine:'sightword', pool:LEAP23, rounds:2, label:'Leap Words'}
+    ]
+  },
+  {id:'L25', n:25, title:'EE and Vowel Teams', emoji:'🐑', cls:'c-phon',
+    intro:{
+      topic:'The EE team, and a fourth kind of syllable',
+      lines:[
+        'Two <b>e</b>s side by side make one single sound, and that sound is long e. You hear it in <b>need</b>, <b>green</b> and <b>queen</b>. Because the two letters work together as one, we call them a <b>vowel team</b>.',
+        'A vowel team rides on one tile, so when you sound out <b>feet</b> you say f, then ee, then t. Three sounds, even though there are four letters.',
+        'That gives you a fourth kind of syllable. You already know <b>closed</b>, <b>open</b> and <b>Name Game</b>. Now add <b>Vowel Team</b>, for any syllable that gets its vowel sound from a team of letters — <b>seek</b>, <b>beep</b>, <b>teeth</b>.',
+        'When you split a longer word, treat the whole team as one vowel. In <b>fifteen</b> the vowels are the i and the ee, with two consonants between them, so it splits <b>fif-teen</b>. Closed first, then Vowel Team.'
+      ],
+      words:['feet','green','fifteen'],
+      review:['deep','green','feet','keep','need','street','tree','queen','speed','been'],
+      trick:{
+        title:'Worth remembering',
+        points:[
+          {w:'Four tags now', note:'Closed, Open, Name Game, and Vowel Team'},
+          {w:'Splitting a word?', note:'a vowel team counts as one vowel — fif-teen, week-end'},
+          {w:'been', note:'ee says long e everywhere except here — most of us say it like bin, so it is a Leap Word'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:EECHANGE25}, rounds:7, label:'Change the Word'},
+      {engine:'syllabletag', pool:SYLTAG25, rounds:8, label:'Form Teams'},
+      {engine:'sightword', pool:CARDS25, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];

@@ -266,15 +266,20 @@ const ENGINES={
         <div class="snd">${b.key}</div><div class="ex">like <b>${b.ex}</b></div></div>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
-  syllabletag(item){
-    const TAGS=[['closed','Closed','ends in a consonant \u00b7 short vowel'],
-                ['open','Open','ends in a vowel \u00b7 long vowel'],
-                ['name','Name Game','ends in Silent E \u00b7 vowel says its name']];
+  syllabletag(item,pool){
+    const ALL=[['closed','Closed','ends in a consonant \u00b7 short vowel'],
+               ['open','Open','ends in a vowel \u00b7 long vowel'],
+               ['name','Name Game','ends in Silent E \u00b7 vowel says its name'],
+               ['team','Vowel Team','letters teaming up for one vowel sound']];
+    // Buttons come from the types the pool actually uses, so Lesson 15 still asks a
+    // three-way question and Lesson 25, which adds Vowel Team, asks a four-way one.
+    const present=new Set((pool||[]).map(x=>x.t));
+    const TAGS=ALL.filter(t=>present.has(t[0]));
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Which syllable tag does this word get?</div>
       <div class="big-target word-target">${item.w}
         <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="options three">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
+      <div class="options${TAGS.length===3?' three':''}">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   syllabletype(item){
@@ -471,11 +476,12 @@ const Game={
   },
   pickTag(btn,picked,correct,word){
     if(this.locked)return;this.locked=true;
-    const LABEL={closed:'Closed',open:'Open',name:'Name Game'};
+    const LABEL={closed:'Closed',open:'Open',name:'Name Game',team:'Vowel Team'};
     const WHY={
       closed:word+' ends in a consonant, so the vowel stays short.',
       open:word+' ends in a vowel, so the vowel says its long sound.',
-      name:word+' ends in Silent E, so the vowel says its name.'};
+      name:word+' ends in Silent E, so the vowel says its name.',
+      team:word+' gets its vowel sound from a team of letters working as one.'};
     if(picked===correct){btn.classList.add('correct');this.win();this.good('\u2713 '+LABEL[correct]+'! '+WHY[correct]);}
     else{btn.classList.add('wrong');
       document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===LABEL[correct])o.classList.add('correct');});
