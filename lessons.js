@@ -1356,6 +1356,89 @@ const EJOBS46={
    oh is a Leap Word because its h is silent; the intro says so. */
 const CARDS46=['brother','mother','other','love','glove','shove','won','front','rinse','cheese','oh'];
 
+/* Lesson 48 -- phonogram ed, past tense, and the three sounds of the ending.
+   The manual's central technique: cover the ed, read the base word, then say the
+   whole thing as if it happened yesterday. So this stage runs backwards from a
+   past-tense word to its base, which is the step a reader actually has to take.
+   Three kinds of base word are mixed in on purpose -- plain (folded, jumped), a
+   doubled consonant (stopped, planned) and a dropped Silent E (smiled, raced) --
+   because those two spelling changes are exactly what make the base hard to see. */
+const BASE48=[
+  {from:'folded',  to:'fold'},
+  {from:'printed', to:'print'},
+  {from:'tested',  to:'test'},
+  {from:'jumped',  to:'jump'},
+  {from:'mixed',   to:'mix'},
+  {from:'barked',  to:'bark'},
+  {from:'locked',  to:'lock'},
+  {from:'bumped',  to:'bump'},
+  {from:'twisted', to:'twist'},
+  {from:'covered', to:'cover'},
+  {from:'spilled', to:'spill'},
+  {from:'planted', to:'plant'},
+  {from:'stopped', to:'stop'},
+  {from:'stepped', to:'step'},
+  {from:'tapped',  to:'tap'},
+  {from:'robbed',  to:'rob'},
+  {from:'planned', to:'plan'},
+  {from:'hopped',  to:'hop'},
+  {from:'hiked',   to:'hike'},
+  {from:'smiled',  to:'smile'},
+  {from:'raced',   to:'race'},
+  {from:'saved',   to:'save'},
+  {from:'danced',  to:'dance'},
+  {from:'shaped',  to:'shape'},
+  {from:'liked',   to:'like'},
+  {from:'stared',  to:'stare'},
+  {from:'skated',  to:'skate'}];
+/* Sound Sorting for Phonogram ED, the manual's own three-column activity.
+   The rule behind it is about the sound just before the ending: a base ending in
+   t or d forces ed into a syllable of its own, a voiced sound takes /d/, and an
+   unvoiced one takes /t/. The manual's position is that a native speaker already
+   does this without being told, so the word is spoken and the child answers by
+   ear; the explanations are there to confirm rather than to be applied. */
+const EDSOUND48={
+  instruction:'Say the word. What does the ed ending sound like?',
+  buckets:[
+    {key:'/ed/', ex:'wanted', why:'the base word ends in t or d, so ed becomes a whole extra beat'},
+    {key:'/d/',  ex:'snowed', why:'no extra beat here, and the ending simply buzzes'},
+    {key:'/t/',  ex:'jumped', why:'no extra beat here, and the ending is a crisp t'}],
+  items:[
+    {w:'wanted',  k:'/ed/'},
+    {w:'printed', k:'/ed/'},
+    {w:'folded',  k:'/ed/'},
+    {w:'tested',  k:'/ed/'},
+    {w:'landed',  k:'/ed/'},
+    {w:'planted', k:'/ed/'},
+    {w:'needed',  k:'/ed/'},
+    {w:'painted', k:'/ed/'},
+    {w:'twisted', k:'/ed/'},
+    {w:'started', k:'/ed/'},
+    {w:'snowed',  k:'/d/'},
+    {w:'smiled',  k:'/d/'},
+    {w:'saved',   k:'/d/'},
+    {w:'filled',  k:'/d/'},
+    {w:'played',  k:'/d/'},
+    {w:'rained',  k:'/d/'},
+    {w:'cleaned', k:'/d/'},
+    {w:'called',  k:'/d/'},
+    {w:'covered', k:'/d/'},
+    {w:'formed',  k:'/d/'},
+    {w:'dropped', k:'/t/'},
+    {w:'baked',   k:'/t/'},
+    {w:'jumped',  k:'/t/'},
+    {w:'stopped', k:'/t/'},
+    {w:'mixed',   k:'/t/'},
+    {w:'danced',  k:'/t/'},
+    {w:'raced',   k:'/t/'},
+    {w:'walked',  k:'/t/'},
+    {w:'picked',  k:'/t/'},
+    {w:'barked',  k:'/t/'}]};
+/* Word Cards 243-252 -- the nine Practice Reading Words plus they on card 252.
+   Ten cards against a ten-round stage, so each comes up once per sitting. they is
+   a Leap Word because its ey says long a, a spelling not taught yet. */
+const CARDS48=['printed','covered','raced','stopped','tested','smiled','saved','jumped','mixed','they'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1979,6 +2062,33 @@ let LESSONS=[
       {engine:'sortsound', pool:OSOUND46, rounds:7, label:'Which Sound of O'},
       {engine:'sortsound', pool:EJOBS46, rounds:7, label:'Which Job?'},
       {engine:'sightword', pool:CARDS46, rounds:11, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L48', n:48, title:'ED and the Past Tense', emoji:'🍕', cls:'c-ed',
+    intro:{
+      topic:'ED, and talking about the past',
+      lines:[
+        'Add <b>ed</b> to the end of a word and it means the thing already happened. Today I <b>jump</b>. Yesterday I <b>jumped</b>. That is what we call the <b>past tense</b>.',
+        'Here is the surprise. That little <b>ed</b> makes three different sounds. It can say <b>/ed/</b> as in <b>wanted</b>, <b>/d/</b> as in <b>snowed</b>, or <b>/t/</b> as in <b>jumped</b>. You already pick the right one whenever you talk, so trust your ear.',
+        'To read a long ed word, cover the <b>ed</b> with your finger and read the base word first. <b>folded</b> becomes <b>fold</b>. Then uncover it and say the whole word as if it happened yesterday.',
+        'Two things to watch for. Sometimes a letter gets <b>doubled</b> first, so <b>stop</b> becomes <b>stopped</b> and the o stays short. And when a word ends in Silent E, that <b>e drops off</b>, so <b>smile</b> becomes <b>smiled</b> rather than smileed.'
+      ],
+      words:['jumped','wanted','snowed'],
+      review:['printed','covered','raced','stopped','tested','smiled','saved','jumped','mixed','they'],
+      trick:{
+        title:'Three sounds, one ending',
+        points:[
+          {w:'/ed/ like wanted', note:'the base word ends in t or d, so ed adds a whole extra beat'},
+          {w:'/d/ like snowed', note:'no extra beat, and the ending just buzzes'},
+          {w:'/t/ like jumped', note:'no extra beat, and the ending is a crisp t'},
+          {w:'they', note:'a Leap Word \u2014 the ey says long a, which you have not studied yet'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Cover the ed with your finger. What is the base word?', pairs:BASE48}, rounds:8, label:'Find the Base Word'},
+      {engine:'sortsound', pool:EDSOUND48, rounds:7, label:'Sound Sorting'},
+      {engine:'sightword', pool:CARDS48, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
