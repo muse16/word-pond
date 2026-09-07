@@ -64,9 +64,12 @@ Fields:
 | `heteronym`    | array of `{sentence, word, right, wrong, note}` — the sentence carries the target word in `<b>` tags and the child picks which meaning it has here. The only engine that never speaks: saying the sentence would give the answer away, and browser speech guesses heteronyms in context unreliably | `HETERO21` |
 | `expand`       | array of `{two, one}` — the mirror of `contraction`: shows the contraction and the child picks the two words it stands for. Same pool shape, so one pool feeds both directions | `CONTRACT27` |
 | `syllablesplit3`| array of `{w, parts:[p1,p2,p3]}` — three-syllable words. Wrong options carry two splits as well, just in the wrong places, so hyphen-counting cannot substitute for deciding where the syllables break. Every generated piece is at least two letters | `THREESYL33` |
+| `leapword`     | array of `{w, n, why, breaker}` — like `sightword`, but after answering it names the lesson the word came from and why it is odd. `breaker` marks a true rule breaker as against a word that merely arrives before the rule explaining it | `LEAPWORDS` |
 | `sightword`    | flat word array — no multiple choice; the word is shown, the child reads it aloud, and self-reports "I read it!" or "Still tricky" (only the former earns a star) | `SIGHTWORDS` |
 
 A lesson stage may also use `sightword` to have a word list read aloud rather than answered — Lesson 14 uses it for the Word Cards. Only the standalone Sight Word Flash game records lifetime mastery, so a lesson borrowing the engine never writes into the saved mastery set.
+
+Two games drill until every word is known rather than running 25 rounds: Sight Word Flash and Leap Words. The `MASTERY` table in `app.js` describes both, and each keeps its own saved set, so progress in one never counts toward the other. Saves written before Leap Words existed still load: a bare `mastered` array is read as the sight-word set.
 
 `sightword` is special-cased in the game controller (by the `sight` game id) to track long-term mastery rather than just session rounds: every word marked "I read it!" is saved to `localStorage` permanently, the header shows "N / total left to master" instead of a round counter, and mastered words drop out of the rotation so practice always focuses on what's left. Marking the last word triggers a full-screen congratulations achievement. "Reset stars & progress" in settings clears mastery too.
 

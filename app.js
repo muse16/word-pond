@@ -83,16 +83,18 @@ function pipSVG(size){
 const SAVE_KEY='wordpond_v1';
 let stars=0; const enabled={}; GAMES.forEach(g=>enabled[g.id]=g.on);
 let masteredWords=new Set();
+let masteredLeap=new Set();
 let childName='Mckenna';
 let storageOK=true;
-function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords],name:childName,rate:speechRate,voiceURI:speechVoiceURI}));}catch(e){storageOK=false;}}
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords],leap:[...masteredLeap],name:childName,rate:speechRate,voiceURI:speechVoiceURI}));}catch(e){storageOK=false;}}
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s){if(typeof s.stars==='number')stars=s.stars;
   if(s.enabled)GAMES.forEach(g=>{if(g.id in s.enabled)enabled[g.id]=s.enabled[g.id];});
   if(Array.isArray(s.mastered))masteredWords=new Set(s.mastered);
+  if(Array.isArray(s.leap))masteredLeap=new Set(s.leap);
   if(typeof s.name==='string'&&s.name.trim())childName=s.name.trim();
   if(typeof s.rate==='number')speechRate=s.rate;
   if(typeof s.voiceURI==='string')speechVoiceURI=s.voiceURI;}}catch(e){storageOK=false;}}
-function resetProgress(){stars=0;GAMES.forEach(g=>enabled[g.id]=g.on);masteredWords=new Set();persist();$('starCount').textContent=0;renderMenu();renderSkillList();}
+function resetProgress(){stars=0;GAMES.forEach(g=>enabled[g.id]=g.on);masteredWords=new Set();masteredLeap=new Set();persist();$('starCount').textContent=0;renderMenu();renderSkillList();}
 function updateName(){const v=$('nameInput').value.trim();childName=v||'Reader';persist();renderGreeting();}
 
 function addStar(n=1){stars+=n;$('starCount').textContent=stars;persist();
@@ -396,6 +398,22 @@ const ENGINES={
       <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickSplit(this,'${o}','${correct}','${other}','${item.correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
+  /* Leap Words. Same read-aloud-and-self-report shape as `sightword`, with the
+     reason added afterwards: these words are odd for a reason, and a grown-up
+     sitting alongside benefits from knowing whether this one truly breaks the
+     rules or merely arrived before the rule that explains it. */
+  leapword(item){
+    const q=jsq(item.w);
+    $('gameArea').innerHTML=`<div class="card" style="text-align:center">
+      <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the Leap Word out loud! Stuck? Tap the speaker.</div>
+      <div class="big-target word-target">${item.w}
+        <button class="speak-btn" onclick="speak('${q}')" aria-label="hear ${item.w}">${SPKR}</button></div>
+      <div class="sight-controls">
+        <button class="btn-mint" onclick="Game.leapAnswer(true,'${q}')">\u2713 I read it!</button>
+        <button class="btn-soft" onclick="Game.leapAnswer(false,'${q}')">🔁 Still tricky</button>
+      </div>
+      <div class="feedback" id="fb"></div></div>`;},
+
   sightword(w){
     const q=jsq(w);
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
@@ -416,6 +434,13 @@ const ENGINES={
       <div class="feedback" id="fb"></div></div>`;speak(s.w);}
 };
 
+/* Games that drill until every word is known, rather than running 25 rounds.
+   Both keep their own mastery set so progress in one never counts for the other. */
+const MASTERY={
+  sight:{pool:()=>SIGHTWORDS, set:()=>masteredWords, engine:'sightword', key:w=>w,      label:'sight words'},
+  leap: {pool:()=>LEAPWORDS,  set:()=>masteredLeap,  engine:'leapword',  key:x=>x.w,    label:'Leap Words'}
+};
+
 /* ---------------- Game controller ---------------- */
 const Game={
   deck:null,round:0,total:25,correct:0,locked:false,order:null,stageOrders:null,sightUsed:null,
@@ -423,7 +448,7 @@ const Game={
     $('game').classList.remove('active');$('lessonIntro').classList.remove('active');},
   buildOrders(){
     this.sightUsed=new Set();
-    if(this.deck.id==='sight')return;
+    if(MASTERY[this.deck.id])return;
     if(this.deck.stages){this.stageOrders=this.deck.stages.map(s=>resolveOrder(s.engine,s.pool,s.rounds));this.order=null;}
     else{this.order=resolveOrder(this.deck.engine,this.deck.pool,this.total);this.stageOrders=null;}
   },
@@ -449,14 +474,16 @@ const Game={
   },
   next(){this.locked=false;this.round++;
     if(this.round>this.total){this.finish();return;}
-    if(this.deck.id==='sight'){
-      const unmastered=SIGHTWORDS.filter(w=>!masteredWords.has(w));
-      if(unmastered.length===0){this.showAchievement();return;}
-      let avail=unmastered.filter(w=>!this.sightUsed.has(w));
+    const m=MASTERY[this.deck.id];
+    if(m){
+      const pool=m.pool(), done=m.set();
+      const unmastered=pool.filter(x=>!done.has(m.key(x)));
+      if(unmastered.length===0){this.showAchievement(pool.length,m.label);return;}
+      let avail=unmastered.filter(x=>!this.sightUsed.has(m.key(x)));
       if(avail.length===0){this.sightUsed.clear();avail=unmastered;}
-      const w=rand(avail);this.sightUsed.add(w);
-      $('progress').textContent=unmastered.length+' / '+SIGHTWORDS.length+' left to master';
-      ENGINES.sightword(w);
+      const x=rand(avail);this.sightUsed.add(m.key(x));
+      $('progress').textContent=unmastered.length+' / '+pool.length+' left to master';
+      ENGINES[m.engine](x);
       return;
     }
     const {stage,item}=this.currentStageInfo();
@@ -561,6 +588,16 @@ const Game={
     speak(correct.replace(/-/g,''));
     this.showNext();
   },
+  leapAnswer(knewIt,word){
+    if(this.locked)return;this.locked=true;
+    const item=LEAPWORDS.find(x=>x.w===word);
+    const note=item?(' Lesson '+item.n+' \u2014 '+item.why+'.'):'';
+    if(knewIt){
+      if(word&&!masteredLeap.has(word)){masteredLeap.add(word);persist();}
+      this.win();this.good('\u2b50 Way to read it!'+note);
+    }else{this.bad('Nice try, it will come back around.'+note);}
+    this.showNext();
+  },
   sightAnswer(knewIt,word){
     if(this.locked)return;this.locked=true;
     if(knewIt){
@@ -569,13 +606,13 @@ const Game={
     }else{this.bad('Nice try — that one will come back around.');}
     this.showNext();
   },
-  showAchievement(){
+  showAchievement(total,label){
     $('progress').textContent='';
     $('gameArea').innerHTML=`<div class="card done-card achievement-card">
       <div class="done-mascot">${pipSVG(70)}</div>
       <div class="achievement-badge">🏆</div>
       <h2>Congratulations, ${childName}!</h2>
-      <p>You've mastered all ${SIGHTWORDS.length} sight words! Pip is so proud of you. 🐸✨</p>
+      <p>You've mastered all ${total} ${label}! Pip is so proud of you. 🐸✨</p>
       <button class="back" style="margin-top:6px" onclick="Game.home()">Back to menu</button>
     </div>`;
   },

@@ -1626,6 +1626,49 @@ const OWWORDS56=['cow','now','down','town','brown','clown','owl','flower',
    y says what the rules so far would predict. */
 const CARDS56=['brown','cloud','down','out','flower','found','mouth','now','any','many'];
 
+/* Every Leap Word taught across Level 2 -- thirty-two of them, gathered from the
+   appendix that lists them all. A Leap Word is a common word that either breaks
+   the rules outright or leans on a phonogram taught later, so it is read by sight
+   rather than sounded out.
+   `n` is the lesson that introduced it and `why` is the reason, reworded here.
+   `breaker` carries the appendix's own distinction: a true rule breaker really
+   does defy the rules, while the rest merely arrive before the rule that explains
+   them. That difference matters to a grown-up deciding how much to explain, so
+   the game says which is which after each word. */
+const LEAPWORDS=[
+  {w:'you',       n:2,  breaker:false, why:'the ou team was not taught until much later'},
+  {w:'are',       n:2,  breaker:false, why:'both the ar team and Silent E came later'},
+  {w:'from',      n:4,  breaker:false, why:'the o says uh, a sound taught later on'},
+  {w:'your',      n:4,  breaker:false, why:'o, u and r work together to say or'},
+  {w:'have',      n:6,  breaker:false, why:'it carries a Silent E, which had not been taught yet'},
+  {w:'her',       n:8,  breaker:false, why:'the er team had not been taught yet'},
+  {w:'some',      n:19, breaker:true,  why:'the o says uh, and Silent E does not stretch it'},
+  {w:'something', n:19, breaker:true,  why:'some plus thing, and that o still says uh'},
+  {w:'come',      n:19, breaker:true,  why:'the o says uh, and Silent E does not stretch it'},
+  {w:'what',      n:19, breaker:true,  why:'the a does not say the sound you would expect'},
+  {w:'pony',      n:23, breaker:false, why:'the y on the end says long e, taught later'},
+  {w:'sandwich',  n:23, breaker:false, why:'it splits by a syllable rule taught later'},
+  {w:'been',      n:25, breaker:true,  why:'most of us do not give the ee its usual long e'},
+  {w:'who',       n:29, breaker:true,  why:'the wh says h, and the o says oo'},
+  {w:'move',      n:29, breaker:true,  why:'the o says oo instead of its long sound'},
+  {w:'done',      n:31, breaker:false, why:'the o takes its fourth sound, uh'},
+  {w:'none',      n:31, breaker:false, why:'the o takes its fourth sound, uh'},
+  {w:'one',       n:31, breaker:true,  why:'the o says wuh, which is unusual'},
+  {w:'warm',      n:33, breaker:true,  why:'in many places the ar here sounds like or'},
+  {w:'Mr.',       n:33, breaker:false, why:'a short way of writing mister'},
+  {w:'Mrs.',      n:33, breaker:false, why:'a short way of writing missus'},
+  {w:'too',       n:33, breaker:false, why:'the two o letters together say oo'},
+  {w:'where',     n:37, breaker:true,  why:'the e, r and e do not say what you would expect'},
+  {w:'there',     n:37, breaker:true,  why:'the e, r and e do not say what you would expect'},
+  {w:'pumpkin',   n:42, breaker:false, why:'it splits by a syllable rule taught later'},
+  {w:'oh',        n:46, breaker:true,  why:'the h is silent'},
+  {w:'they',      n:48, breaker:false, why:'the ey says long a, which comes later'},
+  {w:'two',       n:50, breaker:true,  why:'the w is silent and the o says oo'},
+  {w:'were',      n:52, breaker:true,  why:'the Silent E has no job at all in this one'},
+  {w:'aunt',      n:54, breaker:true,  why:'in many places the au here sounds like ant'},
+  {w:'any',       n:56, breaker:true,  why:'the a says short e and the y says long e'},
+  {w:'many',      n:56, breaker:true,  why:'the a says short e and the y says long e'}];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -2396,5 +2439,6 @@ const GAMES=[
   {id:'magic',    name:'Magic E', emoji:'✨', cls:'c-magic', sub:'Add an E, change the word!', engine:'magic', pool:MAGIC, on:false, hint:'Silent E makes a short vowel say its long sound.'},
   {id:'ed',       name:'-ed Endings', emoji:'🏁', cls:'c-ed', sub:'Sort by the -ed sound.', engine:'ed', pool:ED, on:false, hint:'The three sounds of -ed: /t/, /d/, /id/.'},
   {id:'contraction', name:'Squish It', emoji:'🤝', cls:'c-contr', sub:'Two words into one.', engine:'contraction', pool:CONTRACTIONS, on:false, hint:'Contractions like do not → don’t.'},
-  {id:'sight', name:'Sight Word Flash', emoji:'⚡', cls:'c-review', sub:'Read it out loud!', engine:'sightword', pool:SIGHTWORDS, on:true, hint:'High-frequency "heart words" that don\'t follow regular phonics rules — read by sight, not by sounding out.'}
+  {id:'sight', name:'Sight Word Flash', emoji:'⚡', cls:'c-review', sub:'Read it out loud!', engine:'sightword', pool:SIGHTWORDS, on:true, hint:'High-frequency "heart words" that don\'t follow regular phonics rules — read by sight, not by sounding out.'},
+  {id:'leap', name:'Leap Words', emoji:'🐸', cls:'c-magic', sub:'Words that break the rules.', engine:'leapword', pool:LEAPWORDS, on:true, hint:'All 32 Leap Words from Level 2. Each one either breaks the rules or uses a phonogram taught later, so it is read by sight. After each word the game says which lesson it came from and why it is odd. Tracks mastery separately from Sight Word Flash.'}
 ];
