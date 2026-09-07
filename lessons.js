@@ -89,7 +89,7 @@ const WORDCHANGE=[
   {from:'lack',to:'black',hint:'add b at the start → bl blend'},
   {from:'low',to:'slow',hint:'add s at the start → sl blend'},
   {from:'an',to:'ant',hint:'add t at the end → nt blend'},
-  {from:'en',to:'end',hint:'add d at the end → nd blend'},
+  {from:'lend',to:'blend',hint:'add b at the start → bl blend'},
   {from:'rot',to:'trot',hint:'add t at the start → tr blend'},
   {from:'rick',to:'trick',hint:'add t at the start → tr blend'}];
 const YWORDS=['my','cry','try','dry','by','sky','fly','shy','fry','ply','pry','sly','spy','sty','why','guy'];
@@ -138,41 +138,50 @@ const SPLIT=[
   {w:'dentist', parts:['den','tist']},
   {w:'combat', parts:['com','bat']},
   {w:'helmet', parts:['hel','met']},
-  {w:'carpet', parts:['car','pet']},
+  {w:'tablet', parts:['tab','let']},
   {w:'cobweb', parts:['cob','web']},
   {w:'pancake', parts:['pan','cake']},
   {w:'sandbox', parts:['sand','box']},
   {w:'catfish', parts:['cat','fish']},
   {w:'sunset', parts:['sun','set']}];
+/* Every pair carries a `say`. Without one the app spoke the displayed string
+   with its ellipsis, leaving the voice to guess at bare syllables -- the very
+   failure the respelling convention exists to avoid. An unstressed -er ending is
+   written "urr" and a final -et "ett", so neither is read as a long vowel.
+   blanket is shown blank...et, not blan...ket: nk is one phonogram and Lessons 12
+   and 25 both teach that a team is never split. */
 const GUESSWORDS=[
-  {from:'pup...pet', to:'puppet'},
-  {from:'pil...grim', to:'pilgrim'},
-  {from:'rab...bit', to:'rabbit'},
-  {from:'hap...pen', to:'happen'},
-  {from:'mag...net', to:'magnet'},
-  {from:'sud...den', to:'sudden'},
-  {from:'but...ton', to:'button'},
-  {from:'din...ner', to:'dinner'},
-  {from:'hid...den', to:'hidden'},
-  {from:'prob...lem', to:'problem'},
-  {from:'sig...nal', to:'signal'},
-  {from:'ob...ject', to:'object'},
-  {from:'traf...fic', to:'traffic'},
-  {from:'sis...ter', to:'sister'},
-  {from:'win...ter', to:'winter'},
-  {from:'af...ter', to:'after'},
-  {from:'dol...lar', to:'dollar'},
-  {from:'lad...der', to:'ladder'},
-  {from:'ham...mer', to:'hammer'},
-  {from:'hap...py', to:'happy', say:'hap, pee'},
-  {from:'rock...et', to:'rocket', say:'rock, ett'},
-  {from:'blan...ket', to:'blanket'},
-  {from:'trum...pet', to:'trumpet'},
-  {from:'pock...et', to:'pocket', say:'pock, ett'},
-  {from:'jack...et', to:'jacket', say:'jack, ett'}];
+  {from:'pup...pet',  to:'puppet',  say:'pup, pett'},
+  {from:'pil...grim', to:'pilgrim', say:'pill, grim'},
+  {from:'rab...bit',  to:'rabbit',  say:'rab, bit'},
+  {from:'hap...pen',  to:'happen',  say:'hap, pen'},
+  {from:'mag...net',  to:'magnet',  say:'mag, nett'},
+  {from:'sud...den',  to:'sudden',  say:'sud, den'},
+  {from:'but...ton',  to:'button',  say:'but, ton'},
+  {from:'kit...ten',  to:'kitten',  say:'kit, ten'},
+  {from:'hid...den',  to:'hidden',  say:'hid, den'},
+  {from:'prob...lem', to:'problem', say:'prob, lem'},
+  {from:'sig...nal',  to:'signal',  say:'sig, nal'},
+  {from:'ob...ject',  to:'object',  say:'obb, jekt'},
+  {from:'traf...fic', to:'traffic', say:'traf, fick'},
+  {from:'muf...fin',  to:'muffin',  say:'muff, in'},
+  {from:'nap...kin',  to:'napkin',  say:'nap, kin'},
+  {from:'bas...ket',  to:'basket',  say:'bass, kett'},
+  {from:'vel...vet',  to:'velvet',  say:'vell, vett'},
+  {from:'gob...lin',  to:'goblin',  say:'gob, lin'},
+  {from:'mit...ten',  to:'mitten',  say:'mit, ten'},
+  {from:'hap...py',   to:'happy',   say:'hap, pee'},
+  {from:'rock...et',  to:'rocket',  say:'rock, ett'},
+  {from:'blank...et', to:'blanket', say:'blank, ett'},
+  {from:'trum...pet', to:'trumpet', say:'trum, pett'},
+  {from:'pock...et',  to:'pocket',  say:'pock, ett'},
+  {from:'jack...et',  to:'jacket',  say:'jack, ett'}];
+/* Every word here is decodable with Level 1 phonograms. Earlier versions of this
+   pool reached for screen, sprout, splinter, scream and stream, whose ee, ou, er
+   and ea are all taught much later or in Level 3. */
 const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','splash','scram',
-  'scratch','splat','sprout','strap','scream','screen','script','scrape','splinter','splotch',
-  'sprint','spray','sprig','stream','stroll','strand'];
+  'scratch','splat','splint','strap','sprang','strut','script','scrape','strict','splotch',
+  'sprint','sprung','sprig','strung','stroll','strand'];
 /* High-frequency "heart words" — many don't follow regular phonics rules, so they're
    practiced by sight rather than sounded out. This is the standard Dolch pre-primer +
    primer + first-grade word lists (133 words, the widely used baseline for "first
@@ -447,7 +456,7 @@ const LONGU17={
     {w:'June',    k:'/oo/'},
     {w:'tulip',   k:'/oo/'},
     {w:'flute',   k:'/oo/'},
-    {w:'super',   k:'/oo/'},
+    {w:'truth',   k:'/oo/'},
     {w:'prune',   k:'/oo/'},
     {w:'ruby',    k:'/oo/'}]};
 /* S between two vowels usually buzzes as /z/, but not always -- the manual names
@@ -455,7 +464,10 @@ const LONGU17={
    so the lesson's "most of the time" stays true while the exception still shows
    up often enough to be learned rather than guessed past.
    Every word here has s sitting between two vowels; words where s does anything
-   else are not the question this stage is asking. */
+   else are not the question this stage is asking.
+   "use" is deliberately absent even though the manual lists it: as a verb its s
+   buzzes and as a noun it hisses, so the round would have no single right answer
+   and the voice picks the reading. It is still Word Card 80, where it is read. */
 const SSOUND17={
   instruction:'The s is between two vowels. Which sound is it making?',
   buckets:[
@@ -470,14 +482,14 @@ const SSOUND17={
     {w:'wise',  k:'/z/'},
     {w:'rise',  k:'/z/'},
     {w:'chose', k:'/z/'},
-    {w:'use',   k:'/z/'},
+    {w:'choose',k:'/z/'},
     {w:'music', k:'/z/'},
     {w:'pose',  k:'/z/'},
     {w:'muse',  k:'/z/'},
     {w:'goose', k:'/s/'},
     {w:'case',  k:'/s/'},
     {w:'house', k:'/s/'},
-    {w:'mouse', k:'/s/'},
+    {w:'base',  k:'/s/'},
     {w:'loose', k:'/s/'},
     {w:'chase', k:'/s/'}]};
 /* Word Cards 80-89 -- Lesson 17's Practice Reading Words, exactly as listed.
@@ -491,8 +503,11 @@ const CARDS17=['use','cute','wise','rule','these','those','nose','June','chose',
    Left out on purpose: who, whose and whole. Those are spelled with wh but the
    w is silent and they say /h/, which is a different phonogram sound this lesson
    does not teach -- including them would contradict the rule being learned. */
-const WHWORDS19=['when','while','white','whale','which','why','whip','whim','whiff',
-  'wheel','wheat','whisk','whack','whine','whirl','whisper'];
+/* Twelve words, every one readable with what Lesson 19 has covered. Dropped from
+   an earlier version: wheel and wheat (ee and ea), whisper (er) and whirl (ir),
+   none of which she can decode this early. */
+const WHWORDS19=['when','while','white','whale','which','why',
+  'whip','whim','whiff','whisk','whack','whine'];
 /* The manual's "Change the Word" chain, where one or two tiles move at a time and
    the wh team stays put. Hints are required for the same reason as Lesson 15's
    Word Flippers: the other options are drawn from this very list, so without a
@@ -894,10 +909,10 @@ const THREESYL33=[
   {w:'different',  parts:['dif','fer','ent']},
   {w:'cucumber',   parts:['cu','cum','ber']},
   {w:'carpenter',  parts:['car','pen','ter']},
-  {w:'hamburger',  parts:['ham','bur','ger']},
+  {w:'establish',  parts:['es','tab','lish']},
   {w:'butterfly',  parts:['but','ter','fly']},
   {w:'wonderful',  parts:['won','der','ful']},
-  {w:'yesterday',  parts:['yes','ter','day']},
+  {w:'confident',  parts:['con','fi','dent']},
   {w:'basketball', parts:['bas','ket','ball']},
   {w:'understand', parts:['un','der','stand']},
   {w:'important',  parts:['im','por','tant']},
@@ -909,7 +924,7 @@ const CARDS33=['barn','sharp','hard','start','March','dark'];
    /ar/, though the manual notes some regions say it the regular way. Mr. and
    Mrs. are abbreviations, which is why they carry a capital and a period; the
    browser voice reads them as "mister" and "missus", which is what we want. */
-const LEAP33=['warm','Mr.','Mrs.','too'];
+const LEAP33=['warm',{w:'Mr.',say:'mister'},{w:'Mrs.',say:'missus'},'too'];
 
 /* Lesson 35 -- phonogram or, the third Bossy R spelling after ar and er.
    The manual's Change the Word chain (fort to short to port to sport), extended
@@ -1281,7 +1296,7 @@ const UVCHANGE44=[
   {from:'glue',  to:'clue',  hint:'change the g to a c'},
   {from:'clue',  to:'true',  hint:'change the cl to a tr'},
   {from:'true',  to:'blue',  hint:'change the tr to a bl'},
-  {from:'carve', to:'curve', hint:'change the a to a u'}];
+  {from:'wave',  to:'cave',  hint:'change the w to a c'}];
 /* Word Cards 222-231 -- the Practice Reading Words, exactly as listed. Ten cards
    against a ten-round stage, so each comes up once per sitting. Sue keeps its
    capital, being a name. This lesson has no Leap Words. */
@@ -1434,16 +1449,16 @@ const EDSOUND48={
     {w:'landed',  k:'/ed/'},
     {w:'planted', k:'/ed/'},
     {w:'needed',  k:'/ed/'},
-    {w:'painted', k:'/ed/'},
+    {w:'hunted',  k:'/ed/'},
     {w:'twisted', k:'/ed/'},
     {w:'started', k:'/ed/'},
     {w:'snowed',  k:'/d/'},
     {w:'smiled',  k:'/d/'},
     {w:'saved',   k:'/d/'},
     {w:'filled',  k:'/d/'},
-    {w:'played',  k:'/d/'},
-    {w:'rained',  k:'/d/'},
-    {w:'cleaned', k:'/d/'},
+    {w:'buzzed',  k:'/d/'},
+    {w:'spilled', k:'/d/'},
+    {w:'planned', k:'/d/'},
     {w:'called',  k:'/d/'},
     {w:'covered', k:'/d/'},
     {w:'formed',  k:'/d/'},
@@ -1678,8 +1693,8 @@ const LEAPWORDS=[
   {w:'none',      n:31, breaker:false, why:'the o takes its fourth sound, uh'},
   {w:'one',       n:31, breaker:true,  why:'the o says wuh, which is unusual'},
   {w:'warm',      n:33, breaker:true,  why:'in many places the ar here sounds like or'},
-  {w:'Mr.',       n:33, breaker:false, why:'a short way of writing mister'},
-  {w:'Mrs.',      n:33, breaker:false, why:'a short way of writing missus'},
+  {w:'Mr.',       n:33, breaker:false, say:'mister', why:'a short way of writing mister'},
+  {w:'Mrs.',      n:33, breaker:false, say:'missus', why:'a short way of writing missus'},
   {w:'too',       n:33, breaker:false, why:'the two o letters together say oo'},
   {w:'where',     n:37, breaker:true,  why:'the e, r and e do not say what you would expect'},
   {w:'there',     n:37, breaker:true,  why:'the e, r and e do not say what you would expect'},
@@ -1927,7 +1942,7 @@ let LESSONS=[
         'This lesson also brings four <b>Leap Words</b>. Those are words that break the rules you have learned so far, so instead of sounding them out you leap right over and just know them.'
       ],
       words:['white','when','whale'],
-      review:['when','while','white','whale','which','why'],
+      review:['when','while','white','whale','which','why','some','something','come','what'],
       trick:{
         title:'The four Leap Words',
         points:[
@@ -1982,7 +1997,7 @@ let LESSONS=[
         'But when the base word already ends in a hissing or buzzing sound, the s has to start a whole new syllable. <b>noses</b> is two claps, and so is <b>prizes</b>. Say them slowly and you will hear the extra beat.'
       ],
       words:['cakes','ropes','prizes'],
-      review:['miles','cakes','games','gates','notes','holes','jokes','lakes'],
+      review:['miles','cakes','games','gates','notes','holes','jokes','lakes','pony','sandwich'],
       trick:{
         title:'Handy to remember',
         points:[
@@ -2061,12 +2076,14 @@ let LESSONS=[
         'One catch, and it matters. The rule says the vowel <b>may</b> go long, not that it always does. Plenty of words with that very same shape keep the short sound, like <b>lost</b>, <b>cost</b> and <b>gift</b>. So say the word out loud and let your ear settle it.'
       ],
       words:['find','gold','child'],
-      review:['told','wild','both','child','hold','most','find','behind',"don't","won't"],
+      review:['told','wild','both','child','hold','most','find','behind',"don't","won't",'who','move'],
       trick:{
         title:'Two contractions worth a look',
         points:[
           {w:'don\'t', note:'do plus not \u2014 and the o goes long, because now two consonants follow it'},
           {w:'won\'t', note:'will plus not \u2014 the one contraction where even the first word changes'},
+          {w:'who', note:'a Leap Word \u2014 the wh says h, and the o says oo'},
+          {w:'move', note:'a Leap Word \u2014 the o says oo rather than its long sound'},
           {w:'Rule of thumb', note:'i or o, then two consonants, often means long \u2014 but say it aloud to be sure'}
         ]
       }
@@ -2088,7 +2105,7 @@ let LESSONS=[
         'And when you split a longer word, the er counts as the vowel of its syllable. <b>paper</b> has one consonant sitting between its two vowels, so it divides <b>pa-per</b> \u2014 Open first, then Bossy R.'
       ],
       words:['her','fern','paper'],
-      review:['never','paper','after','summer','winter','over','under'],
+      review:['never','paper','after','summer','winter','over','under','done','none','one'],
       trick:{
         title:'Three Leap Words that rhyme',
         points:[
@@ -2115,7 +2132,7 @@ let LESSONS=[
         'Try <b>fantastic</b>. Find the first two vowels, notice two consonants between them, and split: <b>fan</b>. Then do the very same thing again to what is left: <b>tas</b>, then <b>tic</b>. Three syllables, three easy pieces, and the word almost reads itself.'
       ],
       words:['car','barn','fantastic'],
-      review:['barn','sharp','hard','start','March','dark'],
+      review:['barn','sharp','hard','start','March','dark','warm','Mr.','Mrs.','too'],
       trick:{
         title:'Four Leap Words',
         points:[
@@ -2168,7 +2185,7 @@ let LESSONS=[
         'This lesson also has a listening game. Say <b>lem...on</b> slowly, sounding the second part exactly as it is spelled, then say the whole thing fast. Out comes <b>lemon</b>. That second syllable gets muffled when we talk quickly, so sounding it out gets you close and normal speed finishes the job.'
       ],
       words:['put','push','pull'],
-      review:['push','full','pull','put','bacon','wagon','dragon','lemon'],
+      review:['push','full','pull','put','bacon','wagon','dragon','lemon','where','there'],
       trick:{
         title:'Worth remembering',
         points:[

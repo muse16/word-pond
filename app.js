@@ -403,23 +403,26 @@ const ENGINES={
      sitting alongside benefits from knowing whether this one truly breaks the
      rules or merely arrived before the rule that explains it. */
   leapword(item){
-    const q=jsq(item.w);
+    const q=jsq(item.w), spoken=jsq(item.say||item.w);
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
       <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the Leap Word out loud! Stuck? Tap the speaker.</div>
       <div class="big-target word-target">${item.w}
-        <button class="speak-btn" onclick="speak('${q}')" aria-label="hear ${item.w}">${SPKR}</button></div>
+        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${item.w}">${SPKR}</button></div>
       <div class="sight-controls">
         <button class="btn-mint" onclick="Game.leapAnswer(true,'${q}')">\u2713 I read it!</button>
         <button class="btn-soft" onclick="Game.leapAnswer(false,'${q}')">🔁 Still tricky</button>
       </div>
       <div class="feedback" id="fb"></div></div>`;},
 
-  sightword(w){
-    const q=jsq(w);
+  /* A pool entry is normally just the word, but it may be {w, say} when the
+     spelling would mislead the voice -- Mr. and Mrs. have no vowel, and some
+     voices spell them out rather than saying mister and missus. */
+  sightword(item){
+    const w=(item&&item.w)||item, q=jsq(w), spoken=jsq((item&&item.say)||w);
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
       <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the word out loud! Stuck? Tap the speaker.</div>
       <div class="big-target word-target">${w}
-        <button class="speak-btn" onclick="speak('${q}')" aria-label="hear ${w}">${SPKR}</button></div>
+        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${w}">${SPKR}</button></div>
       <div class="sight-controls">
         <button class="btn-mint" onclick="Game.sightAnswer(true,'${q}')">✓ I read it!</button>
         <button class="btn-soft" onclick="Game.sightAnswer(false,'${q}')">🔁 Still tricky</button>
