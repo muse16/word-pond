@@ -1581,6 +1581,51 @@ const AWWORDS54=['saw','law','draw','claw','lawn','yawn','hawk','straw',
    a Leap Word because its au does not say /aw/; most of us say it like ant. */
 const CARDS54=['saw','law','yawn','hawk','draw','haul','pause','August','because','aunt'];
 
+/* Lesson 56 -- phonograms ow and ou. The third pair of this shape after oy/oi
+   and aw/au, split by the same rule: English words do not end in u, so ou stays
+   inside a word and ow takes the end.
+   What is new here, and the intro says so, is that both of these carry OTHER
+   sounds as well -- ow can say long o as in low, and ou has three more besides.
+   Those belong to later levels, so every word in this lesson uses /ow/ only.
+   Both of the manual's Change the Word chains, run in both directions. */
+const OWCHANGE56=[
+  {from:'down',   to:'town',   hint:'change the d to a t'},
+  {from:'town',   to:'down',   hint:'change the t to a d'},
+  {from:'town',   to:'clown',  hint:'change the t to a c and an l'},
+  {from:'clown',  to:'crown',  hint:'change the l to an r'},
+  {from:'crown',  to:'clown',  hint:'change the r to an l'},
+  {from:'crown',  to:'brown',  hint:'change the c to a b'},
+  {from:'brown',  to:'frown',  hint:'change the b to an f'},
+  {from:'frown',  to:'brown',  hint:'change the f to a b'},
+  {from:'cow',    to:'now',    hint:'change the c to an n'},
+  {from:'now',    to:'cow',    hint:'change the n to a c'},
+  {from:'now',    to:'how',    hint:'change the n to an h'},
+  {from:'how',    to:'now',    hint:'change the h to an n'},
+  {from:'found',  to:'pound',  hint:'change the f to a p'},
+  {from:'pound',  to:'sound',  hint:'change the p to an s'},
+  {from:'pound',  to:'found',  hint:'change the p to an f'},
+  {from:'sound',  to:'round',  hint:'change the s to an r'},
+  {from:'round',  to:'ground', hint:'change the r to a g and an r'},
+  {from:'round',  to:'found',  hint:'change the r to an f'},
+  {from:'ground', to:'round',  hint:'take the g off the front'},
+  {from:'out',    to:'shout',  hint:'add an s and an h at the front'},
+  {from:'shout',  to:'out',    hint:'take the sh off the front'},
+  {from:'ouch',   to:'couch',  hint:'add a c at the front'},
+  {from:'couch',  to:'ouch',   hint:'take the c off the front'},
+  {from:'house',  to:'mouse',  hint:'change the h to an m'},
+  {from:'mouse',  to:'house',  hint:'change the m to an h'}];
+/* Find the /ow/ word. Both spellings share one pool, since the reading insight is
+   that ow and ou make the same sound here. Distractors come from the same list,
+   so rounds pit down against town or found against cloud.
+   Nothing ends in ou, which is the whole reason the two spellings exist. */
+const OWWORDS56=['cow','now','down','town','brown','clown','owl','flower',
+  'out','house','mouse','mouth','found','cloud','round','shout'];
+/* Word Cards 283-292 -- the eight Practice Reading Words plus any and many on
+   cards 291 and 292. Ten cards against a ten-round stage, so each comes up once
+   per sitting. any and many rhyme and are both Leap Words: neither the a nor the
+   y says what the rules so far would predict. */
+const CARDS56=['brown','cloud','down','out','flower','found','mouth','now','any','many'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -2312,6 +2357,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:AWCHANGE54}, rounds:8, label:'Change the Word'},
       {engine:'review', pool:AWWORDS54, rounds:7, label:'Find the Word'},
       {engine:'sightword', pool:CARDS54, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L56', n:56, title:'OW and OU', emoji:'🐄', cls:'c-sound',
+    intro:{
+      topic:'One more pair, with a twist',
+      lines:[
+        'One more pair sharing a sound. <b>ow</b> and <b>ou</b> can both say <b>/ow/</b>, the sound in <b>cow</b> and in <b>mouse</b>. That sound is what this whole lesson is about.',
+        'The same familiar reason keeps them apart. <b>ou</b> is only found inside a word, because English words do not end in u. So the end of a word takes <b>ow</b> \u2014 <b>cow</b>, <b>now</b>, <b>how</b>, <b>plow</b>.',
+        'Inside a word, <b>ow</b> likes to sit before an l, n or d, as in <b>owl</b>, <b>brown</b> and <b>crowd</b>. Nearly everywhere else inside a word you will meet <b>ou</b>: <b>house</b>, <b>found</b>, <b>cloud</b>, <b>mouth</b>.',
+        'Here is what is different this time. Both of these have <b>other sounds</b> as well. <b>ow</b> can say long o, as in <b>low</b>, and <b>ou</b> has several more besides. You will meet those further along in your books. Everything in this lesson uses <b>/ow/</b>.'
+      ],
+      words:['cow','mouse','brown'],
+      review:['brown','cloud','down','out','flower','found','mouth','now','any','many'],
+      trick:{
+        title:'Worth knowing',
+        points:[
+          {w:'Both can say /ow/', note:'that is the one sound this lesson is about'},
+          {w:'ow goes on the end', note:'cow, now, how \u2014 English words do not end in u'},
+          {w:'ow also sits before l, n and d', note:'owl, brown, crowd'},
+          {w:'any and many', note:'Leap Words that rhyme \u2014 neither the a nor the y says what you would expect'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:OWCHANGE56}, rounds:8, label:'Change the Word'},
+      {engine:'review', pool:OWWORDS56, rounds:7, label:'Find the Word'},
+      {engine:'sightword', pool:CARDS56, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
