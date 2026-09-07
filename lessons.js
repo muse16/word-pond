@@ -1264,6 +1264,98 @@ const UVCHANGE44=[
    capital, being a name. This lesson has no Leap Words. */
 const CARDS44=['blue','give','forgive','glue','carve','true','live','twelve','Sue','clue'];
 
+/* Lesson 46 -- the fourth sound of o, and the fourth job of Silent E.
+   The fourth sound of o is /u/ as in love and mother. It is a clear vowel in an
+   accented syllable, not a schwa, which is why front and won belong here while a
+   muffled unaccented o does not.
+   Sorted against short o rather than all four sounds at once: short o is the one
+   a reader actually reaches for first and gets wrong, so that is the contrast
+   worth drilling. Weighted 14 to 10 toward the new sound. */
+const OSOUND46={
+  instruction:'Listen to the o. Which sound is it making?',
+  buckets:[
+    {key:'/u/', ex:'love', why:'this is the fourth sound of o, the one you hear in love and mother'},
+    {key:'/o/', ex:'hot',  why:'this is the plain short o you already knew'}],
+  items:[
+    {w:'love',    k:'/u/'},
+    {w:'mother',  k:'/u/'},
+    {w:'brother', k:'/u/'},
+    {w:'other',   k:'/u/'},
+    {w:'front',   k:'/u/'},
+    {w:'won',     k:'/u/'},
+    {w:'nothing', k:'/u/'},
+    {w:'month',   k:'/u/'},
+    {w:'glove',   k:'/u/'},
+    {w:'shove',   k:'/u/'},
+    {w:'cover',   k:'/u/'},
+    {w:'some',    k:'/u/'},
+    {w:'come',    k:'/u/'},
+    {w:'done',    k:'/u/'},
+    {w:'hot',     k:'/o/'},
+    {w:'stop',    k:'/o/'},
+    {w:'lock',    k:'/o/'},
+    {w:'frog',    k:'/o/'},
+    {w:'pond',    k:'/o/'},
+    {w:'sock',    k:'/o/'},
+    {w:'box',     k:'/o/'},
+    {w:'clock',   k:'/o/'},
+    {w:'shop',    k:'/o/'},
+    {w:'rock',    k:'/o/'}]};
+/* All four jobs of Silent E, now that the fourth is taught. Job four is the
+   subtle one: strip the e off rinse and you get rins, which reads like a plural
+   of some word rin, so the e is there purely to settle that.
+   As in Lesson 44, every word does exactly ONE job. Job-four words all take their
+   vowel sound from somewhere else -- a short vowel before a cluster (rinse,
+   glimpse), a vowel team (cheese, goose, noise) or a bossy r (horse, sparse) --
+   so the e is not stretching anything. Words like case and nose are left out:
+   there the e is doing job one as well. */
+const EJOBS46={
+  instruction:'Which job is Silent E doing in this word?',
+  buckets:[
+    {key:'long vowel',   ex:'cake',  why:'nothing to soften, no u or v to rescue and no plural to rule out, so the e just stretches the vowel'},
+    {key:'soft c or g',  ex:'fence', why:'the e is there to soften the c or g, and the vowel stays short'},
+    {key:'saves u or v', ex:'give',  why:'English words cannot end in v and hardly ever in u, so the e takes the last spot'},
+    {key:'not a plural', ex:'rinse', why:'without the e that s would read like a plural ending, so the e settles it'}],
+  items:[
+    {w:'cake',    k:'long vowel'},
+    {w:'bike',    k:'long vowel'},
+    {w:'home',    k:'long vowel'},
+    {w:'note',    k:'long vowel'},
+    {w:'rope',    k:'long vowel'},
+    {w:'made',    k:'long vowel'},
+    {w:'ride',    k:'long vowel'},
+    {w:'name',    k:'long vowel'},
+    {w:'fence',   k:'soft c or g'},
+    {w:'since',   k:'soft c or g'},
+    {w:'dance',   k:'soft c or g'},
+    {w:'prince',  k:'soft c or g'},
+    {w:'large',   k:'soft c or g'},
+    {w:'hinge',   k:'soft c or g'},
+    {w:'change',  k:'soft c or g'},
+    {w:'glance',  k:'soft c or g'},
+    {w:'give',    k:'saves u or v'},
+    {w:'have',    k:'saves u or v'},
+    {w:'solve',   k:'saves u or v'},
+    {w:'carve',   k:'saves u or v'},
+    {w:'glove',   k:'saves u or v'},
+    {w:'glue',    k:'saves u or v'},
+    {w:'blue',    k:'saves u or v'},
+    {w:'true',    k:'saves u or v'},
+    {w:'rinse',   k:'not a plural'},
+    {w:'cheese',  k:'not a plural'},
+    {w:'horse',   k:'not a plural'},
+    {w:'mouse',   k:'not a plural'},
+    {w:'goose',   k:'not a plural'},
+    {w:'noise',   k:'not a plural'},
+    {w:'pause',   k:'not a plural'},
+    {w:'false',   k:'not a plural'},
+    {w:'sparse',  k:'not a plural'},
+    {w:'glimpse', k:'not a plural'}]};
+/* Word Cards 232-242 -- the ten Practice Reading Words plus oh on card 242.
+   Eleven cards against an eleven-round stage, so each comes up once per sitting.
+   oh is a Leap Word because its h is silent; the intro says so. */
+const CARDS46=['brother','mother','other','love','glove','shove','won','front','rinse','cheese','oh'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1859,6 +1951,34 @@ let LESSONS=[
       {engine:'sortsound', pool:EJOBS44, rounds:8, label:'Which Job?'},
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:UVCHANGE44}, rounds:7, label:'Change the Word'},
       {engine:'sightword', pool:CARDS44, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L46', n:46, title:'Fourth Sound, Fourth Job', emoji:'🦢', cls:'c-sound',
+    intro:{
+      topic:'A fourth sound for O, and a fourth job for Silent E',
+      lines:[
+        'The letter <b>o</b> has four sounds and you have already met three. Short o in <b>otter</b>, long o in <b>open</b>, and the /oo/ in <b>to</b>. Here is the fourth: <b>/uh/</b>, the sound sitting in <b>love</b> and <b>mother</b>.',
+        'Listen for it in <b>front</b>, <b>won</b>, <b>nothing</b>, <b>month</b>, <b>brother</b>. If you meet an o and are not sure which sound it wants, try them in order until one makes a real word.',
+        'Now Silent E picks up a fourth job, and this one is clever. Look at <b>rinse</b>. Take the e away and you are left with <b>rins</b>, which looks like it might mean more than one <b>rin</b>. That e is there to show the word is <b>not a plural</b>.',
+        'The same goes for <b>cheese</b>, <b>horse</b>, <b>mouse</b> and <b>goose</b>. Drop the e off any of them and the s starts to look like a plural ending. So Silent E steps in and settles the matter.'
+      ],
+      words:['love','front','rinse'],
+      review:['brother','mother','other','love','glove','shove','won','front','rinse','cheese','oh'],
+      trick:{
+        title:'All four jobs of Silent E',
+        points:[
+          {w:'Job one', note:'make the vowel long \u2014 cake, home, ride'},
+          {w:'Job two', note:'soften the c or g \u2014 fence, large, hinge'},
+          {w:'Job three', note:'keep u or v off the end \u2014 give, have, blue'},
+          {w:'Job four', note:'show the word is not a plural \u2014 rinse, cheese, goose'},
+          {w:'oh', note:'a Leap Word \u2014 the h is silent'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'sortsound', pool:OSOUND46, rounds:7, label:'Which Sound of O'},
+      {engine:'sortsound', pool:EJOBS46, rounds:7, label:'Which Job?'},
+      {engine:'sightword', pool:CARDS46, rounds:11, label:'Read the Word Cards'}
     ]
   }
 ];
