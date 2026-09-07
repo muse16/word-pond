@@ -982,6 +982,78 @@ const CARDS37=['push','full','pull','put','bacon','wagon','dragon','lemon'];
    e-r-e refuses to say what the rules so far would predict. */
 const LEAP37=['where','there'];
 
+/* Lesson 39 -- soft c, and the second job of Silent E.
+   Hammers and Feathers, the manual's sort, with its own answer key as the seed:
+   carpet, cold, cake, creek, plastic, cry, craft and cart in the hammer pile;
+   dance, force, fence, prince, since, glance and cent in the feather pile.
+   Feedback names the rule every round rather than just the answer, since the rule
+   is the whole point: c goes soft before e, i or y and stays hard before anything
+   else. Words spelled with ch are kept out -- in chance the deciding c is the
+   second one, and a child applying the rule to the first would get it backwards. */
+const CSOUND39={
+  instruction:'Find the c. Is it hard or soft here?',
+  buckets:[
+    {key:'hard', ex:'cake', why:'the c is followed by something other than e, i or y, so it says /k/'},
+    {key:'soft', ex:'city', why:'the c is followed by an e, i or y, so it says /s/'}],
+  items:[
+    {w:'carpet',  k:'hard'},
+    {w:'cold',    k:'hard'},
+    {w:'cake',    k:'hard'},
+    {w:'creek',   k:'hard'},
+    {w:'plastic', k:'hard'},
+    {w:'cry',     k:'hard'},
+    {w:'craft',   k:'hard'},
+    {w:'cart',    k:'hard'},
+    {w:'cup',     k:'hard'},
+    {w:'class',   k:'hard'},
+    {w:'dance',   k:'soft'},
+    {w:'force',   k:'soft'},
+    {w:'fence',   k:'soft'},
+    {w:'prince',  k:'soft'},
+    {w:'since',   k:'soft'},
+    {w:'glance',  k:'soft'},
+    {w:'cent',    k:'soft'},
+    {w:'city',    k:'soft'},
+    {w:'pencil',  k:'soft'},
+    {w:'center',  k:'soft'}]};
+/* Silent E now has two jobs, and this stage asks which one it is doing. Job one
+   is the Lesson 14 skill, stretching the vowel long. Job two is new: sitting
+   behind a c to make it say /s/, while the vowel stays short.
+   Deliberately left out: face, race, place, nice, ice, twice, space and their
+   kin, where Silent E is doing BOTH at once. They are perfectly good words, and
+   the manual even lists several, but a two-way question has no honest answer for
+   them. Every word here does one job or the other, never both. */
+const SILENTE39={
+  instruction:'Silent E has two jobs. Which one is it doing here?',
+  buckets:[
+    {key:'long vowel', ex:'cake',  why:'there is no c to soften, so the e stretches the vowel long'},
+    {key:'soft c',     ex:'fence', why:'the e sits behind the c to make it say /s/, and the vowel stays short'}],
+  items:[
+    {w:'cake',   k:'long vowel'},
+    {w:'bike',   k:'long vowel'},
+    {w:'home',   k:'long vowel'},
+    {w:'five',   k:'long vowel'},
+    {w:'name',   k:'long vowel'},
+    {w:'rope',   k:'long vowel'},
+    {w:'made',   k:'long vowel'},
+    {w:'note',   k:'long vowel'},
+    {w:'ride',   k:'long vowel'},
+    {w:'hope',   k:'long vowel'},
+    {w:'fence',  k:'soft c'},
+    {w:'prince', k:'soft c'},
+    {w:'dance',  k:'soft c'},
+    {w:'since',  k:'soft c'},
+    {w:'glance', k:'soft c'},
+    {w:'chance', k:'soft c'},
+    {w:'force',  k:'soft c'},
+    {w:'wince',  k:'soft c'},
+    {w:'prance', k:'soft c'},
+    {w:'hence',  k:'soft c'}]};
+/* Word Cards 192-201 -- the Practice Reading Words, exactly as listed. Ten cards
+   against a ten-round stage, so each comes up once per sitting.
+   This lesson has no Leap Words. */
+const CARDS39=['cent','dance','fence','force','prince','chance','since','pencil','center','France'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1473,6 +1545,32 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESS37}, rounds:7, label:'Guess What I\'m Saying'},
       {engine:'sightword', pool:CARDS37, rounds:8, label:'Read the Word Cards'},
       {engine:'sightword', pool:LEAP37, rounds:2, label:'Leap Words'}
+    ]
+  },
+  {id:'L39', n:39, title:'Soft C and Silent E', emoji:'🪶', cls:'c-review',
+    intro:{
+      topic:'Soft C, and Silent E takes a second job',
+      lines:[
+        'The letter <b>c</b> has two sounds. The hard one is /k/, the sound in <b>cake</b>. The soft one is /s/, the sound in <b>city</b>.',
+        'Here is how to tell which one you are looking at, and it works very nearly every time. If the c is followed by <b>e</b>, <b>i</b> or <b>y</b>, it goes soft and says /s/. In front of any other letter it stays hard and says /k/.',
+        'Try it yourself. <b>cent</b>, <b>city</b> and <b>pencil</b> are all soft. <b>cat</b>, <b>cold</b>, <b>cup</b> and <b>cry</b> are all hard.',
+        'And that hands Silent E a <b>second job</b>. You already know the first one, stretching a vowel out long the way it does in <b>cake</b>. But in <b>fence</b> and <b>prince</b> it is not doing that at all \u2014 those vowels stay short. That e is there purely to sit behind the c and make it say /s/.'
+      ],
+      words:['cake','city','fence'],
+      review:['cent','dance','fence','force','prince','chance','since','pencil','center','France'],
+      trick:{
+        title:'Two jobs for one quiet letter',
+        points:[
+          {w:'Job one', note:'Silent E makes the vowel long \u2014 cake, bike, home'},
+          {w:'Job two', note:'Silent E makes the c soft \u2014 fence, prince, dance'},
+          {w:'The soft c rule', note:'c before e, i or y says /s/; before anything else it says /k/'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'sortsound', pool:CSOUND39, rounds:8, label:'Hammers and Feathers'},
+      {engine:'sortsound', pool:SILENTE39, rounds:7, label:'Which Job?'},
+      {engine:'sightword', pool:CARDS39, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
