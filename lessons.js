@@ -1502,6 +1502,44 @@ const ASOUND50={
    a Leap Word because its w is silent; the o says the third sound of o. */
 const CARDS50=['tall','swamp','ball','fall','wall','want','water','wash','small','two'];
 
+/* Lesson 52 -- phonograms oy and oi, two spellings of one sound.
+   Both of the manual's Change the Word chains, run in both directions: the oi
+   chain (join to coin to coil to boil to soil to spoil) and the oy chain (toy to
+   joy to soy to coy to ploy). */
+const OYCHANGE52=[
+  {from:'join',  to:'coin',  hint:'change the j to a c'},
+  {from:'coin',  to:'coil',  hint:'change the n to an l'},
+  {from:'coin',  to:'join',  hint:'change the c to a j'},
+  {from:'coil',  to:'boil',  hint:'change the c to a b'},
+  {from:'coil',  to:'coin',  hint:'change the l to an n'},
+  {from:'boil',  to:'soil',  hint:'change the b to an s'},
+  {from:'boil',  to:'coil',  hint:'change the b to a c'},
+  {from:'soil',  to:'spoil', hint:'add a p after the s'},
+  {from:'soil',  to:'boil',  hint:'change the s to a b'},
+  {from:'spoil', to:'soil',  hint:'take the p out'},
+  {from:'toy',   to:'joy',   hint:'change the t to a j'},
+  {from:'toy',   to:'boy',   hint:'change the t to a b'},
+  {from:'joy',   to:'soy',   hint:'change the j to an s'},
+  {from:'joy',   to:'toy',   hint:'change the j to a t'},
+  {from:'soy',   to:'coy',   hint:'change the s to a c'},
+  {from:'soy',   to:'joy',   hint:'change the s to a j'},
+  {from:'coy',   to:'ploy',  hint:'change the c to a p and an l'},
+  {from:'coy',   to:'toy',   hint:'change the c to a t'},
+  {from:'boy',   to:'toy',   hint:'change the b to a t'}];
+/* Find the /oy/ word. Both spellings sit in one pool on purpose, because the
+   reading insight of this lesson is simply that oy and oi make the same sound --
+   the manual says as much: for reading, that is all the student needs.
+   Distractors come from this same list, so a round often pits boy against toy or
+   soil against coin, which is real discrimination rather than spotting the only
+   /oy/ word on screen. Notice that nothing here ends in oi: English words do not
+   end in i, which is exactly why the end of a word always takes oy. */
+const OYWORDS52=['boy','toy','joy','soy','enjoy','oyster','royal',
+  'oil','point','join','soil','coin','boil','voice','choice','noise'];
+/* Word Cards 263-272 -- the nine Practice Reading Words plus were on card 272.
+   Ten cards against a ten-round stage, so each comes up once per sitting. were is
+   a Leap Word because its Silent E has no job at all. */
+const CARDS52=['boy','point','soil','toy','choice','noise','join','voice','enjoy','were'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -2179,6 +2217,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:ACHANGE50}, rounds:8, label:'Change the Word'},
       {engine:'sortsound', pool:ASOUND50, rounds:7, label:'Which Sound of A'},
       {engine:'sightword', pool:CARDS50, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L52', n:52, title:'OY and OI', emoji:'🦪', cls:'c-review',
+    intro:{
+      topic:'Two spellings, one sound',
+      lines:[
+        'Here are two phonograms that make exactly the same sound, <b>/oy/</b>. One is spelled <b>oy</b>, as in <b>boy</b>. The other is spelled <b>oi</b>, as in <b>oil</b>. Same sound, two different ways to write it.',
+        'For reading, that is honestly the whole story. Whenever you meet either one, say <b>/oy/</b> and carry straight on.',
+        'If you are curious why English keeps two of them, here it is. <b>oi</b> never sits at the end of a word, because English words do not end in i. So the end of a word always takes <b>oy</b> \u2014 <b>boy</b>, <b>toy</b>, <b>joy</b>, <b>enjoy</b>.',
+        'Inside a word you will usually meet <b>oi</b> instead: <b>point</b>, <b>join</b>, <b>soil</b>, <b>voice</b>. A handful of words like <b>oyster</b> and <b>royal</b> use oy in the middle as well, so let your ear lead the way.'
+      ],
+      words:['boy','oil','point'],
+      review:['boy','point','soil','toy','choice','noise','join','voice','enjoy','were'],
+      trick:{
+        title:'Worth knowing',
+        points:[
+          {w:'Both say /oy/', note:'for reading, that is all you actually need'},
+          {w:'oy goes on the end', note:'boy, toy, joy, enjoy \u2014 English words do not end in i'},
+          {w:'oi goes inside', note:'point, join, soil, voice, noise'},
+          {w:'were', note:'a Leap Word \u2014 its Silent E has no job at all'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:OYCHANGE52}, rounds:8, label:'Change the Word'},
+      {engine:'review', pool:OYWORDS52, rounds:7, label:'Find the Word'},
+      {engine:'sightword', pool:CARDS52, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
