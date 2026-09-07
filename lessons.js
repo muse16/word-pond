@@ -933,6 +933,55 @@ const ORSPLIT35=[
    This lesson has no Leap Words. */
 const CARDS35=['north','short','order','fork','corn','forest','morning','forever','forget','storm'];
 
+/* Lesson 37 -- the third sound of u, /oo/ as in put.
+   The whole pool is six words, and that is not an oversight: the manual's point
+   is that very few words use this sound, so learning this handful covers nearly
+   all of them. Every pair here keeps u on its third sound, which rules out
+   otherwise tempting swaps like put to but, where the u goes back to short. */
+const UCHANGE37=[
+  {from:'push', to:'bush', hint:'change the p to a b'},
+  {from:'push', to:'pull', hint:'change the sh to a double l'},
+  {from:'push', to:'put',  hint:'change the sh to a t'},
+  {from:'bush', to:'push', hint:'change the b to a p'},
+  {from:'bush', to:'bull', hint:'change the sh to a double l'},
+  {from:'bull', to:'pull', hint:'change the b to a p'},
+  {from:'bull', to:'full', hint:'change the b to an f'},
+  {from:'bull', to:'bush', hint:'change the double l to an s and an h'},
+  {from:'pull', to:'bull', hint:'change the p to a b'},
+  {from:'pull', to:'full', hint:'change the p to an f'},
+  {from:'pull', to:'push', hint:'change the double l to an s and an h'},
+  {from:'pull', to:'put',  hint:'change the double l to a t'},
+  {from:'full', to:'bull', hint:'change the f to a b'},
+  {from:'full', to:'pull', hint:'change the f to a p'},
+  {from:'put',  to:'pull', hint:'change the t to a double l'},
+  {from:'put',  to:'push', hint:'change the t to an s and an h'}];
+/* Guess What I'm Saying, with the muffled-o words. `from` is what the child SEES
+   and `say` is what the browser SPEAKS -- here the spelling pronunciation the
+   manual asks you to use, sounding the second syllable as it looks rather than
+   as it is said at speed. Blending those parts lands close enough that normal
+   talking speed does the rest, which is the lesson's actual point.
+   bacon needs its first syllable respelled "bay": it is an open syllable, and a
+   bare "ba" comes out of text-to-speech with a short a. */
+const GUESS37=[
+  {from:'lem...on',  to:'lemon',  say:'lem, on'},
+  {from:'drag...on', to:'dragon', say:'drag, on'},
+  {from:'wag...on',  to:'wagon',  say:'wag, on'},
+  {from:'ba...con',  to:'bacon',  say:'bay, con'},
+  {from:'rib...bon', to:'ribbon', say:'rib, bon'},
+  {from:'but...ton', to:'button', say:'but, ton'},
+  {from:'cot...ton', to:'cotton', say:'cot, ton'},
+  {from:'les...son', to:'lesson', say:'less, on'},
+  {from:'gal...lon', to:'gallon', say:'gal, lon'},
+  {from:'mel...on',  to:'melon',  say:'mel, on'},
+  {from:'car...ton', to:'carton', say:'car, ton'},
+  {from:'can...non', to:'cannon', say:'can, non'}];
+/* Word Cards 182-189 -- the Practice Reading Words, exactly as listed. Eight
+   cards against an eight-round stage, so each comes up once per sitting. */
+const CARDS37=['push','full','pull','put','bacon','wagon','dragon','lemon'];
+/* Word Cards 190-191 -- two Leap Words that rhyme with each other. In both, the
+   e-r-e refuses to say what the rules so far would predict. */
+const LEAP37=['where','there'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1397,6 +1446,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:ORCHANGE35}, rounds:8, label:'Change the Word'},
       {engine:'syllablesplit', pool:ORSPLIT35, rounds:7, label:'Split the Word'},
       {engine:'sightword', pool:CARDS35, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L37', n:37, title:'The Third Sound of U', emoji:'🐉', cls:'c-phon',
+    intro:{
+      topic:'U has a third sound',
+      lines:[
+        'The letter <b>u</b> has three sounds. You already know the short one in <b>up</b> and the long one in <b>unit</b>. Here is the third: <b>/oo/</b>, the sound sitting in <b>put</b>.',
+        'Hardly any words use it, and that is the good news. Learn this small handful and you have very nearly all of them: <b>put</b>, <b>push</b>, <b>pull</b>, <b>full</b>, <b>bull</b>, <b>bush</b>.',
+        'If you meet a u and are not sure which sound it wants, just try them in order. Short first, then long, then this one. One of the three will make a real word.',
+        'This lesson also has a listening game. Say <b>lem...on</b> slowly, sounding the second part exactly as it is spelled, then say the whole thing fast. Out comes <b>lemon</b>. That second syllable gets muffled when we talk quickly, so sounding it out gets you close and normal speed finishes the job.'
+      ],
+      words:['put','push','pull'],
+      review:['push','full','pull','put','bacon','wagon','dragon','lemon'],
+      trick:{
+        title:'Worth remembering',
+        points:[
+          {w:'Not sure which u?', note:'try short, then long, then /oo/ \u2014 stop when you get a real word'},
+          {w:'where', note:'a Leap Word \u2014 the e-r-e does not say what you would expect'},
+          {w:'there', note:'the very same odd e-r-e, and yes, it rhymes with where'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:UCHANGE37}, rounds:8, label:'Change the Word'},
+      {engine:'wordchange', pool:{instruction:'Guess What I\'m Saying! Blend the parts into one word.', pairs:GUESS37}, rounds:7, label:'Guess What I\'m Saying'},
+      {engine:'sightword', pool:CARDS37, rounds:8, label:'Read the Word Cards'},
+      {engine:'sightword', pool:LEAP37, rounds:2, label:'Leap Words'}
     ]
   }
 ];
