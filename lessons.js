@@ -61,40 +61,63 @@ const SYLLABLES=[{w:'rabbit',n:2},{w:'sunset',n:2},{w:'napkin',n:2},{w:'basket',
   {w:'garden',n:2},{w:'elephant',n:3},{w:'dinosaur',n:3}];
 const BLENDS=['bland','slump','grunt','trust','cramp','branch','slept','frost','grand','plant','print','spend','craft',
   'twist','clamp','swept','blast','crisp','flask','grasp','stunt','blend','drift','stand','crust'];
+/* These already carried a written description of each change; it is now a `hint`
+   so the game actually shows it. Without one, a few rounds had more than one right
+   answer: "add a blend to rip" is satisfied by trip and drip alike, and both sit
+   in this list. */
 const WORDCHANGE=[
-  {from:'plan',to:'plant',note:'add t at the end → nt blend'},
-  {from:'plum',to:'plump',note:'add p before the end → mp blend'},
-  {from:'ban',to:'band',note:'add d at the end → nd blend'},
-  {from:'win',to:'wind',note:'add d at the end → nd blend'},
-  {from:'ten',to:'tent',note:'add t at the end → nt blend'},
-  {from:'top',to:'stop',note:'add s at the start → st blend'},
-  {from:'ramp',to:'cramp',note:'add c at the start → cr blend'},
-  {from:'rip',to:'trip',note:'add t at the start → tr blend'},
-  {from:'pin',to:'spin',note:'add s at the start → sp blend'},
-  {from:'lap',to:'clap',note:'add c at the start → cl blend'},
-  {from:'rust',to:'crust',note:'add c at the start → cr blend'},
-  {from:'ran',to:'rant',note:'add t at the end → nt blend'},
-  {from:'pan',to:'plan',note:'add l at the start → pl blend'},
-  {from:'dip',to:'drip',note:'add r at the start → dr blend'},
-  {from:'rag',to:'drag',note:'add d at the start → dr blend'},
-  {from:'pot',to:'spot',note:'add s at the start → sp blend'},
-  {from:'lot',to:'slot',note:'add s at the start → sl blend'},
-  {from:'lid',to:'slid',note:'add s at the start → sl blend'},
-  {from:'rack',to:'track',note:'add t at the start → tr blend'},
-  {from:'rim',to:'trim',note:'add t at the start → tr blend'},
-  {from:'lack',to:'black',note:'add b at the start → bl blend'},
-  {from:'low',to:'slow',note:'add s at the start → sl blend'},
-  {from:'an',to:'ant',note:'add t at the end → nt blend'},
-  {from:'en',to:'end',note:'add d at the end → nd blend'},
-  {from:'rot',to:'trot',note:'add t at the start → tr blend'},
-  {from:'rick',to:'trick',note:'add t at the start → tr blend'}];
+  {from:'plan',to:'plant',hint:'add t at the end → nt blend'},
+  {from:'plum',to:'plump',hint:'add p before the end → mp blend'},
+  {from:'ban',to:'band',hint:'add d at the end → nd blend'},
+  {from:'win',to:'wind',hint:'add d at the end → nd blend'},
+  {from:'ten',to:'tent',hint:'add t at the end → nt blend'},
+  {from:'top',to:'stop',hint:'add s at the start → st blend'},
+  {from:'ramp',to:'cramp',hint:'add c at the start → cr blend'},
+  {from:'rip',to:'trip',hint:'add t at the start → tr blend'},
+  {from:'pin',to:'spin',hint:'add s at the start → sp blend'},
+  {from:'lap',to:'clap',hint:'add c at the start → cl blend'},
+  {from:'rust',to:'crust',hint:'add c at the start → cr blend'},
+  {from:'ran',to:'rant',hint:'add t at the end → nt blend'},
+  {from:'pan',to:'plan',hint:'add l at the start → pl blend'},
+  {from:'dip',to:'drip',hint:'add r at the start → dr blend'},
+  {from:'rag',to:'drag',hint:'add d at the start → dr blend'},
+  {from:'pot',to:'spot',hint:'add s at the start → sp blend'},
+  {from:'lot',to:'slot',hint:'add s at the start → sl blend'},
+  {from:'lid',to:'slid',hint:'add s at the start → sl blend'},
+  {from:'rack',to:'track',hint:'add t at the start → tr blend'},
+  {from:'rim',to:'trim',hint:'add t at the start → tr blend'},
+  {from:'lack',to:'black',hint:'add b at the start → bl blend'},
+  {from:'low',to:'slow',hint:'add s at the start → sl blend'},
+  {from:'an',to:'ant',hint:'add t at the end → nt blend'},
+  {from:'en',to:'end',hint:'add d at the end → nd blend'},
+  {from:'rot',to:'trot',hint:'add t at the start → tr blend'},
+  {from:'rick',to:'trick',hint:'add t at the start → tr blend'}];
 const YWORDS=['my','cry','try','dry','by','sky','fly','shy','fry','ply','pry','sly','spy','sty','why','guy'];
+/* Every pair carries a `hint` naming the exact letter to swap, and it is not
+   decoration. All the options in a round are -y words drawn from this very list,
+   so "swap the beginning sound of why" is answered equally well by shy, fry and
+   spy -- only one of which was accepted. The hint makes exactly one right. */
 const YCHANGE=[
-  {from:'dry',to:'pry'},{from:'pry',to:'fry'},{from:'fry',to:'try'},{from:'try',to:'cry'},
-  {from:'sky',to:'shy'},{from:'by',to:'my'},{from:'cry',to:'fry'},{from:'fry',to:'fly'},
-  {from:'fly',to:'ply'},{from:'ply',to:'pry'},{from:'spy',to:'sky'},{from:'sky',to:'sly'},
-  {from:'sly',to:'shy'},{from:'shy',to:'sty'},{from:'sty',to:'spy'},{from:'why',to:'shy'},
-  {from:'try',to:'fry'},{from:'my',to:'by'},{from:'dry',to:'try'},{from:'shy',to:'sky'}];
+  {from:'dry', to:'pry', hint:'change the d to a p'},
+  {from:'dry', to:'try', hint:'change the d to a t'},
+  {from:'pry', to:'fry', hint:'change the p to an f'},
+  {from:'fry', to:'try', hint:'change the f to a t'},
+  {from:'fry', to:'fly', hint:'change the r to an l'},
+  {from:'try', to:'cry', hint:'change the t to a c'},
+  {from:'try', to:'fry', hint:'change the t to an f'},
+  {from:'cry', to:'fry', hint:'change the c to an f'},
+  {from:'sky', to:'shy', hint:'change the k to an h'},
+  {from:'sky', to:'sly', hint:'change the k to an l'},
+  {from:'by',  to:'my',  hint:'change the b to an m'},
+  {from:'my',  to:'by',  hint:'change the m to a b'},
+  {from:'fly', to:'ply', hint:'change the f to a p'},
+  {from:'ply', to:'pry', hint:'change the l to an r'},
+  {from:'spy', to:'sky', hint:'change the p to a k'},
+  {from:'sly', to:'shy', hint:'change the l to an h'},
+  {from:'shy', to:'sty', hint:'change the h to a t'},
+  {from:'shy', to:'sky', hint:'change the h to a k'},
+  {from:'sty', to:'spy', hint:'change the t to a p'},
+  {from:'why', to:'shy', hint:'change the w to an s'}];
 const SPLIT=[
   {w:'picnic', parts:['pic','nic']},
   {w:'insect', parts:['in','sect']},
@@ -1736,7 +1759,7 @@ let LESSONS=[
     },
     stages:[
       {engine:'review', pool:YWORDS, rounds:15, label:'Find the Y Word'},
-      {engine:'wordchange', pool:{instruction:'Change the word! Swap the beginning sound to make a new -y word.', pairs:YCHANGE}, rounds:10, label:'Change the Word'}
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:YCHANGE}, rounds:10, label:'Change the Word'}
     ]
   },
   {id:'L6', n:6, title:'Splitting Words into Syllables', emoji:'✂️', cls:'c-syll',
