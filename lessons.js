@@ -1117,6 +1117,80 @@ const DETECTIVE40={
    is a two-jobs word. This lesson has no Leap Words. */
 const CARDS40=['ice','face','nice','twice','space','place','price','lace','mice','rice'];
 
+/* Lesson 42 -- soft g. It looks like Lesson 39's soft c, and it deliberately
+   is NOT as tidy. The manual is explicit about why: for the /k/ sound English has
+   both c and k, so k covers hard-c duty before e, i and y. For /g/ there is only
+   g, which has to do double duty, and a handful of very common words keep the
+   hard sound before those same letters.
+   So this pool carries three kinds of word on purpose -- soft g before e/i/y,
+   ordinary hard g before other letters, and the stubborn exceptions (get, girl,
+   gift, give, begin) that break the rule. A child cannot win it by applying the
+   pattern blindly, which is precisely the manual's point.
+   Weighted 14 to 10 toward soft, since soft g is by far the commoner case. */
+const GSOUND42={
+  instruction:'Find the g. Is it hard or soft here?',
+  buckets:[
+    {key:'soft', ex:'gem',  why:'g before an e, i or y usually goes soft and says /j/'},
+    {key:'hard', ex:'goat', why:'g says /g/ here, either because nothing soft follows it or because this is one of the few words that stays hard anyway'}],
+  items:[
+    {w:'gem',    k:'soft'},
+    {w:'germ',   k:'soft'},
+    {w:'large',  k:'soft'},
+    {w:'cage',   k:'soft'},
+    {w:'page',   k:'soft'},
+    {w:'age',    k:'soft'},
+    {w:'huge',   k:'soft'},
+    {w:'stage',  k:'soft'},
+    {w:'orange', k:'soft'},
+    {w:'danger', k:'soft'},
+    {w:'change', k:'soft'},
+    {w:'magic',  k:'soft'},
+    {w:'hinge',  k:'soft'},
+    {w:'gym',    k:'soft'},
+    {w:'goat',   k:'hard'},
+    {w:'game',   k:'hard'},
+    {w:'gold',   k:'hard'},
+    {w:'glad',   k:'hard'},
+    {w:'flag',   k:'hard'},
+    {w:'get',    k:'hard'},
+    {w:'girl',   k:'hard'},
+    {w:'gift',   k:'hard'},
+    {w:'give',   k:'hard'},
+    {w:'begin',  k:'hard'}]};
+/* The same one-job-or-two question as Lesson 40, now with g instead of c, and it
+   turns on the very same structural test: ONE consonant between the vowel and the
+   e leaves the vowel free to go long (huge, stage, cage), while TWO closes the
+   syllable and pins it short, leaving the e only the softening job (large, hinge).
+   large and hinge are the manual's own one-job examples, huge and stage its
+   two-job ones, so the rule and the examples agree. */
+const SILENTEG42={
+  instruction:'How many jobs is Silent E doing in this word?',
+  buckets:[
+    {key:'two jobs', ex:'huge',  why:'one consonant before the e, so it makes the vowel long AND the g soft'},
+    {key:'one job',  ex:'large', why:'two consonants before the e, so the vowel cannot stretch and the e only softens the g'}],
+  items:[
+    {w:'age',    k:'two jobs'},
+    {w:'cage',   k:'two jobs'},
+    {w:'page',   k:'two jobs'},
+    {w:'rage',   k:'two jobs'},
+    {w:'sage',   k:'two jobs'},
+    {w:'wage',   k:'two jobs'},
+    {w:'huge',   k:'two jobs'},
+    {w:'stage',  k:'two jobs'},
+    {w:'large',  k:'one job'},
+    {w:'hinge',  k:'one job'},
+    {w:'change', k:'one job'},
+    {w:'charge', k:'one job'},
+    {w:'bulge',  k:'one job'},
+    {w:'plunge', k:'one job'},
+    {w:'sponge', k:'one job'},
+    {w:'cringe', k:'one job'}]};
+/* Word Cards 212-221 -- the nine Practice Reading Words plus pumpkin on card 221.
+   pumpkin rides along here rather than getting a Leap Word stage of its own, as
+   there is only one of it; the intro explains what makes it a Leap Word. Ten
+   cards against a ten-round stage, so each comes up once per sitting. */
+const CARDS42=['cage','huge','large','germ','age','page','change','danger','orange','pumpkin'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1660,6 +1734,32 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:CECHANGE40}, rounds:7, label:'Change the Word'},
       {engine:'sortsound', pool:DETECTIVE40, rounds:8, label:'Detective Dog'},
       {engine:'sightword', pool:CARDS40, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L42', n:42, title:'Soft G', emoji:'💎', cls:'c-syll',
+    intro:{
+      topic:'Soft G, and why it is trickier than soft C',
+      lines:[
+        'Just like c, the letter <b>g</b> has a hard sound and a soft one. Hard g is /g/, the sound in <b>goat</b>. Soft g is /j/, the sound in <b>gem</b>.',
+        'The pattern will look familiar. G before <b>e</b>, <b>i</b> or <b>y</b> usually goes soft: <b>gem</b>, <b>germ</b>, <b>giant</b>, <b>gym</b>.',
+        'But notice that word <b>usually</b>, because this is where g parts company with c. A handful of very common words keep the hard sound even before those letters \u2014 <b>get</b>, <b>girl</b>, <b>gift</b>, <b>give</b>, <b>begin</b>. So if a word sounds wrong with one sound, simply try the other.',
+        'Silent E turns up here too, doing the same work it did with c. In <b>large</b> its only job is softening the g. In <b>huge</b> it manages both jobs at once, long u and soft g. Same question as last lesson, just with a g this time.'
+      ],
+      words:['gem','goat','huge'],
+      review:['cage','huge','large','germ','age','page','change','danger','orange','pumpkin'],
+      trick:{
+        title:'Worth knowing',
+        points:[
+          {w:'Soft wins most of the time', note:'g is soft in hundreds of words and hard in only about forty'},
+          {w:'The stubborn few', note:'get, girl, gift, give and begin keep their hard g \u2014 try the other sound if one comes out wrong'},
+          {w:'pumpkin', note:'a Leap Word \u2014 pump plus kin, split by a rule you have not learned yet'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'sortsound', pool:GSOUND42, rounds:8, label:'Hard or Soft G'},
+      {engine:'sortsound', pool:SILENTEG42, rounds:7, label:'How Many Jobs?'},
+      {engine:'sightword', pool:CARDS42, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
