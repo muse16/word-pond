@@ -1054,6 +1054,69 @@ const SILENTE39={
    This lesson has no Leap Words. */
 const CARDS39=['cent','dance','fence','force','prince','chance','since','pencil','center','France'];
 
+/* Lesson 40 -- Silent E can hold both jobs at once.
+   This is the lesson that picks up exactly the words Lesson 39's two-way sort had
+   to leave out: face, race, place, nice, ice, twice and space, where Silent E is
+   stretching the vowel AND softening the c in the same breath. */
+const CECHANGE40=[
+  {from:'ice',   to:'mice',  hint:'add an m at the front'},
+  {from:'ice',   to:'rice',  hint:'add an r at the front'},
+  {from:'ice',   to:'nice',  hint:'add an n at the front'},
+  {from:'mice',  to:'nice',  hint:'change the m to an n'},
+  {from:'mice',  to:'rice',  hint:'change the m to an r'},
+  {from:'nice',  to:'rice',  hint:'change the n to an r'},
+  {from:'nice',  to:'mice',  hint:'change the n to an m'},
+  {from:'rice',  to:'mice',  hint:'change the r to an m'},
+  {from:'rice',  to:'price', hint:'add a p at the front'},
+  {from:'price', to:'rice',  hint:'take the p off the front'},
+  {from:'face',  to:'lace',  hint:'change the f to an l'},
+  {from:'face',  to:'race',  hint:'change the f to an r'},
+  {from:'lace',  to:'face',  hint:'change the l to an f'},
+  {from:'lace',  to:'race',  hint:'change the l to an r'},
+  {from:'race',  to:'face',  hint:'change the r to an f'},
+  {from:'race',  to:'lace',  hint:'change the r to an l'},
+  {from:'place', to:'space', hint:'change the pl to an sp'},
+  {from:'space', to:'place', hint:'change the sp to a pl'}];
+/* Detective Dog Breaks the Code -- how many jobs is Silent E doing here?
+   The manual's own contrast is place against since, and the two buckets sit on a
+   real structural difference rather than a memorised list. A "two jobs" word has
+   ONE consonant between the vowel and the e (pla-c-e), so the vowel is free to go
+   long. A "one job" word has TWO (sin-c-e), which closes the syllable and pins
+   the vowel short, leaving the e with nothing to do but soften the c.
+   Both buckets contain a soft c, so the round turns entirely on the vowel. */
+const DETECTIVE40={
+  instruction:'How many jobs is Silent E doing in this word?',
+  buckets:[
+    {key:'two jobs', ex:'place', why:'one consonant before the e, so it makes the vowel long AND the c soft'},
+    {key:'one job',  ex:'since', why:'two consonants before the e, so the vowel stays short and the e only softens the c'}],
+  items:[
+    {w:'ice',    k:'two jobs'},
+    {w:'face',   k:'two jobs'},
+    {w:'nice',   k:'two jobs'},
+    {w:'twice',  k:'two jobs'},
+    {w:'space',  k:'two jobs'},
+    {w:'place',  k:'two jobs'},
+    {w:'price',  k:'two jobs'},
+    {w:'lace',   k:'two jobs'},
+    {w:'mice',   k:'two jobs'},
+    {w:'rice',   k:'two jobs'},
+    {w:'race',   k:'two jobs'},
+    {w:'slice',  k:'two jobs'},
+    {w:'since',  k:'one job'},
+    {w:'fence',  k:'one job'},
+    {w:'prince', k:'one job'},
+    {w:'dance',  k:'one job'},
+    {w:'chance', k:'one job'},
+    {w:'glance', k:'one job'},
+    {w:'wince',  k:'one job'},
+    {w:'prance', k:'one job'},
+    {w:'hence',  k:'one job'},
+    {w:'mince',  k:'one job'}]};
+/* Word Cards 202-211 -- the Practice Reading Words, exactly as listed. Ten cards
+   against a ten-round stage, so each comes up once per sitting. Every one of them
+   is a two-jobs word. This lesson has no Leap Words. */
+const CARDS40=['ice','face','nice','twice','space','place','price','lace','mice','rice'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1571,6 +1634,32 @@ let LESSONS=[
       {engine:'sortsound', pool:CSOUND39, rounds:8, label:'Hammers and Feathers'},
       {engine:'sortsound', pool:SILENTE39, rounds:7, label:'Which Job?'},
       {engine:'sightword', pool:CARDS39, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L40', n:40, title:'Silent E Has Two Jobs', emoji:'🕵️', cls:'c-magic',
+    intro:{
+      topic:'One quiet letter, two jobs at once',
+      lines:[
+        'You know both of Silent E\'s jobs now. Job one is making the vowel say its name, the way it does in <b>cake</b>. Job two is making the c go soft, the way it does in <b>fence</b>.',
+        'Here is the twist. Sometimes Silent E does <b>both at the same time</b>. Look at <b>mice</b>. That one little e makes the i say its name and makes the c say /s/. Two jobs, one quiet letter.',
+        'Now hold <b>place</b> next to <b>since</b>. In <b>place</b> the e is working twice over, long a and soft c. In <b>since</b> it has only the one job, softening the c, because that i stays short.',
+        'So whenever you meet a word ending in <b>ce</b>, put on your detective hat and ask how hard that little e is working. One job, or two?'
+      ],
+      words:['mice','place','since'],
+      review:['ice','face','nice','twice','space','place','price','lace','mice','rice'],
+      trick:{
+        title:'How to tell them apart',
+        points:[
+          {w:'Two jobs', note:'one consonant before the e \u2014 place, mice, ice. Long vowel and soft c'},
+          {w:'One job', note:'two consonants before the e \u2014 since, fence, dance. Short vowel, soft c only'},
+          {w:'Why that works', note:'the extra consonant closes the syllable, so the vowel cannot stretch out long'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:CECHANGE40}, rounds:7, label:'Change the Word'},
+      {engine:'sortsound', pool:DETECTIVE40, rounds:8, label:'Detective Dog'},
+      {engine:'sightword', pool:CARDS40, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
