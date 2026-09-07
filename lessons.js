@@ -1439,6 +1439,69 @@ const EDSOUND48={
    a Leap Word because its ey says long a, a spelling not taught yet. */
 const CARDS48=['printed','covered','raced','stopped','tested','smiled','saved','jumped','mixed','they'];
 
+/* Lesson 50 -- the third sound of a, /ah/ as in father.
+   The manual's Change the Word chain (ball to call to fall to mall to wall to
+   tall to stall to small), extended a little so the -all family can be walked in
+   either direction. */
+const ACHANGE50=[
+  {from:'ball',  to:'call',  hint:'change the b to a c'},
+  {from:'call',  to:'fall',  hint:'change the c to an f'},
+  {from:'call',  to:'ball',  hint:'change the c to a b'},
+  {from:'fall',  to:'mall',  hint:'change the f to an m'},
+  {from:'fall',  to:'hall',  hint:'change the f to an h'},
+  {from:'mall',  to:'wall',  hint:'change the m to a w'},
+  {from:'mall',  to:'call',  hint:'change the m to a c'},
+  {from:'wall',  to:'tall',  hint:'change the w to a t'},
+  {from:'wall',  to:'ball',  hint:'change the w to a b'},
+  {from:'tall',  to:'stall', hint:'add an s at the front'},
+  {from:'tall',  to:'fall',  hint:'change the t to an f'},
+  {from:'hall',  to:'tall',  hint:'change the h to a t'},
+  {from:'stall', to:'small', hint:'change the t to an m'},
+  {from:'small', to:'stall', hint:'change the m to a t'}];
+/* Two things pull a into its third sound, and the manual names both: an l right
+   after it (ball, salt) or a /w/ sound right before it (want, water, squash --
+   the qu in squash counts, since it carries a w sound).
+   Sorted against plain short a, because that is what a reader tries first and
+   gets wrong. Watch the short-a words: flag, plant and glad all contain an l, but
+   it sits BEFORE the a and so changes nothing, which is exactly the trap.
+   father is the manual's headline example of the sound but fits neither trigger,
+   so it stays out of the sort and is quoted in the intro instead. */
+const ASOUND50={
+  instruction:'Listen to the a. Which sound is it making?',
+  buckets:[
+    {key:'/ah/', ex:'ball', why:'an l right after the a, or a w sound right before it, pulls a to its third sound'},
+    {key:'/a/',  ex:'cat',  why:'nothing here tugs at it, so a keeps its plain short sound'}],
+  items:[
+    {w:'ball',   k:'/ah/'},
+    {w:'call',   k:'/ah/'},
+    {w:'fall',   k:'/ah/'},
+    {w:'tall',   k:'/ah/'},
+    {w:'wall',   k:'/ah/'},
+    {w:'small',  k:'/ah/'},
+    {w:'stall',  k:'/ah/'},
+    {w:'salt',   k:'/ah/'},
+    {w:'walk',   k:'/ah/'},
+    {w:'want',   k:'/ah/'},
+    {w:'water',  k:'/ah/'},
+    {w:'wash',   k:'/ah/'},
+    {w:'swamp',  k:'/ah/'},
+    {w:'watch',  k:'/ah/'},
+    {w:'squash', k:'/ah/'},
+    {w:'cat',    k:'/a/'},
+    {w:'hat',    k:'/a/'},
+    {w:'map',    k:'/a/'},
+    {w:'bag',    k:'/a/'},
+    {w:'ran',    k:'/a/'},
+    {w:'flag',   k:'/a/'},
+    {w:'hand',   k:'/a/'},
+    {w:'stamp',  k:'/a/'},
+    {w:'plant',  k:'/a/'},
+    {w:'camp',   k:'/a/'}]};
+/* Word Cards 253-262 -- the nine Practice Reading Words plus two on card 262.
+   Ten cards against a ten-round stage, so each comes up once per sitting. two is
+   a Leap Word because its w is silent; the o says the third sound of o. */
+const CARDS50=['tall','swamp','ball','fall','wall','want','water','wash','small','two'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -2089,6 +2152,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Cover the ed with your finger. What is the base word?', pairs:BASE48}, rounds:8, label:'Find the Base Word'},
       {engine:'sortsound', pool:EDSOUND48, rounds:7, label:'Sound Sorting'},
       {engine:'sightword', pool:CARDS48, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L50', n:50, title:'The Third Sound of A', emoji:'🍬', cls:'c-phon',
+    intro:{
+      topic:'A has a third sound',
+      lines:[
+        'The letter <b>a</b> has three sounds. You already know short a in <b>apple</b> and long a in <b>acorn</b>. Here is the third: <b>/ah/</b>, the sound sitting in <b>father</b>.',
+        'Two things pull a into that third sound. The first is an <b>l</b> right after it. Listen for it: <b>ball</b>, <b>call</b>, <b>tall</b>, <b>small</b>, <b>salt</b>.',
+        'The second is a <b>w</b> sound right before it: <b>want</b>, <b>water</b>, <b>wash</b>, <b>swamp</b>, <b>squash</b>. Even in <b>water</b>, where the a sits in an open syllable and by rights ought to go long, that w wins.',
+        'One honest note. This particular sound shifts quite a bit from place to place. Some people say <b>all</b> so it rhymes with <b>father</b>, others closer to <b>yawn</b>. Say it whichever way comes naturally to you, because both are right.'
+      ],
+      words:['ball','water','father'],
+      review:['tall','swamp','ball','fall','wall','want','water','wash','small','two'],
+      trick:{
+        title:'When a says /ah/',
+        points:[
+          {w:'An l right after it', note:'ball, call, tall, small, salt'},
+          {w:'A w sound right before it', note:'want, water, wash, swamp, squash'},
+          {w:'Careful', note:'in flag and plant the l comes BEFORE the a, so it changes nothing'},
+          {w:'two', note:'a Leap Word \u2014 the w is silent, and the o says its third sound'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:ACHANGE50}, rounds:8, label:'Change the Word'},
+      {engine:'sortsound', pool:ASOUND50, rounds:7, label:'Which Sound of A'},
+      {engine:'sightword', pool:CARDS50, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
