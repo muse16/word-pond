@@ -1540,6 +1540,47 @@ const OYWORDS52=['boy','toy','joy','soy','enjoy','oyster','royal',
    a Leap Word because its Silent E has no job at all. */
 const CARDS52=['boy','point','soil','toy','choice','noise','join','voice','enjoy','were'];
 
+/* Lesson 54 -- phonograms aw and au, two spellings of one sound. The same shape
+   as Lesson 52's oy and oi, and for the same reason: English words do not end in
+   u, so au never lands at the end and aw takes that spot.
+   Both of the manual's Change the Word chains, run in both directions: the aw
+   chain (paw to jaw to raw to law to claw to thaw to draw) and the au one
+   (pause to cause, which the manual then grows into because).
+   No pair ever crosses between the two spellings, since the chains are built on a
+   fixed vowel team with only the consonants moving. */
+const AWCHANGE54=[
+  {from:'paw',   to:'jaw',   hint:'change the p to a j'},
+  {from:'paw',   to:'saw',   hint:'change the p to an s'},
+  {from:'jaw',   to:'raw',   hint:'change the j to an r'},
+  {from:'jaw',   to:'paw',   hint:'change the j to a p'},
+  {from:'raw',   to:'law',   hint:'change the r to an l'},
+  {from:'raw',   to:'jaw',   hint:'change the r to a j'},
+  {from:'law',   to:'claw',  hint:'add a c at the front'},
+  {from:'law',   to:'paw',   hint:'change the l to a p'},
+  {from:'law',   to:'raw',   hint:'change the l to an r'},
+  {from:'claw',  to:'thaw',  hint:'change the cl to a t and an h'},
+  {from:'claw',  to:'draw',  hint:'change the cl to a d and an r'},
+  {from:'thaw',  to:'draw',  hint:'change the th to a d and an r'},
+  {from:'draw',  to:'claw',  hint:'change the dr to a c and an l'},
+  {from:'saw',   to:'paw',   hint:'change the s to a p'},
+  {from:'pause', to:'cause', hint:'change the p to a c'},
+  {from:'cause', to:'pause', hint:'change the c to a p'},
+  {from:'haul',  to:'maul',  hint:'change the h to an m'},
+  {from:'maul',  to:'haul',  hint:'change the m to an h'},
+  {from:'fault', to:'vault', hint:'change the f to a v'},
+  {from:'vault', to:'fault', hint:'change the v to an f'}];
+/* Find the /aw/ word. Both spellings share one pool, because the reading insight
+   is simply that aw and au make the same sound -- the manual says the student
+   need know no more than that. Distractors come from this same list, so rounds
+   pit saw against law or pause against cause.
+   Nothing here ends in au, which is the whole reason two spellings exist. */
+const AWWORDS54=['saw','law','draw','claw','lawn','yawn','hawk','straw',
+  'haul','pause','cause','because','August','launch','sauce','fault'];
+/* Word Cards 273-282 -- the nine Practice Reading Words plus aunt on card 282.
+   Ten cards against a ten-round stage, so each comes up once per sitting. aunt is
+   a Leap Word because its au does not say /aw/; most of us say it like ant. */
+const CARDS54=['saw','law','yawn','hawk','draw','haul','pause','August','because','aunt'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -2244,6 +2285,33 @@ let LESSONS=[
       {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:OYCHANGE52}, rounds:8, label:'Change the Word'},
       {engine:'review', pool:OYWORDS52, rounds:7, label:'Find the Word'},
       {engine:'sightword', pool:CARDS52, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L54', n:54, title:'AW and AU', emoji:'🦅', cls:'c-syll',
+    intro:{
+      topic:'Two more spellings, one more sound',
+      lines:[
+        'This one will feel familiar. Two phonograms sharing a single sound, just like oy and oi did. <b>aw</b> and <b>au</b> both say <b>/aw/</b>, the sound in <b>saw</b> and in <b>haul</b>.',
+        'For reading, that is genuinely all you need. Meet either one and say <b>/aw/</b>.',
+        'The reason English keeps two of them is the same tidy reason as last time. <b>au</b> never ends a word, because English words do not end in u. So the end of a word always takes <b>aw</b> \u2014 <b>saw</b>, <b>law</b>, <b>draw</b>, <b>paw</b>.',
+        'Inside a word you will meet both. <b>aw</b> likes to sit just before an l, n or k, as in <b>lawn</b>, <b>yawn</b> and <b>hawk</b>. Almost everywhere else inside a word, expect <b>au</b>: <b>haul</b>, <b>pause</b>, <b>August</b>, <b>because</b>.'
+      ],
+      words:['saw','haul','hawk'],
+      review:['saw','law','yawn','hawk','draw','haul','pause','August','because','aunt'],
+      trick:{
+        title:'Worth knowing',
+        points:[
+          {w:'Both say /aw/', note:'for reading, that really is the whole story'},
+          {w:'aw goes on the end', note:'saw, law, draw \u2014 English words do not end in u'},
+          {w:'aw also sits before l, n and k', note:'lawn, yawn, hawk, crawl'},
+          {w:'aunt', note:'a Leap Word \u2014 the au does not say /aw/ here, and most of us say it like ant'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:AWCHANGE54}, rounds:8, label:'Change the Word'},
+      {engine:'review', pool:AWWORDS54, rounds:7, label:'Find the Word'},
+      {engine:'sightword', pool:CARDS54, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
