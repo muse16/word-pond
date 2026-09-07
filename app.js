@@ -266,7 +266,7 @@ const ENGINES={
       <div class="instruction">${pool.instruction}</div>
       <div class="big-target word-target">${item.w}
         <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="bucket-row two">${pool.buckets.map(b=>`<div class="bucket" onclick="Game.pickSound(this,'${b.key}','${item.k}','${item.w}',\`${right.why}\`)">
+      <div class="bucket-row${pool.buckets.length===2?' two':''}">${pool.buckets.map(b=>`<div class="bucket" onclick="Game.pickSound(this,'${b.key}','${item.k}','${item.w}',\`${right.why}\`)">
         <div class="snd">${b.key}</div><div class="ex">like <b>${b.ex}</b></div></div>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 

@@ -1191,6 +1191,79 @@ const SILENTEG42={
    cards against a ten-round stage, so each comes up once per sitting. */
 const CARDS42=['cage','huge','large','germ','age','page','change','danger','orange','pumpkin'];
 
+/* Lesson 44 -- the third job of Silent E: keeping u and v off the end of a word.
+   English words never end in v and hardly ever in u, so Silent E takes the last
+   spot whether or not it is doing anything else.
+   With all three jobs now taught, this sort asks which one is at work. Every word
+   here does exactly ONE job, matching the manual's own "state the job of Silent E"
+   activity -- words doing two at once belong to Lessons 40 and 42.
+   Left out deliberately: live and dove. Both are heteronyms, and each reading
+   picks a different answer (live as in reside is one job, live as in alive is
+   two), so neither could be marked right or wrong honestly. live still appears
+   among the Word Cards, where it is only read. */
+const EJOBS44={
+  instruction:'Which job is Silent E doing in this word?',
+  buckets:[
+    {key:'long vowel',  ex:'cake',  why:'nothing to soften and no u or v to rescue, so the e just stretches the vowel'},
+    {key:'soft c or g', ex:'fence', why:'two consonants keep the vowel short, so the e is only there to soften the c or g'},
+    {key:'saves u or v', ex:'give', why:'English words cannot end in v and hardly ever in u, so the e takes the last spot'}],
+  items:[
+    {w:'cake',    k:'long vowel'},
+    {w:'bike',    k:'long vowel'},
+    {w:'home',    k:'long vowel'},
+    {w:'note',    k:'long vowel'},
+    {w:'rope',    k:'long vowel'},
+    {w:'made',    k:'long vowel'},
+    {w:'ride',    k:'long vowel'},
+    {w:'hope',    k:'long vowel'},
+    {w:'name',    k:'long vowel'},
+    {w:'bone',    k:'long vowel'},
+    {w:'fence',   k:'soft c or g'},
+    {w:'since',   k:'soft c or g'},
+    {w:'dance',   k:'soft c or g'},
+    {w:'prince',  k:'soft c or g'},
+    {w:'chance',  k:'soft c or g'},
+    {w:'glance',  k:'soft c or g'},
+    {w:'large',   k:'soft c or g'},
+    {w:'hinge',   k:'soft c or g'},
+    {w:'change',  k:'soft c or g'},
+    {w:'plunge',  k:'soft c or g'},
+    {w:'give',    k:'saves u or v'},
+    {w:'have',    k:'saves u or v'},
+    {w:'solve',   k:'saves u or v'},
+    {w:'carve',   k:'saves u or v'},
+    {w:'twelve',  k:'saves u or v'},
+    {w:'forgive', k:'saves u or v'},
+    {w:'glove',   k:'saves u or v'},
+    {w:'shove',   k:'saves u or v'},
+    {w:'glue',    k:'saves u or v'},
+    {w:'blue',    k:'saves u or v'},
+    {w:'true',    k:'saves u or v'},
+    {w:'clue',    k:'saves u or v'}]};
+/* The manual's give-to-gave demonstration, extended through the other u and v
+   families. give and gave are spelled to the same shape yet the vowels differ,
+   which is the lesson's real point: a v-word's Silent E is compulsory, so it
+   tells you nothing about the vowel and you have to know the word. */
+const UVCHANGE44=[
+  {from:'give',  to:'gave',  hint:'change the i to an a'},
+  {from:'gave',  to:'give',  hint:'change the a to an i'},
+  {from:'gave',  to:'cave',  hint:'change the g to a c'},
+  {from:'cave',  to:'wave',  hint:'change the c to a w'},
+  {from:'wave',  to:'have',  hint:'change the w to an h'},
+  {from:'have',  to:'cave',  hint:'change the h to a c'},
+  {from:'five',  to:'hive',  hint:'change the f to an h'},
+  {from:'hive',  to:'dive',  hint:'change the h to a d'},
+  {from:'dive',  to:'five',  hint:'change the d to an f'},
+  {from:'blue',  to:'glue',  hint:'change the b to a g'},
+  {from:'glue',  to:'clue',  hint:'change the g to a c'},
+  {from:'clue',  to:'true',  hint:'change the cl to a tr'},
+  {from:'true',  to:'blue',  hint:'change the tr to a bl'},
+  {from:'carve', to:'curve', hint:'change the a to a u'}];
+/* Word Cards 222-231 -- the Practice Reading Words, exactly as listed. Ten cards
+   against a ten-round stage, so each comes up once per sitting. Sue keeps its
+   capital, being a name. This lesson has no Leap Words. */
+const CARDS44=['blue','give','forgive','glue','carve','true','live','twelve','Sue','clue'];
+
 /* =========================================================
    LESSONS — add one card here for each topic sent from the
    Teacher's Manual. Each lesson = {id, n, title, emoji, cls, engine, pool}
@@ -1760,6 +1833,32 @@ let LESSONS=[
       {engine:'sortsound', pool:GSOUND42, rounds:8, label:'Hard or Soft G'},
       {engine:'sortsound', pool:SILENTEG42, rounds:7, label:'How Many Jobs?'},
       {engine:'sightword', pool:CARDS42, rounds:10, label:'Read the Word Cards'}
+    ]
+  },
+  {id:'L44', n:44, title:'The Third Job of Silent E', emoji:'💙', cls:'c-contr',
+    intro:{
+      topic:'Silent E takes on a third job',
+      lines:[
+        'Two jobs so far. Silent E can make a vowel long, and it can soften a c or a g. Here is the third, and this one is a rule about English spelling itself.',
+        'English words <b>never</b> end in <b>v</b>, and hardly ever end in <b>u</b>. So when a word would otherwise finish on one of those letters, Silent E steps in and takes the last spot instead \u2014 <b>give</b>, <b>have</b>, <b>blue</b>, <b>clue</b>.',
+        'That is why a v-word will not tell you about its own vowel. <b>give</b> and <b>gave</b> are built to exactly the same shape, yet the i in give stays short while the a in gave goes long. In <b>give</b> the e has only the one job. In <b>gave</b> it has two.',
+        'So Silent E now has three jobs it can do. Stretch a vowel, soften a c or g, or simply keep u and v off the end of a word. And sometimes, as you have seen, it manages more than one at a time.'
+      ],
+      words:['give','blue','carve'],
+      review:['blue','give','forgive','glue','carve','true','live','twelve','Sue','clue'],
+      trick:{
+        title:'All three jobs',
+        points:[
+          {w:'Job one', note:'make the vowel long \u2014 cake, home, ride'},
+          {w:'Job two', note:'soften the c or g \u2014 fence, large, hinge'},
+          {w:'Job three', note:'keep u or v off the end \u2014 give, have, blue, clue'}
+        ]
+      }
+    },
+    stages:[
+      {engine:'sortsound', pool:EJOBS44, rounds:8, label:'Which Job?'},
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:UVCHANGE44}, rounds:7, label:'Change the Word'},
+      {engine:'sightword', pool:CARDS44, rounds:10, label:'Read the Word Cards'}
     ]
   }
 ];
