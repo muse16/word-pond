@@ -146,36 +146,41 @@ const SPLIT=[
   {w:'sunset', parts:['sun','set']}];
 /* Every pair carries a `say`. Without one the app spoke the displayed string
    with its ellipsis, leaving the voice to guess at bare syllables -- the very
-   failure the respelling convention exists to avoid. An unstressed -er ending is
-   written "urr" and a final -et "ett", so neither is read as a long vowel.
+   failure the respelling convention exists to avoid.
+   A respelling has to blend back into the real word, so an unstressed ending is
+   written the way it actually sounds, not the way it is spelled. -et is "it"
+   (pock, it), -al is "ull" (sig, null) and -er is "urr" (tie, gurr). Spelling
+   those endings "ett" or "nal" made the voice stress them and say a full short
+   vowel, so pocket came out pock-ETT and signal came out sig-NAL.
+   basket says "bask, it" for the same reason: "bass" is read with a long a.
    blanket is shown blank...et, not blan...ket: nk is one phonogram and Lessons 12
    and 25 both teach that a team is never split. */
 const GUESSWORDS=[
-  {from:'pup...pet',  to:'puppet',  say:'pup, pett'},
+  {from:'pup...pet',  to:'puppet',  say:'pup, pit'},
   {from:'pil...grim', to:'pilgrim', say:'pill, grim'},
   {from:'rab...bit',  to:'rabbit',  say:'rab, bit'},
   {from:'hap...pen',  to:'happen',  say:'hap, pen'},
-  {from:'mag...net',  to:'magnet',  say:'mag, nett'},
+  {from:'mag...net',  to:'magnet',  say:'mag, nit'},
   {from:'sud...den',  to:'sudden',  say:'sud, den'},
   {from:'but...ton',  to:'button',  say:'but, ton'},
   {from:'kit...ten',  to:'kitten',  say:'kit, ten'},
   {from:'hid...den',  to:'hidden',  say:'hid, den'},
   {from:'prob...lem', to:'problem', say:'prob, lem'},
-  {from:'sig...nal',  to:'signal',  say:'sig, nal'},
+  {from:'sig...nal',  to:'signal',  say:'sig, null'},
   {from:'ob...ject',  to:'object',  say:'obb, jekt'},
   {from:'traf...fic', to:'traffic', say:'traf, fick'},
   {from:'muf...fin',  to:'muffin',  say:'muff, in'},
   {from:'nap...kin',  to:'napkin',  say:'nap, kin'},
-  {from:'bas...ket',  to:'basket',  say:'bass, kett'},
-  {from:'vel...vet',  to:'velvet',  say:'vell, vett'},
+  {from:'bas...ket',  to:'basket',  say:'bask, it'},
+  {from:'vel...vet',  to:'velvet',  say:'vell, vit'},
   {from:'gob...lin',  to:'goblin',  say:'gob, lin'},
   {from:'mit...ten',  to:'mitten',  say:'mit, ten'},
   {from:'hap...py',   to:'happy',   say:'hap, pee'},
-  {from:'rock...et',  to:'rocket',  say:'rock, ett'},
-  {from:'blank...et', to:'blanket', say:'blank, ett'},
-  {from:'trum...pet', to:'trumpet', say:'trum, pett'},
-  {from:'pock...et',  to:'pocket',  say:'pock, ett'},
-  {from:'jack...et',  to:'jacket',  say:'jack, ett'}];
+  {from:'rock...et',  to:'rocket',  say:'rock, it'},
+  {from:'blank...et', to:'blanket', say:'blank, it'},
+  {from:'trum...pet', to:'trumpet', say:'trum, pit'},
+  {from:'pock...et',  to:'pocket',  say:'pock, it'},
+  {from:'jack...et',  to:'jacket',  say:'jack, it'}];
 /* Every word here is decodable with Level 1 phonograms. Earlier versions of this
    pool reached for screen, sprout, splinter, scream and stream, whose ee, ou, er
    and ea are all taught much later or in Level 3. */
@@ -236,8 +241,8 @@ const GUESS10=[
   {from:'ti...ger',   to:'tiger',   say:'tie, gurr'},
   {from:'pa...per',   to:'paper',   say:'pay, per'},
   {from:'mo...tel',   to:'motel',   say:'moe, tell'},
-  {from:'to...tal',   to:'total',   say:'toe, tal'},
-  {from:'fi...nal',   to:'final',   say:'fie, nal'}];
+  {from:'to...tal',   to:'total',   say:'toe, tull'},
+  {from:'fi...nal',   to:'final',   say:'fie, null'}];
 
 /* Lesson 12 -- Syllable Division Rule for One Consonant Tile, Part 2.
    Each entry holds BOTH plausible splits of a VCV word. `open` sends the single
@@ -292,14 +297,14 @@ const GUESS12=[
   {from:'cab...in',   to:'cabin',   say:'cab, in'},
   {from:'hab...it',   to:'habit',   say:'hab, it'},
   {from:'fin...ish',  to:'finish',  say:'fin, ish'},
-  {from:'plan...et',  to:'planet',  say:'plan, ett'},
+  {from:'plan...et',  to:'planet',  say:'plan, it'},
   {from:'vis...it',   to:'visit',   say:'viz, it'},
   {from:'sev...en',   to:'seven',   say:'sev, en'},
   {from:'rad...ish',  to:'radish',  say:'rad, ish'},
-  {from:'pock...et',  to:'pocket',  say:'pock, ett'},
-  {from:'jack...et',  to:'jacket',  say:'jack, ett'},
-  {from:'crick...et', to:'cricket', say:'krick, ett'},
-  {from:'blank...et', to:'blanket', say:'blank, ett'},
+  {from:'pock...et',  to:'pocket',  say:'pock, it'},
+  {from:'jack...et',  to:'jacket',  say:'jack, it'},
+  {from:'crick...et', to:'cricket', say:'krick, it'},
+  {from:'blank...et', to:'blanket', say:'blank, it'},
   {from:'ho...tel',   to:'hotel',   say:'hoe, tell'},
   {from:'he...ro',    to:'hero',    say:'hee, roe'},
   {from:'mi...nus',   to:'minus',   say:'my, nuss'},
