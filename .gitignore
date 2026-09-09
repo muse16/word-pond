@@ -1,0 +1,4 @@
+# Local only: the plan notes and the dev-server config I use to preview.
+# Neither is part of the site Vercel deploys.
+.claude/
+word-pond-plan.md
