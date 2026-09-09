@@ -703,7 +703,11 @@ const SYLTAG25=[
   {w:'milk',   t:'closed'},
   {w:'hand',   t:'closed'},
   {w:'rule',   t:'name'},
-  {w:'scare',  t:'name'},
+  /* scare used to sit here, but Lesson 15 leaves -are words untagged on purpose:
+     the manual calls them regionally unreliable, so tagging one teaches a shaky
+     example. grape is a Lesson 25 word in Appendix Q and asks the same question
+     without the wobble. */
+  {w:'grape',  t:'name'},
   {w:'slime',  t:'name'},
   {w:'cake',   t:'name'},
   {w:'bike',   t:'name'},
