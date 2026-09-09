@@ -152,21 +152,93 @@ function renderIntro(deck){
    without replacement; multiple-choice distractors may still recur across
    different rounds (that's normal), but never duplicate within one round's
    options (see the per-engine dedup loops below). */
-function resolveOrder(engine,pool,count){
-  let items;
+function poolItems(engine,pool){
   if(engine==='phonogram'){
     const all=pool.all||pool;const focus=pool.focus||Object.keys(all);
-    items=[];focus.forEach(phon=>all[phon].forEach(word=>items.push({phon,word})));
-  }else if(engine==='ed'){
-    items=[];Object.keys(pool).forEach(sound=>pool[sound].forEach(word=>items.push({sound,word})));
-  }else if(engine==='sortsound'){
-    items=pool.items.slice();
-  }else if(engine==='wordchange'){
-    items=(Array.isArray(pool)?pool:pool.pairs).slice();
-  }else{
-    items=pool.slice();
+    const items=[];focus.forEach(phon=>all[phon].forEach(word=>items.push({phon,word})));return items;
   }
+  if(engine==='ed'){
+    const items=[];Object.keys(pool).forEach(sound=>pool[sound].forEach(word=>items.push({sound,word})));return items;
+  }
+  if(engine==='sortsound')return pool.items.slice();
+  if(engine==='wordchange')return (Array.isArray(pool)?pool:pool.pairs).slice();
+  return pool.slice();
+}
+function resolveOrder(engine,pool,count){
+  const items=poolItems(engine,pool);
   return shuffle(items).slice(0,Math.min(count,items.length));
+}
+/* The word or words a round is ABOUT, so two stages can be kept off the same one.
+   Change the Word is keyed on its answer, not on the word shown, because that is
+   what she ends up reading. */
+function promptWords(engine,item){
+  if(item==null)return [];
+  const w=[];
+  const add=x=>{if(x)w.push(String(x).toLowerCase());};
+  if(typeof item==='string'){add(item);return w;}
+  switch(engine){
+    case 'wordchange': add(item.to); break;
+    case 'magic': add(item.short); add(item.long); break;
+    case 'contraction': case 'expand': add(item.one); break;
+    case 'phonogram': add(item.word); break;
+    case 'ed': add(item.word); break;
+    default: add(item.w); break;
+  }
+  return w;
+}
+/* One sitting should not ask about the same word twice. Draws inside a stage were
+   already without replacement, but nothing kept two stages off the same word:
+   Lesson 12 could split pocket and then ask her to blend pock...et, and a pool
+   that lists one answer under two different changes could serve both.
+   Dealing the stages is a small allocation problem, and which stage goes first
+   decides how well it comes out. Neither order wins everywhere -- forced-first
+   clears Lesson 14, tightest-first clears Lesson 12 -- so both are tried a few
+   times and the arrangement with the fewest repeats is the one played.
+   Some lessons cannot reach zero: Lesson 4 practises sixteen y-words over
+   twenty-five rounds, so nine of them have to come round twice. Those stages
+   reuse rather than running short. */
+function dealStages(stages,forcedFirst){
+  const used=new Set(), out=stages.map(()=>null);
+  const meta=stages.map((s,i)=>{
+    const items=poolItems(s.engine,s.pool), words=new Set();
+    items.forEach(x=>promptWords(s.engine,x).forEach(w=>words.add(w)));
+    return {i,s,items,slack:words.size-s.rounds};
+  });
+  // forced-first puts the stages with no choice at all in front; tightest-first
+  // ranks every stage by how many spare words it has.
+  const order=forcedFirst
+    ? meta.slice().sort((a,b)=>(a.items.length<=a.s.rounds?0:1)-(b.items.length<=b.s.rounds?0:1))
+    : meta.slice().sort((a,b)=>a.slack-b.slack);
+  order.forEach(({i,s,items})=>{
+    const deck=shuffle(items), chosen=[];
+    for(const it of deck){
+      if(chosen.length>=s.rounds)break;
+      if(promptWords(s.engine,it).some(w=>used.has(w)))continue;
+      chosen.push(it);promptWords(s.engine,it).forEach(w=>used.add(w));
+    }
+    for(const it of deck){
+      if(chosen.length>=s.rounds)break;
+      if(chosen.indexOf(it)===-1)chosen.push(it);
+    }
+    out[i]=chosen;
+  });
+  return out;
+}
+function countRepeats(stages,orders){
+  const seen={};let n=0;
+  orders.forEach((list,i)=>list.forEach(it=>promptWords(stages[i].engine,it).forEach(w=>{
+    seen[w]=(seen[w]||0)+1;if(seen[w]===2)n++;
+  })));
+  return n;
+}
+function buildStageOrders(stages){
+  let best=null,bestDup=Infinity;
+  for(let attempt=0;attempt<24;attempt++){
+    const orders=dealStages(stages,attempt%2===0);
+    const dup=countRepeats(stages,orders);
+    if(dup<bestDup){bestDup=dup;best=orders;if(!dup)break;}
+  }
+  return best;
 }
 /* Picks up to `n` unique-by-key distractors from `pool`, excluding `excludeKey`. */
 function pickUnique(pool,keyFn,excludeKey,n){
@@ -470,7 +542,7 @@ const Game={
   buildOrders(){
     this.sightUsed=new Set();
     if(MASTERY[this.deck.id])return;
-    if(this.deck.stages){this.stageOrders=this.deck.stages.map(s=>resolveOrder(s.engine,s.pool,s.rounds));this.order=null;}
+    if(this.deck.stages){this.stageOrders=buildStageOrders(this.deck.stages);this.order=null;}
     else{this.order=resolveOrder(this.deck.engine,this.deck.pool,this.total);this.stageOrders=null;}
   },
   launch(kind,id){
