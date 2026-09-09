@@ -178,6 +178,24 @@ function pickUnique(pool,keyFn,excludeKey,n){
   return out;
 }
 
+/* A hint reads "change the l to a t". The two letters ARE the instruction, and in
+   plain sentence text they were the easiest part to skim past, so each one is
+   pulled out onto its own tile. Only letters get marked: a short word that
+   happens to sit in one of these positions -- the "end" of "at the end" -- is
+   left alone. */
+const HINTWORDS=/^(and|add|all|at|by|do|end|is|it|its|not|of|off|one|or|out|say|so|the|to|why)$/i;
+function markHint(h){
+  // After "to a" or "and an" the next short token is always the letter itself,
+  // even when that letter is a or i, so it is marked without asking.
+  const tile=x=>'<b>'+x+'</b>', b=x=>HINTWORDS.test(x)?x:tile(x);
+  return String(h)
+    .replace(/\bthe (double )?([a-z]{1,3})\b/gi,(m,d,x)=>'the '+(d||'')+b(x))
+    .replace(/\bto (an?) (double )?([a-z]{1,3})\b/gi,(m,a,d,x)=>'to '+a+' '+(d||'')+tile(x))
+    .replace(/\badd (an? )?([a-z]{1,3})\b/gi,(m,a,x)=>'add '+(a||'')+b(x))
+    .replace(/\band (an?) ([a-z]{1,3})\b/gi,(m,a,x)=>'and '+a+' '+tile(x))
+    .replace(/\b([a-z]{2,3}) blend\b/gi,(m,x)=>b(x)+' blend');
+}
+
 /* ---------------- Engines ---------------- */
 const ENGINES={
   review(target,pool){
@@ -330,7 +348,7 @@ const ENGINES={
       <div class="instruction">${instruction}</div>
       <div class="big-target word-target">${pair.from}
         <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${pair.from}">${SPKR}</button></div>
-      ${pair.hint?`<div class="instruction" style="font-size:15px;margin-top:2px">${pair.hint}</div>`:''}</div>
+      ${pair.hint?`<div class="hint">${markHint(pair.hint)}</div>`:''}</div>
       <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(spoken);},
 

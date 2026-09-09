@@ -70,6 +70,14 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .sentence{font-family:'Baloo 2';font-weight:800;font-size:clamp(22px,5vw,30px);color:var(--deep);
   line-height:1.4;text-align:center;padding:0 4px;}
 .sentence b{color:var(--sky);}
+/* The hint used to be set in the same muted grey as the instruction above it, so
+   it read as page furniture rather than as the thing to act on. It now sits in a
+   warm pill, and each letter it names gets a white tile of its own. */
+.hint{display:inline-block;margin-top:12px;padding:9px 18px;border-radius:999px;
+  background:rgba(255,201,60,.24);border:2px solid rgba(255,201,60,.6);
+  font-family:'Lexend';font-weight:500;font-size:clamp(15px,4vw,17px);color:var(--deep);line-height:1.4;}
+.hint b{display:inline-block;background:var(--paper);border-radius:7px;padding:1px 8px;margin:0 1px;
+  font-weight:800;font-size:1.08em;color:var(--deep);box-shadow:0 1px 0 rgba(23,35,61,.12);}
 .speak-btn{background:var(--sky);border:none;cursor:pointer;width:60px;height:60px;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #2f7ed8;transition:transform .1s;vertical-align:middle;}
 .speak-btn:active{transform:translateY(4px);box-shadow:0 2px 0 #2f7ed8;}
