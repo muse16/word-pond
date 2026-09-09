@@ -365,7 +365,7 @@ const ENGINES={
       <div class="instruction">This word has three syllables. Where do the splits go?</div>
       <div class="big-target word-target">${w}
         <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div></div>
-      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+      <div class="options three split">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(w);},
 
   syllablesplit(item){const w=item.w;const correct=item.parts.join('-');
@@ -376,7 +376,7 @@ const ENGINES={
       <div class="instruction">Where does this word split into syllables?</div>
       <div class="big-target word-target">${w}
         <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div></div>
-      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+      <div class="options three split">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(w);},
 
   /* Lesson 12: the child sees ONE word and the two splits that are genuinely in
@@ -395,7 +395,7 @@ const ENGINES={
       <div class="instruction">Listen to the word. Which split makes a real word?</div>
       <div class="big-target word-target">${item.w}
         <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickSplit(this,'${o}','${correct}','${other}','${item.correct}')">${o}</button>`).join('')}</div>
+      <div class="options split">${opts.map(o=>`<button class="opt" onclick="Game.pickSplit(this,'${o}','${correct}','${other}','${item.correct}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   /* Leap Words. Same read-aloud-and-self-report shape as `sightword`, with the

@@ -79,6 +79,14 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 /* A five-tag sort (Lesson 31) wraps 2+2+1; let the odd one out fill the row
    rather than sitting half-width, which reads like a layout slip. */
 .options.five .opt:last-child{grid-column:1 / -1;}
+/* A syllable split has to be read across the hyphen, so it must never wrap: at
+   three across on a phone "ri-ver" broke into "ri-" above "ver", which reads
+   like the word itself is stacked rather than like a choice between two splits.
+   So a split tile always takes a full-width row of its own and never breaks. A
+   breakpoint would not have been enough: a three-syllable option at a tablet
+   width still runs wider than a third of the card. */
+.options.split{grid-template-columns:1fr;gap:10px;}
+.options.split .opt{white-space:nowrap;padding:15px 10px;}
 .opt{border:3px solid #e6ddc6;background:#fff;cursor:pointer;border-radius:18px;padding:20px 10px;
   font-family:'Lexend';font-weight:600;font-size:clamp(22px,6vw,30px);color:var(--deep);
   transition:transform .1s,background .15s,border-color .15s;letter-spacing:.5px;}
