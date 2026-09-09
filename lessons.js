@@ -67,7 +67,7 @@ const BLENDS=['bland','slump','grunt','trust','cramp','branch','slept','frost','
    in this list. */
 const WORDCHANGE=[
   {from:'plan',to:'plant',hint:'add t at the end → nt blend'},
-  {from:'plum',to:'plump',hint:'add p before the end → mp blend'},
+  {from:'plum',to:'plump',hint:'add a p at the end → mp blend'},
   {from:'ban',to:'band',hint:'add d at the end → nd blend'},
   {from:'win',to:'wind',hint:'add d at the end → nd blend'},
   {from:'ten',to:'tent',hint:'add t at the end → nt blend'},
@@ -78,8 +78,8 @@ const WORDCHANGE=[
   {from:'lap',to:'clap',hint:'add c at the start → cl blend'},
   {from:'rust',to:'crust',hint:'add c at the start → cr blend'},
   {from:'ran',to:'rant',hint:'add t at the end → nt blend'},
-  {from:'pan',to:'plan',hint:'add l at the start → pl blend'},
-  {from:'dip',to:'drip',hint:'add r at the start → dr blend'},
+  {from:'pan',to:'plan',hint:'add an l after the p'},
+  {from:'dip',to:'drip',hint:'add an r after the d'},
   {from:'rag',to:'drag',hint:'add d at the start → dr blend'},
   {from:'pot',to:'spot',hint:'add s at the start → sp blend'},
   {from:'lot',to:'slot',hint:'add s at the start → sl blend'},
@@ -92,7 +92,10 @@ const WORDCHANGE=[
   {from:'lend',to:'blend',hint:'add b at the start → bl blend'},
   {from:'rot',to:'trot',hint:'add t at the start → tr blend'},
   {from:'rick',to:'trick',hint:'add t at the start → tr blend'}];
-const YWORDS=['my','cry','try','dry','by','sky','fly','shy','fry','ply','pry','sly','spy','sty','why','guy'];
+/* Every y-word Appendix Q lists for Lesson 4. There are only eighteen, which is
+   why this lesson cannot fill twenty-five rounds without coming back round. */
+const YWORDS=['my','cry','try','dry','by','sky','fly','shy','fry','ply','pry','sly','spy','sty','why','guy',
+  'spry','bypass'];
 /* Every pair carries a `hint` naming the exact letter to swap, and it is not
    decoration. All the options in a round are -y words drawn from this very list,
    so "swap the beginning sound of why" is answered equally well by shy, fry and
@@ -196,7 +199,7 @@ const THREEBLENDS=['split','strong','string','scrap','spring','scrub','stress','
 const SIGHTWORDS=[
   // Dolch pre-primer (40)
   'a','and','away','big','blue','can','come','down','find','for','funny','go','help',
-  'here','i','in','is','it','jump','little','look','make','me','my','not','one','play',
+  'here','I','in','is','it','jump','little','look','make','me','my','not','one','play',
   'red','run','said','see','the','three','to','two','up','we','where','yellow','you',
   // Dolch primer (52)
   'all','am','are','at','ate','be','black','brown','but','came','did','do','eat','four',
@@ -529,7 +532,16 @@ const WHCHANGE19=[
   {from:'white', to:'whine', hint:'change the t to an n'},
   {from:'whine', to:'white', hint:'change the n to a t'},
   {from:'while', to:'whale', hint:'change the i to an a'},
-  {from:'whale', to:'while', hint:'change the a to an i'}];
+  {from:'whale', to:'while', hint:'change the a to an i'},
+  /* The manual's chain only ever swaps the tail, which keeps every answer inside
+     the twelve wh words and leaves the lesson short of twenty-five different
+     words. These take the wh team off instead, which is the same activity and
+     lands on words she has read since Level 1. */
+  {from:'when',  to:'then',  hint:'change the wh to a th'},
+  {from:'whip',  to:'ship',  hint:'change the wh to an s and an h'},
+  {from:'whip',  to:'chip',  hint:'change the wh to a c and an h'},
+  {from:'whine', to:'shine', hint:'change the wh to an s and an h'},
+  {from:'white', to:'quite', hint:'change the wh to a q and a u'}];
 /* Word Cards 90-95 -- the Practice Reading Words, exactly as listed. Six cards
    against a six-round stage, so every card comes up once per sitting. */
 const CARDS19=['when','while','white','whale','which','why'];
@@ -997,7 +1009,15 @@ const UCHANGE37=[
   {from:'full', to:'bull', hint:'change the f to a b'},
   {from:'full', to:'pull', hint:'change the f to a p'},
   {from:'put',  to:'pull', hint:'change the t to a double l'},
-  {from:'put',  to:'push', hint:'change the t to an s and an h'}];
+  {from:'put',  to:'push', hint:'change the t to an s and an h'},
+  /* Six words cannot fill eight rounds, so the chain reaches for the contrast the
+     lesson is really about: the same shape with an ordinary short vowel. */
+  {from:'pull', to:'pill', hint:'change the u to an i'},
+  {from:'full', to:'fill', hint:'change the u to an i'},
+  {from:'bull', to:'bell', hint:'change the u to an e'},
+  {from:'put',  to:'pit',  hint:'change the u to an i'},
+  {from:'bush', to:'bash', hint:'change the u to an a'},
+  {from:'push', to:'hush', hint:'change the p to an h'}];
 /* Guess What I'm Saying, with the muffled-o words. `from` is what the child SEES
    and `say` is what the browser SPEAKS -- here the spelling pronunciation the
    manual asks you to use, sounding the second syllable as it looks rather than
@@ -1119,7 +1139,14 @@ const CECHANGE40=[
   {from:'race',  to:'face',  hint:'change the r to an f'},
   {from:'race',  to:'lace',  hint:'change the r to an l'},
   {from:'place', to:'space', hint:'change the pl to an sp'},
-  {from:'space', to:'place', hint:'change the sp to a pl'}];
+  {from:'space', to:'place', hint:'change the sp to a pl'},
+  /* Four more answers, so the chain is not fighting the Word Card stage over the
+     same nine words. All four are Lesson 40 words in Appendix Q. */
+  {from:'face',  to:'pace',  hint:'change the f to a p'},
+  {from:'race',  to:'brace', hint:'add a b at the front'},
+  {from:'race',  to:'grace', hint:'change the r to a g and an r'},
+  {from:'race',  to:'trace', hint:'change the r to a t and an r'},
+  {from:'rice',  to:'slice', hint:'change the r to an s and an l'}];
 /* Detective Dog Breaks the Code -- how many jobs is Silent E doing here?
    The manual's own contrast is place against since, and the two buckets sit on a
    real structural difference rather than a memorised list. A "two jobs" word has
@@ -1134,6 +1161,10 @@ const DETECTIVE40={
     {key:'one job',  ex:'since', why:'two consonants before the e, so the vowel stays short and the e only softens the c'}],
   items:[
     {w:'ice',    k:'two jobs'},
+    {w:'pace',   k:'two jobs'},
+    {w:'brace',  k:'two jobs'},
+    {w:'grace',  k:'two jobs'},
+    {w:'trace',  k:'two jobs'},
     {w:'face',   k:'two jobs'},
     {w:'nice',   k:'two jobs'},
     {w:'twice',  k:'two jobs'},
@@ -1210,7 +1241,7 @@ const SILENTEG42={
   instruction:'How many jobs is Silent E doing in this word?',
   buckets:[
     {key:'two jobs', ex:'huge',  why:'one consonant before the e, so it makes the vowel long AND the g soft'},
-    {key:'one job',  ex:'large', why:'two consonants before the e, so the vowel cannot stretch and the e only softens the g'}],
+    {key:'one job',  ex:'large', why:'the e is not next to the vowel, so it cannot reach it — softening the g is all it does'}],
   items:[
     {w:'age',    k:'two jobs'},
     {w:'cage',   k:'two jobs'},
@@ -1248,7 +1279,7 @@ const EJOBS44={
   instruction:'Which job is Silent E doing in this word?',
   buckets:[
     {key:'long vowel',  ex:'cake',  why:'nothing to soften and no u or v to rescue, so the e just stretches the vowel'},
-    {key:'soft c or g', ex:'fence', why:'two consonants keep the vowel short, so the e is only there to soften the c or g'},
+    {key:'soft c or g', ex:'fence', why:'the e is not next to the vowel, so all it does here is soften the c or g'},
     {key:'saves u or v', ex:'give', why:'English words cannot end in v and hardly ever in u, so the e takes the last spot'}],
   items:[
     {w:'cake',    k:'long vowel'},
@@ -1356,7 +1387,7 @@ const EJOBS46={
   instruction:'Which job is Silent E doing in this word?',
   buckets:[
     {key:'long vowel',   ex:'cake',  why:'nothing to soften, no u or v to rescue and no plural to rule out, so the e just stretches the vowel'},
-    {key:'soft c or g',  ex:'fence', why:'the e is there to soften the c or g, and the vowel stays short'},
+    {key:'soft c or g',  ex:'fence', why:'the e is not next to the vowel, so all it does here is soften the c or g'},
     {key:'saves u or v', ex:'give',  why:'English words cannot end in v and hardly ever in u, so the e takes the last spot'},
     {key:'not a plural', ex:'rinse', why:'without the e that s would read like a plural ending, so the e settles it'}],
   items:[
@@ -1500,7 +1531,14 @@ const ACHANGE50=[
   {from:'tall',  to:'fall',  hint:'change the t to an f'},
   {from:'hall',  to:'tall',  hint:'change the h to a t'},
   {from:'stall', to:'small', hint:'change the t to an m'},
-  {from:'small', to:'stall', hint:'change the m to a t'}];
+  {from:'small', to:'stall', hint:'change the m to a t'},
+  /* Nine answers could not fill eight rounds beside a ten-card reading stage that
+     claims most of them. These swap the a for a short e, which is the contrast the
+     sort is built on: the l only pulls an a. */
+  {from:'ball',  to:'bell',  hint:'change the a to an e'},
+  {from:'tall',  to:'tell',  hint:'change the a to an e'},
+  {from:'fall',  to:'fell',  hint:'change the a to an e'},
+  {from:'wall',  to:'well',  hint:'change the a to an e'}];
 /* Two things pull a into its third sound, and the manual names both: an l right
    after it (ball, salt) or a /w/ sound right before it (want, water, squash --
    the qu in squash counts, since it carries a w sound).
@@ -1530,6 +1568,16 @@ const ASOUND50={
     {w:'swamp',  k:'/ah/'},
     {w:'watch',  k:'/ah/'},
     {w:'squash', k:'/ah/'},
+    /* Appendix Q gives Lesson 50 a whole family built on wash and water; every one
+       of them is the /w/ trigger doing its work, and they gave the lesson enough
+       different words to stop repeating itself. */
+    {w:'wander',     k:'/ah/'},
+    {w:'wallpaper',  k:'/ah/'},
+    {w:'washcloth',  k:'/ah/'},
+    {w:'washtub',    k:'/ah/'},
+    {w:'watercraft', k:'/ah/'},
+    {w:'waterfall',  k:'/ah/'},
+    {w:'watermark',  k:'/ah/'},
     {w:'cat',    k:'/a/'},
     {w:'hat',    k:'/a/'},
     {w:'map',    k:'/a/'},
@@ -1577,7 +1625,10 @@ const OYCHANGE52=[
    /oy/ word on screen. Notice that nothing here ends in oi: English words do not
    end in i, which is exactly why the end of a word always takes oy. */
 const OYWORDS52=['boy','toy','joy','soy','enjoy','oyster','royal',
-  'oil','point','join','soil','coin','boil','voice','choice','noise'];
+  'oil','point','join','soil','coin','boil','voice','choice','noise',
+  /* Appendix Q lists all of these at Lesson 52 as well, and the lesson needed the
+     room: twenty-five rounds were being filled from twenty-one words. */
+  'foil','broil','moist','hoist','toil','joint','poise','oink','topsoil','toilet'];
 /* Word Cards 263-272 -- the nine Practice Reading Words plus were on card 272.
    Ten cards against a ten-round stage, so each comes up once per sitting. were is
    a Leap Word because its Silent E has no job at all. */
@@ -1618,7 +1669,9 @@ const AWCHANGE54=[
    pit saw against law or pause against cause.
    Nothing here ends in au, which is the whole reason two spellings exist. */
 const AWWORDS54=['saw','law','draw','claw','lawn','yawn','hawk','straw',
-  'haul','pause','cause','because','August','launch','sauce','fault'];
+  'haul','pause','cause','because','August','launch','sauce','fault',
+  /* All eight are Lesson 54 words in Appendix Q. */
+  'dawn','fawn','flaw','shawl','crawl','squawk','brawl','sawdust'];
 /* Word Cards 273-282 -- the nine Practice Reading Words plus aunt on card 282.
    Ten cards against a ten-round stage, so each comes up once per sitting. aunt is
    a Leap Word because its au does not say /aw/; most of us say it like ant. */
@@ -2254,8 +2307,8 @@ let LESSONS=[
       }
     },
     stages:[
-      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:CECHANGE40}, rounds:7, label:'Change the Word'},
-      {engine:'sortsound', pool:DETECTIVE40, rounds:8, label:'Detective Dog'},
+      {engine:'wordchange', pool:{instruction:'Change the Word! Read the hint, then pick the new word.', pairs:CECHANGE40}, rounds:6, label:'Change the Word'},
+      {engine:'sortsound', pool:DETECTIVE40, rounds:9, label:'Detective Dog'},
       {engine:'sightword', pool:CARDS40, rounds:10, label:'Read the Word Cards'}
     ]
   },

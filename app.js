@@ -65,6 +65,9 @@ const shuffle=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1])
    (Lesson 27) carry apostrophes that would otherwise close the string and break
    the handler outright -- the button silently does nothing when clicked. */
 const jsq=s=>String(s).replace(/'/g,"\\'");
+/* Same idea for an argument passed between backticks: a stray backtick or a
+   ${ would end the template early and kill the button. */
+const jsb=s=>String(s).replace(/[\`$]/g,'\\$&');
 const $=id=>document.getElementById(id);
 
 /* ---------------- Pip mascot ---------------- */
@@ -104,11 +107,11 @@ function addStar(n=1){stars+=n;$('starCount').textContent=stars;persist();
 function renderGreeting(){
   $('menuIntro').innerHTML=`Hi ${childName}! I'm Pip the pond frog! 🐸 Pick a game, tap the blue speaker to hear a word, and grab a star for every one you get right. Ready? Let's hop to it!`;
 }
-function lessonCard(l){return `<button class="game-card ${l.cls}" onclick="Game.launch('L','${l.id}')">
+function lessonCard(l){return `<button class="game-card ${l.cls}" onclick="Game.launch('L','${jsq(l.id)}')">
   <div class="emoji">${l.emoji}</div><div class="tag">Lesson ${l.n}</div>
   <div class="title">${l.title}</div></button>`;}
 function gameCard(g){
-  if(enabled[g.id]) return `<button class="game-card ${g.cls}" onclick="Game.launch('G','${g.id}')">
+  if(enabled[g.id]) return `<button class="game-card ${g.cls}" onclick="Game.launch('G','${jsq(g.id)}')">
     <div class="emoji">${g.emoji}</div><div class="title">${g.name}</div><div class="sub">${g.sub}</div></button>`;
   return `<div class="game-card locked ${g.cls}"><div class="lock-badge">🔒</div>
     <div class="emoji">${g.emoji}</div><div class="title">${g.name}</div><div class="sub">Unlocks later</div></div>`;
@@ -181,6 +184,10 @@ function promptWords(engine,item){
     case 'magic': add(item.short); add(item.long); break;
     case 'contraction': case 'expand': add(item.one); break;
     case 'phonogram': add(item.word); break;
+    // both sides of a minimal pair are shown as buttons, and a heteronym item
+    // keys its word differently, so neither was being claimed by the dealer
+    case 'minimalpair': add(item.w); add(item.other); break;
+    case 'heteronym': add(item.word); break;
     case 'ed': add(item.word); break;
     default: add(item.w); break;
   }
@@ -275,8 +282,8 @@ const ENGINES={
     const opts=shuffle([target,...distract]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Tap the speaker, then find the word you heard.</div>
-      <button class="speak-btn" style="width:74px;height:74px;box-shadow:0 7px 0 #2f7ed8" onclick="speak('${target}')" aria-label="hear word">${SPKR}</button></div>
-      <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${target}')">${w}</button>`).join('')}</div>
+      <button class="speak-btn" style="width:74px;height:74px;box-shadow:0 7px 0 #2f7ed8" onclick="speak('${jsq(target)}')" aria-label="hear word">${SPKR}</button></div>
+      <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(w)}','${jsq(target)}')">${w}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(target);},
 
   phonogram(item,pool){const all=pool.all||pool;const {phon,word:correctWord}=item;
@@ -285,27 +292,37 @@ const ENGINES={
     // phonogram family instead; the chip still shows the letters for the print match.
     const sameFamily=all[phon].filter(w=>w!==correctWord);
     const spokenWord=sameFamily.length?rand(sameFamily):correctWord;
-    const otherKeys=shuffle(Object.keys(all).filter(p=>p!==phon));
+    // The question is "which one has the same sound?", so a distractor must not
+    // share the sound. oy and oi are one sound with two spellings, and so are ow
+    // and ou -- Lessons 52 and 56 teach exactly that -- so a word from the twin
+    // bucket is as correct as the answer. A distractor that merely CONTAINS the
+    // letters is just as bad: flower carries er, wheel carries ee.
+    const TWIN={oy:'oi',oi:'oy',ow:'ou',ou:'ow'};
+    const otherKeys=shuffle(Object.keys(all).filter(p=>p!==phon&&p!==TWIN[phon]));
     const seen=new Set([correctWord]);const others=[];
-    for(const k of otherKeys){const w=rand(all[k]);if(!seen.has(w)){seen.add(w);others.push(w);if(others.length>=3)break;}}
+    for(const k of otherKeys){
+      const fair=all[k].filter(w=>!w.toLowerCase().includes(phon)&&!seen.has(w));
+      if(!fair.length)continue;
+      const w=rand(fair);seen.add(w);others.push(w);if(others.length>=3)break;
+    }
     const opts=shuffle([correctWord,...others]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Listen to the word — which one has the same sound?</div>
       <div class="big-target"><span class="phon-chip">${phon}</span>
-        <button class="speak-btn" onclick="speak('${spokenWord}')" aria-label="hear word">${SPKR}</button></div></div>
-      <div class="options">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${correctWord}','${phon} sound')">${w}
-        <button class="speak-btn" style="width:34px;height:34px;box-shadow:0 3px 0 #2f7ed8;margin-top:8px" onclick="event.stopPropagation();speak('${w}')" aria-label="hear ${w}">${SPKR}</button></button>`).join('')}</div>
+        <button class="speak-btn" onclick="speak('${jsq(spokenWord)}')" aria-label="hear word">${SPKR}</button></div></div>
+      <div class="options">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(w)}','${jsq(correctWord)}','${phon} sound')">${w}
+        <button class="speak-btn" style="width:34px;height:34px;box-shadow:0 3px 0 #2f7ed8;margin-top:8px" onclick="event.stopPropagation();speak('${jsq(w)}')" aria-label="hear ${w}">${SPKR}</button></button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(spokenWord);},
 
   ed(item){const {sound,word}=item;
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Listen — which -ed sound do you hear?</div>
       <div class="big-target word-target">${word.slice(0,-2)}<span class="hl">ed</span>
-        <button class="speak-btn" onclick="speak('${word}')" aria-label="hear ${word}">${SPKR}</button></div></div>
+        <button class="speak-btn" onclick="speak('${jsq(word)}')" aria-label="hear ${word}">${SPKR}</button></div></div>
       <div class="bucket-row">
-        <div class="bucket" onclick="Game.pickBucket(this,'/t/','${sound}')"><div class="snd">/t/</div><div class="ex">like <b>jumped</b></div></div>
-        <div class="bucket" onclick="Game.pickBucket(this,'/d/','${sound}')"><div class="snd">/d/</div><div class="ex">like <b>snowed</b></div></div>
-        <div class="bucket" onclick="Game.pickBucket(this,'/id/','${sound}')"><div class="snd">/id/</div><div class="ex">like <b>wanted</b></div></div>
+        <div class="bucket" onclick="Game.pickBucket(this,'/t/','${jsq(sound)}')"><div class="snd">/t/</div><div class="ex">like <b>jumped</b></div></div>
+        <div class="bucket" onclick="Game.pickBucket(this,'/d/','${jsq(sound)}')"><div class="snd">/d/</div><div class="ex">like <b>snowed</b></div></div>
+        <div class="bucket" onclick="Game.pickBucket(this,'/id/','${jsq(sound)}')"><div class="snd">/id/</div><div class="ex">like <b>wanted</b></div></div>
       </div><div class="feedback" id="fb"></div></div>`;speak(word);},
 
   magic(p){const s=p.short,vowel=s[p.v];
@@ -315,8 +332,8 @@ const ENGINES={
       <div class="magic-word" id="mword">${before}<span class="vowel">${vowel}</span>${after}<span class="adde">e</span></div>
       <div class="magic-meaning" id="mmean"></div>
       <div class="magic-controls">
-        <button class="speak-btn" onclick="speak('${s}')" style="box-shadow:0 6px 0 #2f7ed8">${SPKR}</button>
-        <button class="btn-grape" id="addBtn" onclick="Game.doMagic('${s}','${p.long}',\`${p.mean}\`)">✨ Add Magic E</button>
+        <button class="speak-btn" onclick="speak('${jsq(s)}')" style="box-shadow:0 6px 0 #2f7ed8">${SPKR}</button>
+        <button class="btn-grape" id="addBtn" onclick="Game.doMagic('${jsq(s)}','${jsq(p.long)}',\`${p.mean}\`)">✨ Add Magic E</button>
       </div><div class="feedback" id="fb"></div></div>`;speak(s);},
 
   contraction(c,pool){
@@ -324,7 +341,7 @@ const ENGINES={
     const opts=shuffle([c,...distract]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Squish these two words into one!</div>
-      <div class="big-target">${c.two}<button class="speak-btn" onclick="speak('${c.two}')" aria-label="hear">${SPKR}</button></div></div>
+      <div class="big-target">${c.two}<button class="speak-btn" onclick="speak('${jsq(c.two)}')" aria-label="hear">${SPKR}</button></div></div>
       <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(o.one)}','${jsq(c.one)}')">${o.one}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(c.two);},
 
@@ -349,7 +366,7 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Read the sentence. What does the blue word mean here?</div>
       <div class="sentence">${item.sentence}</div></div>
-      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickMeaning(this,\`${o}\`,\`${item.right}\`,'${item.word}',\`${item.note}\`)">${o}</button>`).join('')}</div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickMeaning(this,\`${jsb(o)}\`,\`${jsb(item.right)}\`,'${jsq(item.word)}',\`${jsb(item.note)}\`)">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;},
 
   sortsound(item,pool){
@@ -357,8 +374,8 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">${pool.instruction}</div>
       <div class="big-target word-target">${item.w}
-        <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="bucket-row${pool.buckets.length===2?' two':pool.buckets.length===4?' four':''}">${pool.buckets.map(b=>`<div class="bucket" onclick="Game.pickSound(this,'${b.key}','${item.k}','${item.w}',\`${right.why}\`)">
+        <button class="speak-btn" onclick="speak('${jsq(item.w)}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="bucket-row${pool.buckets.length===2?' two':pool.buckets.length===4?' four':''}">${pool.buckets.map(b=>`<div class="bucket" onclick="Game.pickSound(this,'${jsq(b.key)}','${jsq(item.k)}','${jsq(item.w)}',\`${jsb(right.why)}\`)">
         <div class="snd">${b.key}</div><div class="ex">like <b>${b.ex}</b></div></div>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
@@ -375,8 +392,8 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Which syllable tag does this word get?</div>
       <div class="big-target word-target">${item.w}
-        <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="options${TAGS.length===3?' three':TAGS.length===5?' five':''}">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${t[0]}','${item.t}','${item.w}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
+        <button class="speak-btn" onclick="speak('${jsq(item.w)}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="options${TAGS.length===3?' three':TAGS.length===5?' five':''}">${TAGS.map(t=>`<button class="opt" onclick="Game.pickTag(this,'${jsq(t[0])}','${jsq(item.t)}','${jsq(item.w)}')">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   /* The mirror of `contraction`, and the other half of the manual's rubber-band
@@ -387,21 +404,21 @@ const ENGINES={
   expand(c,pool){
     const distract=pickUnique(pool.filter(x=>x.two!==c.two),x=>x.two,c.two,2);
     const opts=shuffle([c,...distract]);
-    const spoken=jsq(c.one);
+    const spoken=c.one;
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Stretch it back out! Which two words is this short for?</div>
       <div class="big-target word-target">${c.one}
-        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${c.one}">${SPKR}</button></div></div>
-      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o.two}','${c.two}')">${o.two}</button>`).join('')}</div>
+        <button class="speak-btn" onclick="speak('${jsq(spoken)}')" aria-label="hear ${c.one}">${SPKR}</button></div></div>
+      <div class="options three">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(o.two)}','${jsq(c.two)}')">${o.two}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(c.one);},
 
   syllabletype(item){
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Open or closed? Say the word and listen to the vowel.</div>
-      <div class="big-target word-target">${item.w}<button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="big-target word-target">${item.w}<button class="speak-btn" onclick="speak('${jsq(item.w)}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
       <div class="options">
-        <button class="opt" onclick="Game.pickType(this,'open','${item.t}','${item.w}')">Open<small>ends in a vowel · long sound</small></button>
-        <button class="opt" onclick="Game.pickType(this,'closed','${item.t}','${item.w}')">Closed<small>ends in a consonant · short sound</small></button>
+        <button class="opt" onclick="Game.pickType(this,'open','${jsq(item.t)}','${jsq(item.w)}')">Open<small>ends in a vowel · long sound</small></button>
+        <button class="opt" onclick="Game.pickType(this,'closed','${jsq(item.t)}','${jsq(item.w)}')">Closed<small>ends in a consonant · short sound</small></button>
       </div><div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   wordchange(pair,poolMeta){const arr=Array.isArray(poolMeta)?poolMeta:poolMeta.pairs;
@@ -419,9 +436,9 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">${instruction}</div>
       <div class="big-target word-target">${pair.from}
-        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${pair.from}">${SPKR}</button></div>
+        <button class="speak-btn" onclick="speak('${jsq(spoken)}')" aria-label="hear ${pair.from}">${SPKR}</button></div>
       ${pair.hint?`<div class="hint">${markHint(pair.hint)}</div>`:''}</div>
-      <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${w}','${pair.to}')">${w}</button>`).join('')}</div>
+      <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(w)}','${jsq(pair.to)}')">${w}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(spoken);},
 
   /* Lesson 14's "Kit or Kite?" -- a pure listening contrast where the two options
@@ -433,8 +450,8 @@ const ENGINES={
     const opts=shuffle([item.w,item.other]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Listen closely. Which word did you hear?</div>
-      <button class="speak-btn" style="width:74px;height:74px;box-shadow:0 7px 0 #2f7ed8" onclick="speak('${item.w}')" aria-label="hear word">${SPKR}</button></div>
-      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickHeard(this,'${o}','${item.w}')">${o}</button>`).join('')}</div>
+      <button class="speak-btn" style="width:74px;height:74px;box-shadow:0 7px 0 #2f7ed8" onclick="speak('${jsq(item.w)}')" aria-label="hear word">${SPKR}</button></div>
+      <div class="options">${opts.map(o=>`<button class="opt" onclick="Game.pickHeard(this,'${jsq(o)}','${jsq(item.w)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   /* Lesson 33's three-syllable words. The wrong options carry TWO splits as well,
@@ -454,19 +471,22 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">This word has three syllables. Where do the splits go?</div>
       <div class="big-target word-target">${w}
-        <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div></div>
-      <div class="options three split">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+        <button class="speak-btn" onclick="speak('${jsq(w)}')" aria-label="hear ${w}">${SPKR}</button></div></div>
+      <div class="options three split">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(o)}','${jsq(correct)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(w);},
 
   syllablesplit(item){const w=item.w;const correct=item.parts.join('-');
     const splitIdx=item.parts[0].length;const candidates=[];
-    for(let i=2;i<=w.length-2;i++){const opt=w.slice(0,i)+'-'+w.slice(i);if(i!==splitIdx&&!candidates.includes(opt))candidates.push(opt);}
+    // Splitting only between positions 2 and length-2 left seven Lesson 31 words
+    // -- paper, river, never, over -- with a single wrong answer, so the round was
+    // a coin flip in a three-button grid. Every split position is fair game.
+    for(let i=1;i<=w.length-1;i++){const opt=w.slice(0,i)+'-'+w.slice(i);if(i!==splitIdx&&!candidates.includes(opt))candidates.push(opt);}
     const opts=shuffle([correct,...shuffle(candidates).slice(0,2)]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Where does this word split into syllables?</div>
       <div class="big-target word-target">${w}
-        <button class="speak-btn" onclick="speak('${w}')" aria-label="hear ${w}">${SPKR}</button></div></div>
-      <div class="options three split">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${o}','${correct}')">${o}</button>`).join('')}</div>
+        <button class="speak-btn" onclick="speak('${jsq(w)}')" aria-label="hear ${w}">${SPKR}</button></div></div>
+      <div class="options three split">${opts.map(o=>`<button class="opt" onclick="Game.pickWord(this,'${jsq(o)}','${jsq(correct)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(w);},
 
   /* Lesson 12: the child sees ONE word and the two splits that are genuinely in
@@ -484,8 +504,8 @@ const ENGINES={
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Listen to the word. Which split makes a real word?</div>
       <div class="big-target word-target">${item.w}
-        <button class="speak-btn" onclick="speak('${item.w}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
-      <div class="options split">${opts.map(o=>`<button class="opt" onclick="Game.pickSplit(this,'${o}','${correct}','${other}','${item.correct}')">${o}</button>`).join('')}</div>
+        <button class="speak-btn" onclick="speak('${jsq(item.w)}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="options split">${opts.map(o=>`<button class="opt" onclick="Game.pickSplit(this,'${jsq(o)}','${jsq(correct)}','${jsq(other)}','${jsq(item.correct)}')">${o}</button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(item.w);},
 
   /* Leap Words. Same read-aloud-and-self-report shape as `sightword`, with the
@@ -493,14 +513,14 @@ const ENGINES={
      sitting alongside benefits from knowing whether this one truly breaks the
      rules or merely arrived before the rule that explains it. */
   leapword(item){
-    const q=jsq(item.w), spoken=jsq(item.say||item.w);
+    const q=item.w, spoken=item.say||item.w;
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
       <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the Leap Word out loud! Stuck? Tap the speaker.</div>
       <div class="big-target word-target">${item.w}
-        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${item.w}">${SPKR}</button></div>
+        <button class="speak-btn" onclick="speak('${jsq(spoken)}')" aria-label="hear ${item.w}">${SPKR}</button></div>
       <div class="sight-controls">
-        <button class="btn-mint" onclick="Game.leapAnswer(true,'${q}')">\u2713 I read it!</button>
-        <button class="btn-soft" onclick="Game.leapAnswer(false,'${q}')">🔁 Still tricky</button>
+        <button class="btn-mint" onclick="Game.leapAnswer(true,'${jsq(q)}')">\u2713 I read it!</button>
+        <button class="btn-soft" onclick="Game.leapAnswer(false,'${jsq(q)}')">🔁 Still tricky</button>
       </div>
       <div class="feedback" id="fb"></div></div>`;},
 
@@ -508,21 +528,21 @@ const ENGINES={
      spelling would mislead the voice -- Mr. and Mrs. have no vowel, and some
      voices spell them out rather than saying mister and missus. */
   sightword(item){
-    const w=(item&&item.w)||item, q=jsq(w), spoken=jsq((item&&item.say)||w);
+    const w=(item&&item.w)||item, q=w, spoken=(item&&item.say)||w;
     $('gameArea').innerHTML=`<div class="card" style="text-align:center">
       <div class="instruction" style="font-family:Lexend;font-weight:500;color:#5a6b82;font-size:16px;margin-bottom:16px">Read the word out loud! Stuck? Tap the speaker.</div>
       <div class="big-target word-target">${w}
-        <button class="speak-btn" onclick="speak('${spoken}')" aria-label="hear ${w}">${SPKR}</button></div>
+        <button class="speak-btn" onclick="speak('${jsq(spoken)}')" aria-label="hear ${w}">${SPKR}</button></div>
       <div class="sight-controls">
-        <button class="btn-mint" onclick="Game.sightAnswer(true,'${q}')">✓ I read it!</button>
-        <button class="btn-soft" onclick="Game.sightAnswer(false,'${q}')">🔁 Still tricky</button>
+        <button class="btn-mint" onclick="Game.sightAnswer(true,'${jsq(q)}')">✓ I read it!</button>
+        <button class="btn-soft" onclick="Game.sightAnswer(false,'${jsq(q)}')">🔁 Still tricky</button>
       </div>
       <div class="feedback" id="fb"></div></div>`;},
 
   syllable(s){
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Say it and clap. How many syllables?</div>
-      <div class="big-target word-target">${s.w}<button class="speak-btn" onclick="speak('${s.w}')" aria-label="hear ${s.w}">${SPKR}</button></div></div>
+      <div class="big-target word-target">${s.w}<button class="speak-btn" onclick="speak('${jsq(s.w)}')" aria-label="hear ${s.w}">${SPKR}</button></div></div>
       <div class="options three">${[1,2,3].map(n=>`<button class="opt" onclick="Game.pickNumber(this,${n},${s.n})">${n}<small>${'👏'.repeat(n)}</small></button>`).join('')}</div>
       <div class="feedback" id="fb"></div></div>`;speak(s.w);}
 };
@@ -537,7 +557,7 @@ const MASTERY={
 /* ---------------- Game controller ---------------- */
 const Game={
   deck:null,round:0,total:25,correct:0,locked:false,order:null,stageOrders:null,sightUsed:null,
-  home(){speechSynthesis&&speechSynthesis.cancel();$('home').classList.add('active');
+  home(){if(SPEECH_OK)speechSynthesis.cancel();$('home').classList.add('active');
     $('game').classList.remove('active');$('lessonIntro').classList.remove('active');},
   buildOrders(){
     this.sightUsed=new Set();
@@ -566,12 +586,16 @@ const Game={
     return{stage:this.deck.stages[last],item:this.stageOrders[last][this.stageOrders[last].length-1]};
   },
   next(){this.locked=false;this.round++;
-    if(this.round>this.total){this.finish();return;}
     const m=MASTERY[this.deck.id];
+    // A mastery game checks for the trophy BEFORE the round limit: clearing the
+    // last word on round 25 used to end the sitting with an ordinary star count
+    // and hide the trophy until the game was opened again.
+    if(this.round>this.total&&!m){this.finish();return;}
     if(m){
       const pool=m.pool(), done=m.set();
       const unmastered=pool.filter(x=>!done.has(m.key(x)));
       if(unmastered.length===0){this.showAchievement(pool.length,m.label);return;}
+      if(this.round>this.total){this.finish();return;}
       let avail=unmastered.filter(x=>!this.sightUsed.has(m.key(x)));
       if(avail.length===0){this.sightUsed.clear();avail=unmastered;}
       const x=rand(avail);this.sightUsed.add(m.key(x));
@@ -684,7 +708,7 @@ const Game={
   leapAnswer(knewIt,word){
     if(this.locked)return;this.locked=true;
     const item=LEAPWORDS.find(x=>x.w===word);
-    const note=item?(' Lesson '+item.n+' \u2014 '+item.why+'.'):'';
+    const note=item?(' Lesson '+item.n+' \u2014 '+item.why+'. '+(item.breaker?'A real rule breaker.':'The rule that explains it comes later.')):'';
     if(knewIt){
       if(word&&!masteredLeap.has(word)){masteredLeap.add(word);persist();}
       this.win();this.good('\u2b50 Way to read it!'+note);
