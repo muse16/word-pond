@@ -2544,3 +2544,188 @@ const GAMES=[
   {id:'sight', name:'Sight Word Flash', emoji:'⚡', cls:'c-review', sub:'Read it out loud!', engine:'sightword', pool:SIGHTWORDS, on:true, hint:'High-frequency "heart words" that don\'t follow regular phonics rules — read by sight, not by sounding out.'},
   {id:'leap', name:'Leap Words', emoji:'🐸', cls:'c-magic', sub:'Words that break the rules.', engine:'leapword', pool:LEAPWORDS, on:true, hint:'All 32 Leap Words from Level 2. Each one either breaks the rules or uses a phonogram taught later, so it is read by sight. After each word the game says which lesson it came from and why it is odd. Tracks mastery separately from Sight Word Flash.'}
 ];
+
+/* =========================================================
+   EXAMS -- two check-ups that sit after the practice areas.
+   An exam is a lesson in shape (stages that add to 30 rounds) with three
+   differences the app reads off the deck: `exam:true` turns feedback down to
+   "not quite" so a wrong answer does not hand her the answer, every stage
+   carries a `skill` and the `lessons` behind it so the finish screen can print
+   a report card, and nothing here is locked.
+   Words are drawn only from lessons the child has already had: the mid-year
+   exam stays inside Lessons 1-29, the end-of-year one uses the whole book.
+   ========================================================= */
+
+/* ---- Odd One Out: three share a pattern, one does not. -------------------- */
+const ODD_MID=[
+  {words:['sky','fly','try','plan'],       odd:'plan', why:'the other three end in y saying its long i sound'},
+  {words:['cake','bike','home','milk'],    odd:'milk', why:'the other three end in Silent E'},
+  {words:['feet','green','tree','step'],   odd:'step', why:'the other three have the ee team'},
+  {words:['gold','find','told','lost'],    odd:'lost', why:'the other three follow the Find Gold rule, so their vowel is long'},
+  {words:['trip','clap','stop','sun'],     odd:'sun',  why:'the other three start with a blend'},
+  {words:['when','while','which','shine'], odd:'shine',why:'the other three start with wh'},
+  {words:["can't","isn't","let's",'melt'], odd:'melt', why:'the other three are contractions'},
+  {words:['cakes','notes','holes','hand'], odd:'hand', why:'the other three are plurals with Silent E'}];
+const ODD_END=[
+  {words:['coin','boil','toy','cold'],            odd:'cold', why:'the other three say /oy/'},
+  {words:['saw','claw','yawn','sock'],            odd:'sock', why:'the other three have aw'},
+  {words:['down','found','shout','shop'],         odd:'shop', why:'the other three have ow or ou saying /ow/'},
+  {words:['germ','cage','page','game'],           odd:'game', why:'the other three have a soft g'},
+  {words:['barn','dark','sharp','bank'],          odd:'bank', why:'the other three have ar'},
+  {words:['fork','storm','north','frost'],        odd:'frost',why:'the other three have or'},
+  {words:['wanted','printed','tested','jumped'],  odd:'jumped',why:'the other three end in the /id/ sound'},
+  {words:['ball','tall','wall','flag'],           odd:'flag', why:'the other three give a its third sound'}];
+const ODD_FINAL=[
+  {words:['show','snow','know','shout'],   odd:'shout',why:'the other three have ow saying long o'},
+  {words:['gem','germ','cage','gift'],     odd:'gift', why:'the other three have a soft g'},
+  {words:['ball','call','wall','shall'],   odd:'shall',why:'the other three give a its third sound'},
+  {words:['point','join','coin','pond'],   odd:'pond', why:'the other three have oi'}];
+
+/* ---- Build the Word: hear it, then tap the parts in order. ---------------- */
+const BUILD_MID=[
+  {w:'ship',  parts:['sh','i','p']},
+  {w:'when',  parts:['wh','e','n']},
+  {w:'feet',  parts:['f','ee','t']},
+  {w:'cake',  parts:['c','a','k','e']},
+  {w:'trip',  parts:['t','r','i','p']},
+  {w:'thin',  parts:['th','i','n']},
+  {w:'clock', parts:['cl','o','ck']},
+  {w:'note',  parts:['n','o','t','e']},
+  {w:'quick', parts:['qu','i','ck']},
+  {w:'green', parts:['gr','ee','n']}];
+const BUILD_END=[
+  {w:'coin',  parts:['c','oi','n']},
+  {w:'yawn',  parts:['y','aw','n']},
+  {w:'cloud', parts:['cl','ou','d']},
+  {w:'north', parts:['n','or','th']},
+  {w:'germ',  parts:['g','er','m']},
+  {w:'barn',  parts:['b','ar','n']},
+  {w:'point', parts:['p','oi','n','t']},
+  {w:'crown', parts:['cr','ow','n']},
+  {w:'small', parts:['s','m','a','ll']},
+  {w:'paused',parts:['p','au','s','ed']}];
+/* Spare tiles, so the row is never just the answer shuffled. */
+const TILES_MID=['b','d','g','m','s','t','ck','sh','th','ch','ee','a','e','i','o','u'];
+const TILES_END=['b','d','k','p','s','t','ar','er','or','oi','ow','ou','aw','au','ll','ck'];
+
+/* ---- Read the Sentence: the first rounds in the app that ask for meaning. -- */
+const SENT_MID=[
+  {text:'The frog sat on a ___.',      answer:'log',   options:['log','leg','lug']},
+  {text:'She ate the ___.',            answer:'cake',  options:['cake','rake','lake']},
+  {text:'We ride the ___ to school.',  answer:'bus',   options:['bus','bun','but']},
+  {text:'He put on his ___ and hat.',  answer:'socks', options:['socks','rocks','locks']},
+  {text:'The pup can ___ fast.',       answer:'run',   options:['run','rug','rub']},
+  {text:'I will ___ my name.',         answer:'spell', options:['spell','smell','swell']},
+  {text:'The bee sat on the ___.',     answer:'tree',  options:['tree','free','three']},
+  {text:'Do not ___ the hot pan!',     answer:'drop',  options:['drop','drip','drum']}];
+const SENT_END=[
+  {text:'I saw a ___ up in the tree.', answer:'hawk',  options:['hawk','hack','hark']},
+  {text:'Put the coin in my ___.',     answer:'pocket',options:['pocket','packet','picket']},
+  {text:'The cow is in the ___.',      answer:'barn',  options:['barn','born','bark']},
+  {text:'I want a glass of ___.',      answer:'water', options:['water','winter','wander']},
+  {text:'Do not ___ the door!',        answer:'slam',  options:['slam','slim','slum']},
+  {text:'She wore a ___ on her neck.', answer:'scarf', options:['scarf','scarp','scar']},
+  {text:'The sun comes up at ___.',    answer:'dawn',  options:['dawn','down','darn']},
+  {text:'He ___ the ball to me.',      answer:'tossed',options:['tossed','tasted','tested']}];
+
+/* ---- Rule or Breaker: does this word play fair? --------------------------- */
+const RULE_MID=[
+  {w:'gold',  breaker:false, why:'i or o with two consonants after it goes long -- the Find Gold rule'},
+  {w:'cake',  breaker:false, why:'Silent E reaches back and makes the a long'},
+  {w:'when',  breaker:false, why:'wh says /w/, just as Lesson 19 taught it'},
+  {w:'feet',  breaker:false, why:'the ee team says long e'},
+  {w:'trip',  breaker:false, why:'a plain closed syllable with a blend at the front'},
+  {w:'what',  breaker:true,  why:'it looks as if it should rhyme with hat, and it does not'},
+  {w:'come',  breaker:true,  why:'the Silent E does not make the o long'},
+  {w:'who',   breaker:true,  why:'the wh says h and the o says oo'},
+  {w:'have',  breaker:true,  why:'the Silent E is only keeping v off the end'},
+  {w:'been',  breaker:true,  why:'the ee does not say its long e sound here'}];
+const RULE_END=[
+  {w:'barn',   breaker:false, why:'ar says its own sound, bossing the a'},
+  {w:'fork',   breaker:false, why:'or says its own sound'},
+  {w:'gem',    breaker:false, why:'g before e is soft, exactly as the rule says'},
+  {w:'jumped', breaker:false, why:'ed after a /p/ says /t/'},
+  {w:'boil',   breaker:false, why:'oi says /oy/ in the middle of a word'},
+  {w:'warm',   breaker:true,  why:'the ar here sounds like or in most places'},
+  {w:'two',    breaker:true,  why:'the w is silent and the o says oo'},
+  {w:'were',   breaker:true,  why:'the Silent E has no job at all'},
+  {w:'many',   breaker:true,  why:'the a says short e and the y says long e'},
+  {w:'aunt',   breaker:true,  why:'the au does not say /aw/ -- most of us say it like ant'}];
+
+/* ---- Syllable Bridge: join two parts into a real word. -------------------- */
+const BRIDGE_MID=[
+  {w:'napkin', head:'nap', tail:'kin'},
+  {w:'rabbit', head:'rab', tail:'bit'},
+  {w:'sunset', head:'sun', tail:'set'},
+  {w:'picnic', head:'pic', tail:'nic'},
+  {w:'robin',  head:'rob', tail:'in'},
+  {w:'open',   head:'o',   tail:'pen'},
+  {w:'zero',   head:'ze',  tail:'ro'},
+  {w:'silent', head:'si',  tail:'lent'}];
+const BRIDGE_END=[
+  {w:'morning',head:'morn',tail:'ing'},
+  {w:'forest', head:'for', tail:'est'},
+  {w:'winter', head:'win', tail:'ter'},
+  {w:'summer', head:'sum', tail:'mer'},
+  {w:'order',  head:'or',  tail:'der'},
+  {w:'carpet', head:'car', tail:'pet'},
+  {w:'garden', head:'gar', tail:'den'},
+  {w:'pocket', head:'pock',tail:'et'}];
+
+/* ---- Word Cards drawn across the whole range of each exam. ---------------- */
+const CARDS_MID=['plan','trip','clap','stop','sky','shy','robin','picnic','open','zero',
+  'cake','home','kite','five','like','cute','nose','goose','when','white',
+  'drive','store','cakes','notes','feet','green','street',"don't","won't",'told'];
+const CARDS_END=['never','paper','under','barn','sharp','March','fork','north','storm','forest',
+  'push','pull','bacon','wagon','dance','fence','face','nice','place','cage',
+  'huge','page','give','blue','true','love','mother','wanted','snowed','jumped',
+  'ball','wall','water','wash','boy','point','soil','saw','yawn','hawk',
+  'down','brown','found','cloud','flower'];
+
+const EXAMS=[
+  {id:'midexam', n:'Mid-Year', title:'Mid-Year Check-Up', emoji:'🌟', cls:'c-review',
+    sub:'Lessons 1 to 29', exam:true,
+    intro:{
+      topic:'Mid-Year Check-Up',
+      lines:[
+        'This one is a little different. Thirty questions, and they come from everything you have learned so far -- Lessons 1 all the way to 29.',
+        'There are some new games in here. You will build words out of their parts, spot the word that does not belong, read a whole sentence, and decide whether a word plays fair or breaks the rules.',
+        'If you miss one I will just say <b>not quite</b> and move along, so keep going and do your best. At the end you get your score and Pip tells your grown-up which parts to practice next.'
+      ],
+      words:['ship','gold',"can't"]
+    },
+    stages:[
+      {engine:'oddoneout',     pool:ODD_MID,    rounds:5, label:'Odd One Out',       skill:'Spotting the pattern',   lessons:[2,4,14,19,23,25,27,29]},
+      {engine:'buildword',     pool:{items:BUILD_MID, tiles:TILES_MID}, rounds:5, label:'Build the Word', skill:'Building words from parts', lessons:[1,2,8,14,19,25]},
+      {engine:'sentence',      pool:SENT_MID,   rounds:5, label:'Read the Sentence', skill:'Reading a sentence',     lessons:[1,2,14,25]},
+      {engine:'rulebreaker',   pool:RULE_MID,   rounds:4, label:'Rule or Breaker',   skill:'Rules and rule breakers',lessons:[14,19,25,29]},
+      {engine:'syllablebridge',pool:BRIDGE_MID, rounds:4, label:'Syllable Bridge',   skill:'Two-syllable words',     lessons:[6,10,12]},
+      {engine:'review',        pool:CARDS_MID,  rounds:4, label:'Word Cards',        skill:'Reading Word Cards',     lessons:[1,2,4,6,10,12,14,15,17,19,21,23,25,27,29]},
+      {engine:'buildword',     pool:{items:[{w:'street',parts:['s','t','r','ee','t']},{w:'while',parts:['wh','i','l','e']},
+        {w:'notes',parts:['n','o','t','e','s']},{w:'planet',parts:['pl','a','n','e','t']},{w:'shine',parts:['sh','i','n','e']}],
+        tiles:TILES_MID}, rounds:3, label:'Final Challenge', skill:'The hardest words of the half', lessons:[8,14,19,25]}
+    ]
+  },
+  {id:'endexam', n:'End of Year', title:'End-of-Year Check-Up', emoji:'🏆', cls:'c-magic',
+    sub:'The whole of Level 2', exam:true,
+    intro:{
+      topic:'End-of-Year Check-Up',
+      lines:[
+        'The big one. Thirty questions covering the whole of Level 2, from the very first lesson to the last.',
+        'It starts by looking back at the first half of the year, then moves on to everything since: Bossy R, the sounds of a and u and o, soft c and g, the jobs of Silent E, and the vowel teams oy, oi, aw, au, ow and ou.',
+        'Same as last time. A miss just gets a <b>not quite</b>, and at the end you get your score and a report for your grown-up.'
+      ],
+      words:['coin','germ','water']
+    },
+    stages:[
+      {engine:'oddoneout',     pool:ODD_MID,    rounds:5, label:'Looking Back',      skill:'The first half of the year', lessons:[2,4,14,19,23,25,27,29]},
+      {engine:'oddoneout',     pool:ODD_END,    rounds:4, label:'Odd One Out',       skill:'Spotting the pattern',   lessons:[33,35,42,48,50,52,54,56]},
+      {engine:'buildword',     pool:{items:BUILD_END, tiles:TILES_END}, rounds:4, label:'Build the Word', skill:'Building words from parts', lessons:[31,33,35,50,52,54,56]},
+      {engine:'sentence',      pool:SENT_END,   rounds:5, label:'Read the Sentence', skill:'Reading a sentence',     lessons:[33,35,37,50,52,54]},
+      {engine:'rulebreaker',   pool:RULE_END,   rounds:4, label:'Rule or Breaker',   skill:'Rules and rule breakers',lessons:[33,42,44,48,50,52,54]},
+      {engine:'syllablebridge',pool:BRIDGE_END, rounds:3, label:'Syllable Bridge',   skill:'Longer words',           lessons:[31,33,35]},
+      {engine:'review',        pool:CARDS_END,  rounds:2, label:'Word Cards',        skill:'Reading Word Cards',     lessons:[31,33,35,37,39,40,42,44,46,48,50,52,54,56]},
+      {engine:'oddoneout',     pool:ODD_FINAL,  rounds:3, label:'Final Challenge',   skill:'The trickiest sounds',   lessons:[42,50,52,56]}
+    ]
+  }
+];

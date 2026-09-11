@@ -89,14 +89,25 @@ let masteredWords=new Set();
 let masteredLeap=new Set();
 let childName='Mckenna';
 let storageOK=true;
-function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords],leap:[...masteredLeap],name:childName,rate:speechRate,voiceURI:speechVoiceURI}));}catch(e){storageOK=false;}}
+let examResults={};
+function persist(){try{localStorage.setItem(SAVE_KEY,JSON.stringify({stars,enabled,mastered:[...masteredWords],leap:[...masteredLeap],name:childName,rate:speechRate,voiceURI:speechVoiceURI,exams:examResults}));}catch(e){storageOK=false;}}
+/* Exam attempts are kept so a retake can be read against the first try. Five per
+   exam is plenty for a school year and keeps the save small. */
+function examHistory(id){return (examResults&&examResults[id])||[];}
+function saveExamResult(id,result){
+  if(!examResults)examResults={};
+  const list=examHistory(id).concat([result]);
+  examResults[id]=list.slice(-5);
+  persist();
+}
 function loadSave(){try{const s=JSON.parse(localStorage.getItem(SAVE_KEY));if(s){if(typeof s.stars==='number')stars=s.stars;
   if(s.enabled)GAMES.forEach(g=>{if(g.id in s.enabled)enabled[g.id]=s.enabled[g.id];});
   if(Array.isArray(s.mastered))masteredWords=new Set(s.mastered);
   if(Array.isArray(s.leap))masteredLeap=new Set(s.leap);
   if(typeof s.name==='string'&&s.name.trim())childName=s.name.trim();
   if(typeof s.rate==='number')speechRate=s.rate;
-  if(typeof s.voiceURI==='string')speechVoiceURI=s.voiceURI;}}catch(e){storageOK=false;}}
+  if(typeof s.voiceURI==='string')speechVoiceURI=s.voiceURI;
+  if(s.exams&&typeof s.exams==='object')examResults=s.exams;}}catch(e){storageOK=false;}}
 function resetProgress(){stars=0;GAMES.forEach(g=>enabled[g.id]=g.on);masteredWords=new Set();masteredLeap=new Set();persist();$('starCount').textContent=0;renderMenu();renderSkillList();}
 function updateName(){const v=$('nameInput').value.trim();childName=v||'Reader';persist();renderGreeting();}
 
@@ -116,10 +127,20 @@ function gameCard(g){
   return `<div class="game-card locked ${g.cls}"><div class="lock-badge">🔒</div>
     <div class="emoji">${g.emoji}</div><div class="title">${g.name}</div><div class="sub">Unlocks later</div></div>`;
 }
+/* The two check-ups sit in their own row under the practice areas, and are never
+   locked: they are meant to be taken whenever, and retaken. */
+function examCard(e){
+  const past=examHistory(e.id), last=past[past.length-1];
+  const note=last?`Last time: ${last.correct} / ${last.total}`:e.sub;
+  return `<button class="game-card exam-card ${e.cls}" onclick="Game.launch('E','${jsq(e.id)}')">
+    <div class="emoji">${e.emoji}</div><div class="tag">${e.n}</div>
+    <div class="title">${e.title}</div><div class="sub">${note}</div></button>`;
+}
 function renderMenu(){
   $('lessonGrid').innerHTML = LESSONS.length ? LESSONS.map(lessonCard).join('')
     : `<div class="empty-hint">Lessons you're working on will appear here.</div>`;
   $('menuGrid').innerHTML = GAMES.map(gameCard).join('');
+  if($('examGrid'))$('examGrid').innerHTML = EXAMS.map(examCard).join('');
 }
 function renderSkillList(){
   $('skillList').innerHTML = GAMES.map(g=>`<div class="skillrow">
@@ -164,6 +185,7 @@ function poolItems(engine,pool){
     const items=[];Object.keys(pool).forEach(sound=>pool[sound].forEach(word=>items.push({sound,word})));return items;
   }
   if(engine==='sortsound')return pool.items.slice();
+  if(engine==='buildword')return pool.items.slice();
   if(engine==='wordchange')return (Array.isArray(pool)?pool:pool.pairs).slice();
   return pool.slice();
 }
@@ -184,6 +206,8 @@ function promptWords(engine,item){
     case 'magic': add(item.short); add(item.long); break;
     case 'contraction': case 'expand': add(item.one); break;
     case 'phonogram': add(item.word); break;
+    case 'oddoneout': add(item.odd); break;
+    case 'sentence': add(item.answer); break;
     // both sides of a minimal pair are shown as buttons, and a heteronym item
     // keys its word differently, so neither was being claimed by the dealer
     case 'minimalpair': add(item.w); add(item.other); break;
@@ -544,7 +568,76 @@ const ENGINES={
       <div class="instruction">Say it and clap. How many syllables?</div>
       <div class="big-target word-target">${s.w}<button class="speak-btn" onclick="speak('${jsq(s.w)}')" aria-label="hear ${s.w}">${SPKR}</button></div></div>
       <div class="options three">${[1,2,3].map(n=>`<button class="opt" onclick="Game.pickNumber(this,${n},${s.n})">${n}<small>${'👏'.repeat(n)}</small></button>`).join('')}</div>
-      <div class="feedback" id="fb"></div></div>`;speak(s.w);}
+      <div class="feedback" id="fb"></div></div>`;speak(s.w);},
+
+  /* ---------------- Exam engines ----------------
+     Five rounds that exist only in the two check-ups. Each one asks her to do
+     something the practice lessons never ask: spot a pattern rather than apply
+     a named rule, produce a word instead of recognising one, or read a whole
+     sentence for its meaning. None of them speaks the answer before she gives
+     it, because an exam that reads the word aloud is a listening test. */
+
+  /* Three words share something and one does not. The only clue is the print,
+     so there is no speaker here: reading them IS the question. */
+  oddoneout(item){
+    const opts=shuffle(item.words.slice());
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Three of these belong together. Which one does not?</div></div>
+      <div class="options">${opts.map(w=>`<button class="opt" onclick="Game.pickOdd(this,'${jsq(w)}','${jsq(item.odd)}',\`${jsb(item.why)}\`)">${w}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;},
+
+  /* Hear the word, then tap its parts in order. Spare tiles keep it from being
+     the answer shuffled, and a placed tile can be tapped again to take it back,
+     so a slip of the thumb does not cost the question. */
+  buildword(item,pool){
+    const spare=pickUnique((pool.tiles||[]).filter(t=>!item.parts.includes(t)),t=>t,null,3).slice(0,3);
+    Game.build={target:item.w, correct:item.parts.slice(), placed:[], tiles:shuffle(item.parts.concat(spare))};
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Tap the parts in order to build the word you hear.</div>
+      <div class="big-target"><button class="speak-btn" style="width:74px;height:74px;box-shadow:0 7px 0 #2f7ed8" onclick="speak('${jsq(item.w)}')" aria-label="hear word">${SPKR}</button></div></div>
+      <div class="slot-row" id="slotRow"></div>
+      <div class="tile-row" id="tileRow"></div>
+      <div class="feedback" id="fb"></div></div>`;
+    Game.renderBuild();speak(item.w);},
+
+  /* A sentence with one word missing. Nothing else in Word Pond asks her to
+     read for meaning, and a child can decode every word on a card and still
+     not know what the sentence said. */
+  sentence(item){
+    const opts=shuffle(item.options.slice());
+    const shown=item.text.replace('___','<span class="blank">?</span>');
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Read the sentence. Which word belongs in the gap?</div>
+      <div class="sentence">${shown}</div></div>
+      <div class="options three">${opts.map(w=>`<button class="opt" onclick="Game.pickSentence(this,'${jsq(w)}','${jsq(item.answer)}',\`${jsb(item.text)}\`)">${w}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;},
+
+  /* Does this word play fair? The Leap Word idea turned into a question she has
+     to answer rather than a label the app hands her. */
+  rulebreaker(item){
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Does this word follow the rules, or break them?</div>
+      <div class="big-target word-target">${item.w}
+        <button class="speak-btn" onclick="speak('${jsq(item.say||item.w)}')" aria-label="hear ${item.w}">${SPKR}</button></div></div>
+      <div class="bucket-row two rule">
+        <div class="bucket" onclick="Game.pickRule(this,false,${item.breaker?'true':'false'},'${jsq(item.w)}',\`${jsb(item.why)}\`)">
+          <div class="snd">Plays fair</div><div class="ex">it follows a rule you know</div></div>
+        <div class="bucket" onclick="Game.pickRule(this,true,${item.breaker?'true':'false'},'${jsq(item.w)}',\`${jsb(item.why)}\`)">
+          <div class="snd">Breaks the rules</div><div class="ex">a Leap Word</div></div></div>
+      <div class="feedback" id="fb"></div></div>`;},
+
+  /* Two syllables, joined the other way round: she is given the front of the
+     word and picks the part that finishes it. Distractors are real syllables
+     lifted from the other words, filtered so only one choice makes a word. */
+  syllablebridge(item,pool){
+    const real=new Set(pool.map(x=>x.w.toLowerCase()));
+    const spare=pickUnique(pool.filter(x=>x.tail!==item.tail&&!real.has(item.head+x.tail)),x=>x.tail,null,2).map(x=>x.tail);
+    const opts=shuffle([item.tail,...spare]);
+    $('gameArea').innerHTML=`<div class="card"><div class="prompt">
+      <div class="instruction">Which part finishes the word?</div>
+      <div class="big-target word-target"><span class="head-tile">${item.head}</span><span class="blank">?</span></div></div>
+      <div class="options three">${opts.map(t=>`<button class="opt" onclick="Game.pickBridge(this,'${jsq(t)}','${jsq(item.tail)}','${jsq(item.w)}','${jsq(item.head)}')">${t}</button>`).join('')}</div>
+      <div class="feedback" id="fb"></div></div>`;},
 };
 
 /* Games that drill until every word is known, rather than running 25 rounds.
@@ -566,9 +659,11 @@ const Game={
     else{this.order=resolveOrder(this.deck.engine,this.deck.pool,this.total);this.stageOrders=null;}
   },
   launch(kind,id){
-    this.deck = kind==='L' ? LESSONS.find(l=>l.id===id) : GAMES.find(g=>g.id===id);
+    this.deck = kind==='L' ? LESSONS.find(l=>l.id===id)
+      : kind==='E' ? EXAMS.find(e=>e.id===id)
+      : GAMES.find(g=>g.id===id);
     this.total = this.deck.stages ? this.deck.stages.reduce((a,s)=>a+s.rounds,0) : 25;
-    this.round=0;this.correct=0;
+    this.round=0;this.correct=0;this.examLog=[];this.build=null;
     this.buildOrders();
     if(this.deck.intro){$('home').classList.remove('active');$('lessonIntro').classList.add('active');renderIntro(this.deck);return;}
     $('home').classList.remove('active');$('game').classList.add('active');this.next();
@@ -608,7 +703,12 @@ const Game={
     ENGINES[stage.engine].call(ENGINES,item,stage.pool);},
   win(){this.correct++;addStar();},
   good(msg){$('fb').textContent=msg;$('fb').className='feedback good';},
-  bad(msg){$('fb').textContent=msg;$('fb').className='feedback try';},
+  bad(msg){
+    // An exam withholds the answer: she gets another go at the same question on
+    // a retake, and the report card tells the grown-up what to reteach. Drop the
+    // exam check here to turn reveals back on everywhere.
+    if(this.deck&&this.deck.exam)msg='Not quite.';
+    $('fb').textContent=msg;$('fb').className='feedback try';},
 
   pickWord(btn,word,correct,label){
     if(this.locked)return;this.locked=true;
@@ -617,8 +717,13 @@ const Game={
     const answer=correct.replace(/-/g,'');
     if(word===correct){btn.classList.add('correct');this.win();this.good('✓ Yes! '+correct);speak(answer);}
     else{btn.classList.add('wrong');
-      document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===correct)o.classList.add('correct');});
-      this.bad(label?('That’s not the '+label):('This one says '+correct));speak(answer);}
+      // An exam holds the answer back in print and in speech, not just in words.
+      if(!(this.deck&&this.deck.exam)){
+        document.querySelectorAll('.opt').forEach(o=>{if(o.childNodes[0].textContent.trim()===correct)o.classList.add('correct');});
+        speak(answer);
+      }
+      this.bad(label?('That’s not the '+label):('This one says '+correct));}
+    this.answered(word===correct);
     this.showNext();
   },
   pickBucket(el,picked,correct){
@@ -739,7 +844,127 @@ const Game={
     $('mmean').textContent=mean;$('addBtn').disabled=true;setTimeout(()=>speak(longW),350);
     this.good(shortW+' → '+longW+' ✨');this.win();this.showNext();
   },
+
+  /* ---------------- Exam answers ----------------
+     Every one of these ends in answered(), which is where an exam differs from
+     a lesson: the score is logged against the stage's skill so the report card
+     can be built, and a miss says only "not quite" rather than handing over the
+     answer to a question she has just got wrong. */
+  answered(ok){
+    if(!this.deck||!this.deck.exam)return;
+    const st=this.currentStageInfo().stage;
+    (this.examLog=this.examLog||[]).push({skill:st.skill||st.label||'Other',lessons:st.lessons||[],ok:!!ok});
+  },
+  pickOdd(btn,picked,correct,why){
+    if(this.locked)return;this.locked=true;
+    if(picked===correct){btn.classList.add('correct');this.win();this.good('✓ Yes! '+why);}
+    else{btn.classList.add('wrong');this.bad(correct+' is the odd one — '+why);}
+    this.answered(picked===correct);this.showNext();
+  },
+  pickSentence(btn,picked,correct,text){
+    if(this.locked)return;this.locked=true;
+    const ok=picked===correct;
+    if(ok){btn.classList.add('correct');this.win();this.good('✓ Yes! '+text.replace('___',correct));
+      speak(text.replace('___',correct));}
+    else{btn.classList.add('wrong');this.bad('It says '+text.replace('___',correct));}
+    this.answered(ok);this.showNext();
+  },
+  pickRule(el,saidBreaker,isBreaker,word,why){
+    if(this.locked)return;this.locked=true;
+    const ok=(saidBreaker===isBreaker);
+    if(ok){el.classList.add('correct');this.win();this.good('✓ Yes! '+why);}
+    else{el.classList.add('wrong');this.bad(word+(isBreaker?' breaks the rules — ':' plays fair — ')+why);}
+    this.answered(ok);this.showNext();
+  },
+  pickBridge(btn,picked,correct,word,head){
+    if(this.locked)return;this.locked=true;
+    const ok=picked===correct;
+    if(ok){btn.classList.add('correct');this.win();this.good('✓ Yes! '+word);speak(word);}
+    else{btn.classList.add('wrong');this.bad('It is '+word+'. '+head+picked+' is not a word.');}
+    this.answered(ok);this.showNext();
+  },
+
+  /* Build the Word keeps its state on the controller because the round is built
+     up over several taps rather than decided by one. */
+  build:null,
+  renderBuild(){
+    const b=this.build;if(!b)return;
+    const slots=b.correct.map((_,i)=>b.placed[i]!=null
+      ? `<button class="slot filled" onclick="Game.unTile(${i})">${b.tiles[b.placed[i]]}</button>`
+      : `<span class="slot"></span>`).join('');
+    const tiles=b.tiles.map((t,i)=>{
+      const spent=b.placed.indexOf(i)>=0;
+      return `<button class="tile${spent?' spent':''}"${spent?' disabled':''} onclick="Game.tapTile(${i})">${t}</button>`;
+    }).join('');
+    $('slotRow').innerHTML=slots;
+    $('tileRow').innerHTML=tiles;
+  },
+  tapTile(i){
+    const b=this.build;if(!b||this.locked)return;
+    if(b.placed.length>=b.correct.length||b.placed.indexOf(i)>=0)return;
+    b.placed.push(i);this.renderBuild();
+    if(b.placed.length===b.correct.length){
+      this.locked=true;
+      const built=b.placed.map(k=>b.tiles[k]).join('');
+      const ok=built===b.target;
+      if(ok){this.win();this.good('✓ Yes! '+b.target);speak(b.target);}
+      else{this.bad('It is '+b.correct.join(' - ')+'.');}
+      this.answered(ok);this.showNext();
+    }
+  },
+  unTile(i){
+    const b=this.build;if(!b||this.locked)return;
+    b.placed.splice(i,1);this.renderBuild();
+  },
+
+  /* ---------------- Exam report ----------------
+     The score is for her; this is for the grown-up. A skill she got most of is
+     named and left alone. One she struggled with names the lessons behind it,
+     so a wrong answer turns into next week's practice rather than a number. */
+  examReport(){
+    const log=this.examLog||[],by=[];
+    log.forEach(e=>{
+      let row=by.find(r=>r.skill===e.skill);
+      if(!row){row={skill:e.skill,lessons:e.lessons,ok:0,n:0};by.push(row);}
+      row.n++;if(e.ok)row.ok++;
+    });
+    const pct=Math.round(this.correct/this.total*100);
+    const msg=pct>=90?'Outstanding, '+childName+'! 🏆'
+      :pct>=70?'Well done, '+childName+'! 🐸'
+      :'Good effort, '+childName+'. Every one of these comes back around. 💪';
+    const rows=by.map(r=>{
+      const p=Math.round(r.ok/r.n*100);
+      const tone=p>=80?'strong':p>=50?'okay':'weak';
+      const revisit=p<70&&r.lessons.length
+        ? `<div class="revisit">Worth another look: ${r.lessons.length>6
+            ? 'Lessons '+r.lessons.slice(0,6).join(', ')+' and on'
+            : (r.lessons.length===1?'Lesson '+r.lessons[0]:'Lessons '+r.lessons.slice(0,-1).join(', ')+' and '+r.lessons[r.lessons.length-1])}</div>`
+        : '';
+      return `<div class="rc-row ${tone}">
+        <div class="rc-head"><span class="rc-skill">${r.skill}</span><span class="rc-score">${r.ok} / ${r.n}</span></div>
+        <div class="rc-bar"><span style="width:${p}%"></span></div>${revisit}</div>`;
+    }).join('');
+    saveExamResult(this.deck.id,{t:Date.now(),correct:this.correct,total:this.total,
+      bySkill:by.map(r=>({skill:r.skill,ok:r.ok,n:r.n}))});
+    const past=examHistory(this.deck.id).slice(0,-1).slice(-3).reverse();
+    const history=past.length?`<div class="rc-past"><b>Earlier attempts</b>${past.map(p=>
+      `<span>${p.correct} / ${p.total} · ${new Date(p.t).toLocaleDateString()}</span>`).join('')}</div>`:'';
+    $('gameArea').innerHTML=`<div class="card done-card">
+      <div class="done-mascot">${pipSVG(56)}</div>
+      <h2>${this.deck.title} — all done!</h2>
+      <div class="score-caption" style="font-size:26px">${this.correct} out of ${this.total}</div>
+      <p>${msg}</p>
+      <div class="report-card">
+        <h3>For your grown-up</h3>
+        ${rows}
+      </div>
+      ${history}
+      <button class="next-btn" onclick="Game.replay()">Take it again</button>
+      <button class="back" style="margin-top:12px" onclick="Game.home()">Back to menu</button></div>`;
+    if(pct>=90)addStar(3);
+  },
   finish(){
+    if(this.deck&&this.deck.exam){this.examReport();return;}
     const pct=Math.round(this.correct/this.total*100);
     const msg=pct===100?'Perfect, '+childName+'! You’re a Word Pond champion! 🏆':pct>=70?'Great job, '+childName+'! Keep leaping! 🐸':'Nice try, '+childName+'! Practice makes it easier! 💪';
     const P='M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7z';

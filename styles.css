@@ -206,3 +206,56 @@ header{display:flex;align-items:center;justify-content:space-between;gap:14px;ma
 .reset-link{display:block;width:100%;margin-top:10px;background:none;border:none;color:#b06;font-size:12.5px;cursor:pointer;text-decoration:underline;opacity:.7;}
 footer{color:#8ba0ba;font-size:12px;text-align:center;margin-top:10px;line-height:1.5;}
 @media (max-width:420px){.grid{grid-template-columns:1fr;}.game-card{min-height:auto;}}
+
+/* ---- Check-ups -------------------------------------------------------------
+   The exam screens borrow the lesson card look, with a gold edge so the two
+   check-ups read as the end of the road rather than another game. */
+.exam-card{border:3px solid var(--sun);}
+.exam-card .tag{color:#a97a00;}
+
+/* Build the Word: the slots she fills and the tiles she fills them from. */
+.slot-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:4px 0 18px;}
+.slot{min-width:64px;height:62px;border-radius:14px;border:3px dashed #d9cfae;background:#fff;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-family:'Baloo 2';font-weight:800;font-size:30px;color:var(--deep);padding:0 12px;}
+.slot.filled{border-style:solid;border-color:var(--sky);cursor:pointer;}
+.slot.filled:active{transform:scale(.97);}
+.tile-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:6px;}
+.tile{border:3px solid #e6ddc6;background:#fff;border-radius:14px;cursor:pointer;
+  padding:12px 18px;font-family:'Baloo 2';font-weight:800;font-size:28px;color:var(--deep);
+  transition:transform .1s,background .15s,border-color .15s;}
+.tile:hover{border-color:var(--sky);}
+.tile:active{transform:scale(.96);}
+.tile.spent{opacity:.25;cursor:default;border-style:dashed;}
+
+/* The gap in a sentence, and the fixed first half of a bridge word. */
+.blank{display:inline-block;min-width:52px;border-bottom:4px solid var(--sun);
+  color:var(--sun);text-align:center;}
+.head-tile{background:var(--sun);color:#4a3200;border-radius:16px;padding:2px 18px;margin-right:10px;}
+
+/* The report card the grown-up reads after an exam. */
+.report-card{text-align:left;background:#fff;border:2px solid #eadfc0;border-radius:18px;
+  padding:18px 18px 14px;margin:18px 0 6px;}
+.report-card h3{font-family:'Baloo 2';font-weight:800;font-size:18px;color:var(--deep);margin-bottom:10px;}
+.rc-row{margin-bottom:14px;}
+.rc-row:last-child{margin-bottom:4px;}
+.rc-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;}
+.rc-skill{font-family:'Lexend';font-weight:600;font-size:15px;color:var(--deep);}
+.rc-score{font-family:'Lexend';font-weight:600;font-size:14px;color:#5a6b82;flex:none;}
+.rc-bar{height:8px;border-radius:99px;background:#f0e9d8;overflow:hidden;margin-top:6px;}
+.rc-bar span{display:block;height:100%;border-radius:99px;background:var(--mint);}
+.rc-row.okay .rc-bar span{background:var(--sun);}
+.rc-row.weak .rc-bar span{background:var(--coral);}
+.revisit{margin-top:6px;font-size:13.5px;color:#8a6a2f;}
+.rc-past{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:center;
+  margin:14px 0 4px;font-size:13.5px;color:#6d7b8d;}
+.rc-past b{font-family:'Lexend';font-weight:600;color:var(--deep);}
+/* The two Rule or Breaker choices carry a phrase, not a sound, so they read
+   better stacked inside the bucket than side by side with the example. */
+.bucket-row.rule .bucket .snd{font-size:22px;}
+@media (max-width:520px){
+  .slot{min-width:54px;height:54px;font-size:26px;}
+  .tile{padding:10px 14px;font-size:24px;}
+  .bucket-row.rule .bucket{flex-direction:column;gap:2px;align-items:center;}
+  .bucket-row.rule .bucket .ex{white-space:normal;}
+}
