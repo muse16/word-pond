@@ -160,7 +160,7 @@ function renderIntro(deck){
   const trick=intro.trick?`<div class="trick-box"><div class="trick-title">🐸 ${intro.trick.title}</div>
     ${intro.trick.points.map(p=>`<div class="trick-point"><b>${p.w}</b> — ${p.note}</div>`).join('')}</div>`:'';
   $('introArea').innerHTML=`<div class="card">
-    <div class="intro-head"><div class="lesson-badge">Lesson ${deck.n}</div>${pipSVG(44)}</div>
+    <div class="intro-head"><div class="lesson-badge">${typeof deck.n==='number'?'Lesson '+deck.n:deck.n}</div>${pipSVG(44)}</div>
     <h2 class="intro-topic">${intro.topic}</h2>
     ${intro.lines.map(l=>`<p class="intro-line">${l}</p>`).join('')}
     <div class="intro-words">${words}</div>
@@ -206,7 +206,9 @@ function promptWords(engine,item){
     case 'magic': add(item.short); add(item.long); break;
     case 'contraction': case 'expand': add(item.one); break;
     case 'phonogram': add(item.word); break;
-    case 'oddoneout': add(item.odd); break;
+    // all four, not just the odd one: two sets that share words are two goes at
+    // the same question, and the dealer can only avoid what it can see
+    case 'oddoneout': (item.words||[]).forEach(add); break;
     case 'sentence': add(item.answer); break;
     // both sides of a minimal pair are shown as buttons, and a heteronym item
     // keys its word differently, so neither was being claimed by the dealer
@@ -630,8 +632,7 @@ const ENGINES={
      word and picks the part that finishes it. Distractors are real syllables
      lifted from the other words, filtered so only one choice makes a word. */
   syllablebridge(item,pool){
-    const real=new Set(pool.map(x=>x.w.toLowerCase()));
-    const spare=pickUnique(pool.filter(x=>x.tail!==item.tail&&!real.has(item.head+x.tail)),x=>x.tail,null,2).map(x=>x.tail);
+    const spare=(item.wrong||[]).filter(t=>t!==item.tail).slice(0,2);
     const opts=shuffle([item.tail,...spare]);
     $('gameArea').innerHTML=`<div class="card"><div class="prompt">
       <div class="instruction">Which part finishes the word?</div>
@@ -984,7 +985,7 @@ const Game={
       <button class="back" style="margin-top:12px" onclick="Game.home()">Back to menu</button></div>`;
     if(pct===100)addStar(2);
   },
-  replay(){this.round=0;this.correct=0;this.buildOrders();this.next();},
+  replay(){this.round=0;this.correct=0;this.examLog=[];this.build=null;this.buildOrders();this.next();},
   showNext(){const label=this.round>=this.total?'See my stars →':'Next →';
     $('gameArea').querySelector('.card').insertAdjacentHTML('beforeend',`<button class="next-btn" onclick="Game.next()">${label}</button>`);}
 };

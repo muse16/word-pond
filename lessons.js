@@ -2560,7 +2560,7 @@ const GAMES=[
 const ODD_MID=[
   {words:['sky','fly','try','plan'],       odd:'plan', why:'the other three end in y saying its long i sound'},
   {words:['cake','bike','home','milk'],    odd:'milk', why:'the other three end in Silent E'},
-  {words:['feet','green','tree','step'],   odd:'step', why:'the other three have the ee team'},
+  {words:['feet','green','tree','lamp'],   odd:'lamp', why:'the other three have the ee team'},
   {words:['gold','find','told','lost'],    odd:'lost', why:'the other three follow the Find Gold rule, so their vowel is long'},
   {words:['trip','clap','stop','sun'],     odd:'sun',  why:'the other three start with a blend'},
   {words:['when','while','which','shine'], odd:'shine',why:'the other three start with wh'},
@@ -2570,15 +2570,15 @@ const ODD_END=[
   {words:['coin','boil','toy','cold'],            odd:'cold', why:'the other three say /oy/'},
   {words:['saw','claw','yawn','sock'],            odd:'sock', why:'the other three have aw'},
   {words:['down','found','shout','shop'],         odd:'shop', why:'the other three have ow or ou saying /ow/'},
-  {words:['germ','cage','page','game'],           odd:'game', why:'the other three have a soft g'},
+  {words:['cage','page','huge','flag'],            odd:'flag', why:'the other three have a soft g'},
   {words:['barn','dark','sharp','bank'],          odd:'bank', why:'the other three have ar'},
   {words:['fork','storm','north','frost'],        odd:'frost',why:'the other three have or'},
   {words:['wanted','printed','tested','jumped'],  odd:'jumped',why:'the other three end in the /id/ sound'},
   {words:['ball','tall','wall','flag'],           odd:'flag', why:'the other three give a its third sound'}];
 const ODD_FINAL=[
   {words:['show','snow','know','shout'],   odd:'shout',why:'the other three have ow saying long o'},
-  {words:['gem','germ','cage','gift'],     odd:'gift', why:'the other three have a soft g'},
-  {words:['ball','call','wall','shall'],   odd:'shall',why:'the other three give a its third sound'},
+  {words:['gem','cage','page','gate'],     odd:'gate', why:'the other three have a soft g'},
+  {words:['snowed','smiled','saved','jumped'], odd:'jumped',why:'the other three end in the /d/ sound'},
   {words:['point','join','coin','pond'],   odd:'pond', why:'the other three have oi'}];
 
 /* ---- Build the Word: hear it, then tap the parts in order. ---------------- */
@@ -2638,7 +2638,7 @@ const RULE_MID=[
   {w:'what',  breaker:true,  why:'it looks as if it should rhyme with hat, and it does not'},
   {w:'come',  breaker:true,  why:'the Silent E does not make the o long'},
   {w:'who',   breaker:true,  why:'the wh says h and the o says oo'},
-  {w:'have',  breaker:true,  why:'the Silent E is only keeping v off the end'},
+  {w:'move',  breaker:true,  why:'the o says oo rather than its long sound'},
   {w:'been',  breaker:true,  why:'the ee does not say its long e sound here'}];
 const RULE_END=[
   {w:'barn',   breaker:false, why:'ar says its own sound, bossing the a'},
@@ -2653,24 +2653,28 @@ const RULE_END=[
   {w:'aunt',   breaker:true,  why:'the au does not say /aw/ -- most of us say it like ant'}];
 
 /* ---- Syllable Bridge: join two parts into a real word. -------------------- */
+/* The two wrong endings are named here rather than drawn from the other words,
+   because a generated one kept making a real word of its own: car+ing, gar+ter,
+   for+get, o+bit. The round shows no picture and speaks nothing, so a second
+   real word is a second right answer. */
 const BRIDGE_MID=[
-  {w:'napkin', head:'nap', tail:'kin'},
-  {w:'rabbit', head:'rab', tail:'bit'},
-  {w:'sunset', head:'sun', tail:'set'},
-  {w:'picnic', head:'pic', tail:'nic'},
-  {w:'robin',  head:'rob', tail:'in'},
-  {w:'open',   head:'o',   tail:'pen'},
-  {w:'zero',   head:'ze',  tail:'ro'},
-  {w:'silent', head:'si',  tail:'lent'}];
+  {w:'napkin', head:'nap', tail:'kin',  wrong:['set','lent']},
+  {w:'rabbit', head:'rab', tail:'bit',  wrong:['kin','pen']},
+  {w:'sunset', head:'sun', tail:'set',  wrong:['bit','lent']},
+  {w:'picnic', head:'pic', tail:'nic',  wrong:['pen','ro']},
+  {w:'robin',  head:'rob', tail:'in',   wrong:['nic','set']},
+  {w:'open',   head:'o',   tail:'pen',  wrong:['kin','nic']},
+  {w:'zero',   head:'ze',  tail:'ro',   wrong:['bit','pen']},
+  {w:'silent', head:'si',  tail:'lent', wrong:['ro','kin']}];
 const BRIDGE_END=[
-  {w:'morning',head:'morn',tail:'ing'},
-  {w:'forest', head:'for', tail:'est'},
-  {w:'winter', head:'win', tail:'ter'},
-  {w:'summer', head:'sum', tail:'mer'},
-  {w:'order',  head:'or',  tail:'der'},
-  {w:'carpet', head:'car', tail:'pet'},
-  {w:'garden', head:'gar', tail:'den'},
-  {w:'pocket', head:'pock',tail:'et'}];
+  {w:'morning',head:'morn',tail:'ing', wrong:['est','et']},
+  {w:'forest', head:'for', tail:'est', wrong:['ing','den']},
+  {w:'winter', head:'win', tail:'ter', wrong:['est','den']},
+  {w:'summer', head:'sum', tail:'mer', wrong:['est','den']},
+  {w:'order',  head:'or',  tail:'der', wrong:['pet','est']},
+  {w:'carpet', head:'car', tail:'pet', wrong:['est','mer']},
+  {w:'garden', head:'gar', tail:'den', wrong:['est','pet']},
+  {w:'pocket', head:'pock',tail:'et',  wrong:['ing','den']}];
 
 /* ---- Word Cards drawn across the whole range of each exam. ---------------- */
 const CARDS_MID=['plan','trip','clap','stop','sky','shy','robin','picnic','open','zero',
@@ -2688,7 +2692,7 @@ const EXAMS=[
     intro:{
       topic:'Mid-Year Check-Up',
       lines:[
-        'This one is a little different. Thirty questions, and they come from everything you have learned so far -- Lessons 1 all the way to 29.',
+        'This one is a little different. Thirty questions, and they come from everything you have learned so far — Lessons 1 all the way to 29.',
         'There are some new games in here. You will build words out of their parts, spot the word that does not belong, read a whole sentence, and decide whether a word plays fair or breaks the rules.',
         'If you miss one I will just say <b>not quite</b> and move along, so keep going and do your best. At the end you get your score and Pip tells your grown-up which parts to practice next.'
       ],

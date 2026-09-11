@@ -250,6 +250,13 @@ footer{color:#8ba0ba;font-size:12px;text-align:center;margin-top:10px;line-heigh
 .rc-past{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:center;
   margin:14px 0 4px;font-size:13.5px;color:#6d7b8d;}
 .rc-past b{font-family:'Lexend';font-weight:600;color:var(--deep);}
+/* Three long words across a narrow phone pushed the page a few pixels wider than
+   the screen, so the whole thing scrolled sideways. Tighter gaps and a font that
+   keeps shrinking below 400px hold them inside it. */
+@media (max-width:400px){
+  .options.three{gap:8px;}
+  .options.three .opt{padding:16px 4px;font-size:clamp(17px,5.2vw,26px);letter-spacing:0;}
+}
 /* The two Rule or Breaker choices carry a phrase, not a sound, so they read
    better stacked inside the bucket than side by side with the example. */
 .bucket-row.rule .bucket .snd{font-size:22px;}
